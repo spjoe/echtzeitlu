@@ -1,0 +1,17 @@
+﻿Build started 08.10.2010 19:43:07.
+     1>Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\echtzeitlu.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+         glfw_ogl3_2.vcxproj -> D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_debug.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\echtzeitlu.unsuccessfulbuild".
+         Touching "Debug\echtzeitlu.lastbuildstate".
+     1>Done Building Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.06

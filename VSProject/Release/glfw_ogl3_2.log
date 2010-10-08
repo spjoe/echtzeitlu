@@ -1,0 +1,27 @@
+﻿Build started 08.10.2010 19:40:05.
+     1>Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Release\echtzeitlu.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glew\include /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glfw\include /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glm\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D CONSOLE /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\ogl3_test.cpp ..\src\shader.cpp ..\src\utility.cpp
+         ogl3_test.cpp
+         shader.cpp
+         utility.cpp
+     1>..\src\utility.cpp(8): warning C4800: 'void *' : forcing value to bool 'true' or 'false' (performance warning)
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe" /NOLOGO /LIBPATH:D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\external\glew\lib /LIBPATH:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\external\glfw\lib-msvc100" opengl32.lib glew32.lib GLFW.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\echtzeitlu_release.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.lib" /MACHINE:X86 Release\ogl3_test.obj
+         Release\shader.obj
+         Release\utility.obj /LTCG 
+         Generating code
+         Finished generating code
+         glfw_ogl3_2.vcxproj -> D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe;#1" /manifest Release\echtzeitlu_release.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\echtzeitlu.unsuccessfulbuild".
+         Touching "Release\echtzeitlu.lastbuildstate".
+     1>Done Building Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.61
