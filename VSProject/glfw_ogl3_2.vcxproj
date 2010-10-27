@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -62,7 +62,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_debug.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,6 +107,8 @@
   <ItemGroup>
     <None Include="..\shader\minimal.frag" />
     <None Include="..\shader\minimal.vert" />
+    <None Include="..\shader\simple_shader.frag" />
+    <None Include="..\shader\simple_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

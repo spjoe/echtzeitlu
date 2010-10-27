@@ -2,11 +2,179 @@
 #include "shader.hpp"
 
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp> 
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_projection.hpp>
 #include <glm/gtc/type_ptr.hpp> 
 
+#include <AL/alut.h>
+
+glm::mat4 perspective;
+glm::mat4 model;
+glm::mat4 view;
+glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
+
+// define our light
+glm::vec3 light_position(0.0f, 8.0f, 3.0f);
+glm::vec4 light_color(1.0f, 1.0f, 1.0f, 1.0f);
+glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
 
+GLfloat distance = -4.0f;
+
+static const glm::vec4 vertices[24] =
+{
+    glm::vec4(-1, -1, -1, 1),
+    glm::vec4( 1, -1, -1, 1),
+    glm::vec4( 1,  1, -1, 1),
+    glm::vec4(-1,  1, -1, 1),
+
+    glm::vec4(-1, -1, -1, 1),
+    glm::vec4( 1, -1, -1, 1),
+    glm::vec4( 1, -1,  1, 1),
+    glm::vec4(-1, -1,  1, 1),
+
+    glm::vec4( 1, -1, -1, 1),
+    glm::vec4( 1,  1, -1, 1),
+    glm::vec4( 1,  1,  1, 1),
+    glm::vec4( 1, -1,  1, 1),
+
+    glm::vec4( 1,  1, -1, 1),
+    glm::vec4(-1,  1, -1, 1),
+    glm::vec4(-1,  1,  1, 1),
+    glm::vec4( 1,  1,  1, 1),
+
+    glm::vec4(-1,  1, -1, 1),
+    glm::vec4(-1, -1, -1, 1),
+    glm::vec4(-1, -1,  1, 1),
+    glm::vec4(-1,  1,  1, 1),
+
+    glm::vec4(-1, -1,  1, 1),
+    glm::vec4( 1, -1,  1, 1),
+    glm::vec4( 1,  1,  1, 1),
+    glm::vec4(-1,  1,  1, 1)
+};
+
+static const glm::vec3 normals[24] =
+{
+    glm::vec3( 0,  0, -1),
+    glm::vec3( 0,  0, -1),
+    glm::vec3( 0,  0, -1),
+    glm::vec3( 0,  0, -1),
+
+    glm::vec3( 0, -1,  0),
+    glm::vec3( 0, -1,  0),
+    glm::vec3( 0, -1,  0),
+    glm::vec3( 0, -1,  0),
+
+    glm::vec3( 1,  0,  0),
+    glm::vec3( 1,  0,  0),
+    glm::vec3( 1,  0,  0),
+    glm::vec3( 1,  0,  0),
+
+    glm::vec3( 0,  1,  0),
+    glm::vec3( 0,  1,  0),
+    glm::vec3( 0,  1,  0),
+    glm::vec3( 0,  1,  0),
+
+    glm::vec3(-1,  0,  0),
+    glm::vec3(-1,  0,  0),
+    glm::vec3(-1,  0,  0),
+    glm::vec3(-1,  0,  0),
+
+    glm::vec3( 0,  0,  1),
+    glm::vec3( 0,  0,  1),
+    glm::vec3( 0,  0,  1),
+    glm::vec3( 0,  0,  1),
+};
+
+static const glm::vec4 colors[24] =
+{
+    glm::vec4(1, 1, 1, 1),
+	glm::vec4(1, 1, 1, 1),
+	glm::vec4(1, 1, 1, 1),
+	glm::vec4(1, 1, 1, 1), 
+
+    glm::vec4(1, 0, 0, 1), 
+	glm::vec4(1, 0, 0, 1), 
+	glm::vec4(1, 0, 0, 1), 
+	glm::vec4(1, 0, 0, 1), 
+
+    glm::vec4(0, 1, 0, 1), 
+	glm::vec4(0, 1, 0, 1), 
+	glm::vec4(0, 1, 0, 1), 
+	glm::vec4(0, 1, 0, 1), 
+
+    glm::vec4(0, 0, 1, 1), 
+	glm::vec4(0, 0, 1, 1), 
+	glm::vec4(0, 0, 1, 1), 
+	glm::vec4(0, 0, 1, 1),
+
+    glm::vec4(1, 1, 0, 1), 
+	glm::vec4(1, 1, 0, 1), 
+	glm::vec4(1, 1, 0, 1), 
+	glm::vec4(1, 1, 0, 1),
+
+    glm::vec4(1, 0.5, 0, 1),
+	glm::vec4(1, 0.5, 0, 1),
+	glm::vec4(1, 0.5, 0, 1),
+	glm::vec4(1, 0.5, 0, 1), 
+};
+
+static const int indices[36] =
+{
+    0, 2, 1, 0, 3, 2,
+    4, 5, 6, 4, 6, 7,
+    8, 9, 10, 8, 10, 11,
+    12, 13, 14, 12, 14, 15,
+    16, 17, 18, 16, 18, 19,
+    20, 21, 22, 20, 22, 23,
+};
+
+int width=800,
+	height=800;
+
+
+int oldx,oldy;
+
+void mouseMovementCb (int x, int y)
+{
+	//cout << oldx << ":" << x << std::endl;
+	//cout << oldy << ":" << y << std::endl;
+	int dx = oldx - x;
+	int dy = oldy -y;
+
+	int oldx = x;
+	int oldy = y;
+
+	GLfloat alpha = (GLfloat)dx/(GLfloat)width;
+	GLfloat beta = (GLfloat)dy/(GLfloat)height;
+
+	view = glm::translate(view,glm::vec3(0,0,-distance));
+	view = glm::rotate(view,-alpha,glm::vec3(0,1,0));
+	view = glm::translate(view,glm::vec3(0,0,distance));
+
+	view = glm::translate(view,glm::vec3(0,0,-distance));
+	view = glm::rotate(view,-beta,glm::vec3(1,0,0));
+	view = glm::translate(view,glm::vec3(0,0,distance));
+
+
+	//model = glm::rotate(model,-beta,glm::vec3(1,0,0));
+	//view = glm::rotate(view,beta,glm::vec3(1,0,0));
+}
+
+void init_matrixs()
+{
+	// calculate the aspect ratio of the window and create a perspective matrix
+	// with a 60 degree field of view
+    float aspect = float(width)/float(height);
+    perspective = glm::perspective(60.0f, aspect, 0.1f, 100.0f);
+
+    // move camera 4 units backward, i.e. movie the scene 4 units forward
+	view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, distance));
+
+    // initialize the model matrix to identity
+	model = glm::mat4(1.0f);
+}
 // Test if we got a valid forward compatible context (FCC)
 void test_ogl3(void)
 {
@@ -50,10 +218,10 @@ void release_vbo_vao(GLuint *vbo_id, GLuint *vao_id)
 	//PFNGLDELETEVERTEXARRAYSPROC my_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)glfwGetProcAddress("glDeleteVertexArrays");
 	my_glDeleteVertexArrays(1, vao_id);
 
-	glDeleteBuffers(2, vbo_id);
+	glDeleteBuffers(3, vbo_id);
 
 	*vao_id = 0;
-	vbo_id[0] = vbo_id[1] = 0;
+	vbo_id[0] = vbo_id[1] = vbo_id[2] = 0;
 }
 
 
@@ -85,24 +253,33 @@ void init_vbo_vao(const Shader &shader, GLuint *vbo_id, GLuint *vao_id)
 	my_glBindVertexArray(*vao_id);
 
 	// Allocate and assign two Vertex Buffer Objects (VBOs) to our handle
-	glGenBuffers(2, vbo_id);
-
+	glGenBuffers(3, vbo_id);
+	
 	// Bind our first VBO as being the active buffer and storing vertex attributes (coordinates)	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id[0]);
-	glBufferData(GL_ARRAY_BUFFER, 3 * 4 * sizeof(GLfloat), triangle_positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 24 * 4 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
-	GLint vertex_location = shader.get_attrib_location("in_position");
+	GLint vertex_location = shader.get_attrib_location("vertex");
 	glEnableVertexAttribArray(vertex_location);
 	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 
 	// Repeat for second VBO storing vertex colors
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id[1]);
-	glBufferData(GL_ARRAY_BUFFER, 3 * 3 * sizeof(GLfloat), triangle_colors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 24 * 4 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 
-	GLint color_location = shader.get_attrib_location("in_color");
+	GLint color_location = shader.get_attrib_location("color");
 	glEnableVertexAttribArray(color_location);
 	glVertexAttribPointer(	color_location, 3, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+	
+	// Repeat for second VBO storing normals
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_id[2]);
+	glBufferData(GL_ARRAY_BUFFER, 24 * 3 * sizeof(GLfloat), normals, GL_STATIC_DRAW);
+
+	GLint normal_location = shader.get_attrib_location("normal");
+	glEnableVertexAttribArray(normal_location);
+	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 
 	// unbind VAO
@@ -121,30 +298,78 @@ void init_vbo_vao(const Shader &shader, GLuint *vbo_id, GLuint *vao_id)
 // This draws a shaded 2D triangle on the screen.
 void draw (const Shader &shader, GLuint vao_id)
 {
-	glm::mat4 rotation_matrix = 
-		glm::gtx::transform::rotate(10.0f*(GLfloat)glfwGetTime(), 
-									0.0f, 0.0f, 1.0f);
-
-	shader.bind();
-
+//	glm::mat4 rotation_matrix = 
+//		glm::gtx::transform::rotate(10.0f*(GLfloat)glfwGetTime(), 
+//									0.0f, 0.0f, 1.0f
 	// on some computers this call fails ...
 	// ==> glBindVertexArray(vao_id);
 	// ... small workaround:
+
+	shader.bind();
+	get_errors();
+
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
-
+	get_errors();
 	// Set our matrix uniform
-	GLint matrix_location = shader.get_uniform_location("rotation_matrix");
-	glUniformMatrix4fv( matrix_location, 
-						1, 
-						GL_FALSE, 
-						glm::value_ptr(rotation_matrix));
+//	GLint matrix_location = shader.get_uniform_location("rotation_matrix");
+//	glUniformMatrix4fv( matrix_location, 
+//						1, 
+//						GL_FALSE, 
+//						glm::value_ptr(rotation_matrix));
 
+    // set light uniforms
+    GLint light_position_uniform = shader.get_uniform_location( "light_position");
+    GLint light_color_uniform    = shader.get_uniform_location( "light_color");
+    GLint ambient_color_uniform  = shader.get_uniform_location( "ambient_color");
+
+	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
+    glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
+    glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
+	get_errors();
+
+
+    // set matrix-uniforms
+    GLint perspective_uniform = shader.get_uniform_location( "perspective");
+    GLint view_uniform        = shader.get_uniform_location( "view");
+    GLint model_uniform       = shader.get_uniform_location( "model");
+
+	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(perspective));
+	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
+	get_errors();
+
+
+	
+	/* // set attributes 
+	GLint vertex_attrib = shader.get_attrib_location("vertex");
+    GLint normal_attrib = shader.get_attrib_location( "normal");
+    GLint color_attrib  = shader.get_attrib_location( "color");
+	cout << "vertex: " << vertex_attrib << std::endl;
+	cout << "normal: " << normal_attrib << std::endl;
+	cout << "color: " << color_attrib << std::endl;
+	get_errors();
+	glEnableVertexAttribArray(vertex_attrib);
+    glEnableVertexAttribArray(normal_attrib);
+    glEnableVertexAttribArray(color_attrib);
+	get_errors();
+    glVertexAttribPointer(vertex_attrib, 4, GL_FLOAT, GL_FALSE, 0, vertices);
+	get_errors();
+    glVertexAttribPointer(normal_attrib, 3, GL_FLOAT, GL_FALSE, 0, normals);
+	get_errors();
+    glVertexAttribPointer(color_attrib,  4, GL_FLOAT, GL_FALSE, 0, colors);
+	get_errors();*/
 
 	// Draw triangle in VAO
-
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-
+	// draw the geometry
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, indices);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	get_errors(); //glinvalid
+    /*// disable attribute-pointers
+    glDisableVertexAttribArray(vertex_attrib);
+    glDisableVertexAttribArray(normal_attrib);
+    glDisableVertexAttribArray(color_attrib);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);*/
 	// on some computers this call fails ...
 	// ==> glBindVertexArray(0);
 	// ... small workaround:
@@ -154,14 +379,12 @@ void draw (const Shader &shader, GLuint vao_id)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	shader.unbind();
+	get_errors();
 }
 
 
 int main (void)
 {
-	int width=800,
-		height=800;
-
 	glfwInit();
 
 	// Set flags so GLFW creates the desired OpenGL context
@@ -197,22 +420,32 @@ int main (void)
 	test_ogl3();
 
 	{
+		glfwGetMousePos(&oldx,&oldy);
+		glfwDisable( GLFW_MOUSE_CURSOR );
+		glfwSetMousePosCallback( mouseMovementCb );
 		bool running = true;
 
-		GLuint vbo_id[2], vao_id;
+		GLuint vbo_id[3], vao_id;
 
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
+		Shader simpleShader("../shader/simple_shader");
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
 			return 1;
 		}
+		if (!simpleShader) {
+			cerr << "Could not compile simple_shader program." << endl;
+			return 1;
+		}
 
-		minimal.bind_frag_data_location("out_color");
-
-		init_vbo_vao(minimal, vbo_id, &vao_id);
-
+		simpleShader.bind_frag_data_location("fragColor");
+		get_errors();
+		init_vbo_vao(simpleShader, vbo_id, &vao_id);
+		get_errors();
+		init_matrixs();
+		get_errors();
 		// workaround 2: 
 		// if user closes window, there is no context left to query the proc-address from
 		// therefore get the proc address now and use it at the end of the program
@@ -223,7 +456,7 @@ int main (void)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			draw(minimal, vao_id);
+			draw(simpleShader, vao_id);
 
 			glfwSwapBuffers();
 
@@ -236,6 +469,21 @@ int main (void)
 			running = running && !glfwGetKey( GLFW_KEY_ESC );
 			running = running && !glfwGetKey( 'Q' );
 			running = running && glfwGetWindowParam( GLFW_OPENED );
+
+			if(glfwGetKey( 'A' ))
+				view = glm::translate(view, glm::vec3(0.001, 0, 0));
+			if(glfwGetKey( 'D' ))
+				view = glm::translate(view, glm::vec3(-0.001, 0, 0));
+
+
+			if(glfwGetKey( 'W' )){
+				view = glm::translate(view, glm::vec3(0, 0, 0.001));
+				distance += 0.001;	
+			}
+			if(glfwGetKey( 'S' )){
+				view = glm::translate(view, glm::vec3(0, 0, -0.001));
+				distance -= 0.001;	
+			}
 		}
 
 		release_vbo_vao(vbo_id, &vao_id);

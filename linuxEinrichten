@@ -1,0 +1,16 @@
+GLFW
+sudo apt-get install g++ libxmu-dev  libxi-dev
+
+manuell glfw 2.7 installieren
+manuell glew 1.5.6 installieren 
+
+
+gDEBUGGER
+/usr/lib$ sudo ln -s mesa/libGL.so libGL.so.1
+
+OpenAL
+sudo apt-get install libopenal-dev
+
+manuell freealut1.1 installieren
+
+
