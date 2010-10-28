@@ -478,7 +478,8 @@ int main (void)
 				m_camera_1.translateF(-0.01f);
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
-			usleep(1000);
+			glfwSleep(0.001);
+
 		}
 
 		release_vbo_vao(vbo_id, &vao_id);
