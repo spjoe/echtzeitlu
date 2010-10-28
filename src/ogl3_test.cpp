@@ -484,6 +484,9 @@ int main (void)
 				view = glm::translate(view, glm::vec3(0, 0, -0.001));
 				distance -= 0.001;	
 			}
+			
+			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
+			usleep(1000);
 		}
 
 		release_vbo_vao(vbo_id, &vao_id);
