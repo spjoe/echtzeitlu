@@ -11,9 +11,7 @@
 
 #include <AL/alut.h>
 
-glm::mat4 perspective;
 glm::mat4 model;
-glm::mat4 view;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
 
 // define our light
@@ -146,7 +144,7 @@ void mouseMovementCb (int x, int y)
 	//cout << oldx << ":" << x << std::endl;
 	//cout << oldy << ":" << y << std::endl;
 	int dx = oldx - x;
-	int dy = oldy -y;
+	int dy = oldy - y;
 
 	oldx = x;
 	oldy = y;
@@ -165,12 +163,10 @@ void init_matrixs()
 {
 	// calculate the aspect ratio of the window and create a perspective matrix
 	// with a 60 degree field of view
-    float aspect = float(width)/float(height);
-    perspective = glm::perspective(60.0f, aspect, 0.1f, 100.0f);
+	float aspect = float(width)/float(height);
 	m_camera_1.perspective(60.0f, aspect, 0.1f, 100.0f);
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
-	view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, distance));
 	m_camera_1.lookat(glm::vec3(0,0,-4), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     // initialize the model matrix to identity
@@ -472,14 +468,14 @@ int main (void)
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
 			if(glfwGetKey( 'A' ))
-				m_camera_1.translateS(-0.001f);
+				m_camera_1.translateS(-0.01f);
 			if(glfwGetKey( 'D' ))
-				m_camera_1.translateS(0.001f);
+				m_camera_1.translateS(0.01f);
 
 			if(glfwGetKey( 'W' ))
-				m_camera_1.translateF(0.001f);
+				m_camera_1.translateF(0.01f);
 			if(glfwGetKey( 'S' ))
-				m_camera_1.translateF(-0.001f);
+				m_camera_1.translateF(-0.01f);
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
 			usleep(1000);
