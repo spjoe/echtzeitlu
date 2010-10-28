@@ -1,10 +1,13 @@
 #include "common.hpp"
 #include "shader.hpp"
+#include "camera.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_projection.hpp>
 #include <glm/gtc/type_ptr.hpp> 
+
+#include <stdio.h>
 
 #include <AL/alut.h>
 
@@ -18,8 +21,10 @@ glm::vec3 light_position(0.0f, 8.0f, 3.0f);
 glm::vec4 light_color(1.0f, 1.0f, 1.0f, 1.0f);
 glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
-
 GLfloat distance = -4.0f;
+
+using namespace echtzeitlu;
+Camera m_camera_1;
 
 static const glm::vec4 vertices[24] =
 {
@@ -143,23 +148,17 @@ void mouseMovementCb (int x, int y)
 	int dx = oldx - x;
 	int dy = oldy -y;
 
-	int oldx = x;
-	int oldy = y;
+	oldx = x;
+	oldy = y;
 
-	GLfloat alpha = (GLfloat)dx/(GLfloat)width;
-	GLfloat beta = (GLfloat)dy/(GLfloat)height;
-
-	view = glm::translate(view,glm::vec3(0,0,-distance));
-	view = glm::rotate(view,-alpha,glm::vec3(0,1,0));
-	view = glm::translate(view,glm::vec3(0,0,distance));
-
-	view = glm::translate(view,glm::vec3(0,0,-distance));
-	view = glm::rotate(view,-beta,glm::vec3(1,0,0));
-	view = glm::translate(view,glm::vec3(0,0,distance));
-
-
-	//model = glm::rotate(model,-beta,glm::vec3(1,0,0));
-	//view = glm::rotate(view,beta,glm::vec3(1,0,0));
+	GLfloat alpha = 20.0f*(GLfloat)dx/(GLfloat)width;
+	GLfloat beta = 20.0f*(GLfloat)dy/(GLfloat)height;
+	
+// 	m_camera_1.rotateY(alpha);
+// 	m_camera_1.rotateS(beta);
+	
+	m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,1,0), alpha);
+	m_camera_1.orbit(glm::vec3(0,0,0),m_camera_1.s, beta);
 }
 
 void init_matrixs()
@@ -168,9 +167,11 @@ void init_matrixs()
 	// with a 60 degree field of view
     float aspect = float(width)/float(height);
     perspective = glm::perspective(60.0f, aspect, 0.1f, 100.0f);
+	m_camera_1.perspective(60.0f, aspect, 0.1f, 100.0f);
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
 	view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, distance));
+	m_camera_1.lookat(glm::vec3(0,0,-4), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
@@ -334,8 +335,8 @@ void draw (const Shader &shader, GLuint vao_id)
     GLint view_uniform        = shader.get_uniform_location( "view");
     GLint model_uniform       = shader.get_uniform_location( "model");
 
-	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(perspective));
-	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
+	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 	get_errors();
 
@@ -420,7 +421,7 @@ int main (void)
 	test_ogl3();
 
 	{
-		glfwGetMousePos(&oldx,&oldy);
+// 		glfwGetMousePos(&oldx,&oldy);
 		glfwDisable( GLFW_MOUSE_CURSOR );
 		glfwSetMousePosCallback( mouseMovementCb );
 		bool running = true;
@@ -471,19 +472,14 @@ int main (void)
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
 			if(glfwGetKey( 'A' ))
-				view = glm::translate(view, glm::vec3(0.001, 0, 0));
+				m_camera_1.translateS(-0.001f);
 			if(glfwGetKey( 'D' ))
-				view = glm::translate(view, glm::vec3(-0.001, 0, 0));
+				m_camera_1.translateS(0.001f);
 
-
-			if(glfwGetKey( 'W' )){
-				view = glm::translate(view, glm::vec3(0, 0, 0.001));
-				distance += 0.001;	
-			}
-			if(glfwGetKey( 'S' )){
-				view = glm::translate(view, glm::vec3(0, 0, -0.001));
-				distance -= 0.001;	
-			}
+			if(glfwGetKey( 'W' ))
+				m_camera_1.translateF(0.001f);
+			if(glfwGetKey( 'S' ))
+				m_camera_1.translateF(-0.001f);
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
 			usleep(1000);
