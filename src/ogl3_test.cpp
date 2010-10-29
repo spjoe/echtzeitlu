@@ -1,6 +1,7 @@
 #include "common.hpp"
 #include "shader.hpp"
 #include "camera.h"
+#include "ModelLoader.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -382,6 +383,7 @@ void draw (const Shader &shader, GLuint vao_id)
 
 int main (void)
 {
+	ModelLoader m;
 	glfwInit();
 
 	// Set flags so GLFW creates the desired OpenGL context

@@ -51,18 +51,19 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;$(SolutionDir)\external\collada\include;$(SolutionDir)\external\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PreprocessorDefinitions>_LIB;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22-d.lib;libboost_filesystem-d.lib;libboost_system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_debug.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;$(SolutionDir)\external\collada\lib;$(SolutionDir)\external\boost\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -95,12 +96,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\camera.cpp" />
+    <ClCompile Include="..\src\ModelLoader.cpp" />
     <ClCompile Include="..\src\ogl3_test.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\common.hpp" />
+    <ClInclude Include="..\src\ModelLoader.h" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\utility.hpp" />
   </ItemGroup>
