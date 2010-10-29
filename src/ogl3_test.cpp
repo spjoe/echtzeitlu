@@ -92,10 +92,10 @@ static const glm::vec3 normals[24] =
 
 static const glm::vec4 colors[24] =
 {
-    glm::vec4(1, 0, 0, 1),
-	glm::vec4(1, 0, 0, 1),
-	glm::vec4(1, 0, 0, 1),
-	glm::vec4(1, 0, 0, 1), 
+    glm::vec4(1, 0, 0.5, 1),
+	glm::vec4(1, 0, 0.5, 1),
+	glm::vec4(1, 0, 0.5, 1),
+	glm::vec4(1, 0, 0.5, 1), 
 
     glm::vec4(1, 0, 0, 1), 
 	glm::vec4(1, 0, 0, 1), 
