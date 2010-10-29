@@ -13,4 +13,11 @@ sudo apt-get install libopenal-dev
 
 manuell freealut1.1 installieren
 
-
+colladaDOM
+sudo apt-get install libboost-filesystem-dev libxml2-dev libpcre3-dev
+installieren
+colladDOM2.2zip
+mv Makefile Makefile.ps3
+mv Makefile.linux Makefile
+mv ./dom/include/1.4/dom/domasset.h ./dom/include/1.4/dom/domAsset.h
+make
