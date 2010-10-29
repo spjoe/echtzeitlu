@@ -142,8 +142,6 @@ int oldx,oldy;
 
 void mouseMovementCb (int x, int y)
 {
-	//cout << oldx << ":" << x << std::endl;
-	//cout << oldy << ":" << y << std::endl;
 	int dx = oldx - x;
 	int dy = oldy - y;
 
@@ -156,6 +154,7 @@ void mouseMovementCb (int x, int y)
 // 	m_camera_1.rotateY(alpha);
 // 	m_camera_1.rotateS(beta);
 	
+	// rotate camera about origin (0,0,0) and the vector y and s respectively
 	m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,1,0), alpha);
 	m_camera_1.orbit(glm::vec3(0,0,0),m_camera_1.s, beta);
 }
