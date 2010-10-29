@@ -92,10 +92,10 @@ static const glm::vec3 normals[24] =
 
 static const glm::vec4 colors[24] =
 {
-    glm::vec4(1, 1, 1, 1),
-	glm::vec4(1, 1, 1, 1),
-	glm::vec4(1, 1, 1, 1),
-	glm::vec4(1, 1, 1, 1), 
+    glm::vec4(1, 0, 0, 1),
+	glm::vec4(1, 0, 0, 1),
+	glm::vec4(1, 0, 0, 1),
+	glm::vec4(1, 0, 0, 1), 
 
     glm::vec4(1, 0, 0, 1), 
 	glm::vec4(1, 0, 0, 1), 
@@ -149,8 +149,8 @@ void mouseMovementCb (int x, int y)
 	oldx = x;
 	oldy = y;
 
-	GLfloat alpha = 20.0f*(GLfloat)dx/(GLfloat)width;
-	GLfloat beta = 20.0f*(GLfloat)dy/(GLfloat)height;
+	GLfloat alpha = 40.0f*(GLfloat)dx/(GLfloat)width;
+	GLfloat beta = 40.0f*(GLfloat)dy/(GLfloat)height;
 	
 // 	m_camera_1.rotateY(alpha);
 // 	m_camera_1.rotateS(beta);
@@ -267,7 +267,7 @@ void init_vbo_vao(const Shader &shader, GLuint *vbo_id, GLuint *vao_id)
 
 	GLint color_location = shader.get_attrib_location("color");
 	glEnableVertexAttribArray(color_location);
-	glVertexAttribPointer(	color_location, 3, GL_FLOAT, 
+	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 	
 	// Repeat for second VBO storing normals
@@ -448,7 +448,10 @@ int main (void)
 		// therefore get the proc address now and use it at the end of the program
 		// (the address of the function itself, of course, remains valid)
 		my_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)glfwGetProcAddress("glDeleteVertexArrays");
-
+		
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
+		
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
