@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;$(SolutionDir)\external\collada\include;$(SolutionDir)\external\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;$(SolutionDir)\external\collada\include;$(SolutionDir)\external\boost;$(SolutionDir)\external\collada\include\1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
