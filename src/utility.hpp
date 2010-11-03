@@ -9,5 +9,6 @@ string read_file(const string &filename);
 
 // Query OpenGL errors and print error messages to STDERR.
 void get_errors(void);
+int GenerateVBO(size_t count);
 
 #endif //#ifndef _UTILITY_HPP_

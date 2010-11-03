@@ -6,9 +6,12 @@
 
 class ModelLoader
 {
+private:
+	daeElement* defaultScene;
 public:
-	ModelLoader(void);
+	ModelLoader(const std::string path);
 	~ModelLoader(void);
+	void loadScene();
 private:
 	void ReadScene(domVisual_scene *scene);
 };

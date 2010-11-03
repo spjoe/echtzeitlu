@@ -12,6 +12,7 @@
 
 #include <AL/alut.h>
 
+const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
 
@@ -382,7 +383,7 @@ void draw (const Shader &shader, GLuint vao_id)
 
 int main (void)
 {
-	ModelLoader m;
+	ModelLoader m(daeModelPath);
 	glfwInit();
 
 	// Set flags so GLFW creates the desired OpenGL context
@@ -441,6 +442,7 @@ int main (void)
 		simpleShader.bind_frag_data_location("fragColor");
 		get_errors();
 		init_vbo_vao(simpleShader, vbo_id, &vao_id);
+		m.loadScene();
 		get_errors();
 		init_matrixs();
 		get_errors();

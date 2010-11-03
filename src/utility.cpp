@@ -42,3 +42,9 @@ void get_errors(void)
 		}
 	}
 }
+
+int GenerateVBO(size_t count){
+	unsigned int vbo;
+	glGenBuffers(count,&vbo);
+	return vbo;
+}

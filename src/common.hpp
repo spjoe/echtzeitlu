@@ -15,4 +15,6 @@ using std::endl;
 
 #include "utility.hpp"
 
+
+
 #endif //#ifndef _COMMON_HPP_

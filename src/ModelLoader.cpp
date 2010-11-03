@@ -8,20 +8,20 @@
 
 #include <glm/glm.hpp>
 
+#include "common.hpp"
 
 
-ModelLoader::ModelLoader(void)
+ModelLoader::ModelLoader(const std::string path)
 {
-	DAE dae;
-	domCOLLADA* domRoot = dae.open("../resources/SteamEngine/models/Steam EngineV2_6.dae");
+	DAE *dae = new DAE;
+	domCOLLADA* domRoot = dae->open(path);
 	domCOLLADA::domSceneRef domScene = domRoot->getScene();
-	daeElement* defaultScene = NULL;
+	defaultScene = NULL;
 	if (domScene)
 		if (domScene->getInstance_visual_scene())
 			if (domScene->getInstance_visual_scene())
 				defaultScene = domScene->getInstance_visual_scene()->getUrl().getElement();
-	if(defaultScene)
-		ReadScene( (domVisual_scene *)defaultScene );
+	
 	//int geometrieCount = root->getDatabase()->getElementCount(NULL, COLLADA_TYPE_IMAGE, NULL);
 
 }
@@ -117,17 +117,44 @@ void travers(domNode *node)
 					}
 				}
 				unsigned int numPoints = position_floats->getCount()/3;
-				glm::vec3 * Points = new glm::vec3[numPoints];
+				glm::vec3 * points = new glm::vec3[numPoints];
 				for(unsigned int i=0;i< numPoints;i++){
-					Points[i].x = position_floats->get(i*3+0);
-					Points[i].y = position_floats->get(i*3+1);
-					Points[i].z = position_floats->get(i*3+2);
+					points[i].x = position_floats->get(i*3+0);
+					points[i].y = position_floats->get(i*3+1);
+					points[i].z = position_floats->get(i*3+2);
 				}
-				int * Indices;
-				Indices = new int[dom_triangles->getCount() * 3];
+				int * pointIndices;
+				pointIndices = new int[dom_triangles->getCount() * 3];
 				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
-					Indices[i] = P[i*max_offset + position_offset];
+					pointIndices[i] = P[i*max_offset + position_offset];
 				}
+
+				unsigned int numNormals = normal_floats->getCount()/3;
+				glm::vec3 * normals = new glm::vec3[numNormals];
+				for(unsigned int i=0;i< numNormals;i++){
+						normals[i].x = normal_floats->get(i*3+0);
+						normals[i].y = normal_floats->get(i*3+1);
+						normals[i].z = normal_floats->get(i*3+2);
+				}
+				int * normalIndices = new int[dom_triangles->getCount() * 3];
+				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
+						normalIndices[i] = P[i*max_offset + normal_offset];
+				}
+
+				unsigned int numTexture = texture1_floats->getCount()/2;
+				glm::vec2 * texture = new glm::vec2[numTexture];
+				for(unsigned int i=0;i< numTexture;i++){
+						texture[i].x = texture1_floats->get(i*2+0);
+						texture[i].y = texture1_floats->get(i*2+1);
+				}
+				int * textureIndices = new int[dom_triangles->getCount() * 3];
+				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
+						textureIndices[i] = P[i*max_offset + texture1_offset];
+				}
+
+				//VBO's erstellen
+
+				int pointsVBO = GenerateVBO(1);
 
 			}
 
@@ -170,4 +197,10 @@ void ModelLoader::ReadScene(domVisual_scene *scene)
 		domNode* currNode = scene->getNode_array()[i];
 		travers(currNode);
 	}
+}
+
+void ModelLoader::loadScene()
+{
+	if(defaultScene)
+		ReadScene( (domVisual_scene *)defaultScene );
 }
