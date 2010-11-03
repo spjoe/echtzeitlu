@@ -141,16 +141,17 @@ void travers(domNode *node)
 						normalIndices[i] = P[i*max_offset + normal_offset];
 				}
 
-				unsigned int numTexture = texture1_floats->getCount()/2;
-				glm::vec2 * texture = new glm::vec2[numTexture];
-				for(unsigned int i=0;i< numTexture;i++){
-						texture[i].x = texture1_floats->get(i*2+0);
-						texture[i].y = texture1_floats->get(i*2+1);
-				}
-				int * textureIndices = new int[dom_triangles->getCount() * 3];
-				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
-						textureIndices[i] = P[i*max_offset + texture1_offset];
-				}
+				// TODO causes segmentation fault when no texture used
+// 				unsigned int numTexture = texture1_floats->getCount()/2;
+// 				glm::vec2 * texture = new glm::vec2[numTexture];
+// 				for(unsigned int i=0;i< numTexture;i++){
+// 						texture[i].x = texture1_floats->get(i*2+0);
+// 						texture[i].y = texture1_floats->get(i*2+1);
+// 				}
+// 				int * textureIndices = new int[dom_triangles->getCount() * 3];
+// 				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
+// 						textureIndices[i] = P[i*max_offset + texture1_offset];
+// 				}
 
 				//VBO's erstellen
 

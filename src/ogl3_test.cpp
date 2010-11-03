@@ -12,7 +12,7 @@
 
 #include <AL/alut.h>
 
-const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
+const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
 
@@ -442,7 +442,11 @@ int main (void)
 		simpleShader.bind_frag_data_location("fragColor");
 		get_errors();
 		init_vbo_vao(simpleShader, vbo_id, &vao_id);
+		
+		cout << "Loading Scene" << endl;
 		m.loadScene();
+		cout << "Done loading Scene" << endl;
+		
 		get_errors();
 		init_matrixs();
 		get_errors();
