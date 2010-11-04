@@ -9,6 +9,7 @@
 
 #include "SceneObject.h"
 #include "common.hpp"
+#include "shader.hpp"
 
 namespace echtzeitlu{
   
@@ -17,9 +18,12 @@ class Model : public SceneObject
 private:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vao_id;		// Vertex Array Object
+	GLuint *indices;	// Indices Array
+	Shader shader;
 	
 public:
-	Model(GLuint[3], GLuint);
+	Model(GLuint[3], GLuint,GLuint *);
+	Model();
 	/** @brief draws the model */
 	virtual void draw();
 	

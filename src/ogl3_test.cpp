@@ -2,6 +2,7 @@
 #include "shader.hpp"
 #include "camera.h"
 #include "ModelLoader.h"
+#include "Model.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -25,6 +26,7 @@ GLfloat distance = -4.0f;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
+SceneObject *rootScene;
 
 static const glm::vec4 vertices[24] =
 {
@@ -425,7 +427,7 @@ int main (void)
 		bool running = true;
 
 		GLuint vbo_id[3], vao_id;
-
+		rootScene = new Model();
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
 		Shader simpleShader("../shader/simple_shader");
@@ -458,13 +460,16 @@ int main (void)
 		
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
-		
+		double time = glfwGetTime( );
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			draw(simpleShader, vao_id);
-
+			rootScene->draw();
+			double tmptime = glfwGetTime();
+			rootScene->update(tmptime-time);
+			time = tmptime;
 			glfwSwapBuffers();
 
 			// Get OGL errors

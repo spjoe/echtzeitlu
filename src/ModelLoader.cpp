@@ -11,8 +11,11 @@
 
 #include "common.hpp"
 #include "Model.h"
+#include "SceneObject.h"
 
 using namespace echtzeitlu;
+
+extern SceneObject* rootScene;
 
 ModelLoader::ModelLoader(const std::string path)
 {
@@ -195,10 +198,24 @@ void ModelLoader::travers(domNode *node)
 
 			//VBO's erstellen
 			GLuint *vbo_id;
-			vbo_id = GenerateVBO(3);
-			bindVBO(vbo_id[0],points, numPoints * 4 *sizeof(GLfloat));
-			bindVBO(vbo_id[1],normals, numNormals * 3 *sizeof(GLfloat));
-			Model model(vbo_id,0);
+			GLuint vao_id;
+			PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
+			my_glGenVertexArrays(1, &vao_id);
+			PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+			my_glBindVertexArray(vao_id);
+
+			//komischer vector error, reihnfolge bind und shader binds müssen noch angepasst werden (verlagerung in model klasse)
+			//vbo_id = GenerateVBO(3);
+			//bindVBO(vbo_id[0],&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
+			//bindVBO(vbo_id[1],&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
+			//Model model(vbo_id,vao_id,&indexlist[0]); 
+
+			my_glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+			//rootScene->add((SceneObject*)&model);
+			
 			
 
 		}

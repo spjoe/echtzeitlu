@@ -20,11 +20,27 @@ class SceneObject
 	std::vector<SceneObject*> children;
 	
   public:
+	  SceneObject() : children(){};
 	~SceneObject();
 	
 	virtual void draw()=0;
 	virtual void update(float fTime)=0;
-	
+
+	void add(SceneObject * child){
+		children.push_back(child);
+	};
+  protected:
+	void drawAll(){
+		std::vector<SceneObject*>::iterator childrenIterator;
+		for(childrenIterator = children.begin(); 
+				childrenIterator != children.end();
+				childrenIterator++)
+		{
+			SceneObject* tmp = *childrenIterator;
+			tmp->draw();
+		}
+
+	};
 };
 
 }; // namespace echtzeitlu
