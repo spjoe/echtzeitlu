@@ -16,20 +16,16 @@ extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
 extern glm::mat4 model;
 
-Model::Model(GLuint vbo_id[3], GLuint vao_id,GLuint * indices) : shader("../shader/simple_shader")
+Model::Model(GLuint vbo_id[3], GLuint vao_id,GLuint * indices, size_t numIndices) : shader("../shader/simple_shader")
 {
-	memcpy (this->vbo_id,vbo_id, 3 * sizeof(GLuint));
+	//memcpy (this->vbo_id,vbo_id, 3 * sizeof(GLuint));
+	this->vbo_id[0] = vbo_id[0];
+	this->vbo_id[1] = vbo_id[1];
+	this->vbo_id[2] = vbo_id[2];
 	this->vao_id = vao_id;
 	this->indices = indices;
-	GLint vertex_location = shader.get_attrib_location("vertex");
-	glEnableVertexAttribArray(vertex_location);
-	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
-							GL_FALSE, 0, NULL);
-
-	GLint normal_location = shader.get_attrib_location("normal");
-	glEnableVertexAttribArray(normal_location);
-	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
-							GL_FALSE, 0, NULL);
+	this->numIndices = numIndices;
+	shader.bind_frag_data_location("fragColor");
 
 }
 Model::Model() : shader("../shader/simple_shader")
@@ -81,4 +77,27 @@ void Model::draw()
 void Model::update(float fTime)
 {
   
+}
+void Model::bindVertex(void* data, size_t size){
+	bindVBO(vbo_id[0], data, size);
+	GLint vertex_location = shader.get_attrib_location("vertex");
+	glEnableVertexAttribArray(vertex_location);
+	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
+
+void Model::bindNormals(void* data, size_t size){
+	bindVBO(vbo_id[1], data, size);
+	GLint normal_location = shader.get_attrib_location("normal");
+	glEnableVertexAttribArray(normal_location);
+	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
+
+void Model::bindColor(void* data, size_t size){
+	bindVBO(vbo_id[2], data, size);
+	GLint color_location = shader.get_attrib_location("color");
+	glEnableVertexAttribArray(color_location);
+	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
 }

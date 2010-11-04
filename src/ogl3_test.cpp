@@ -465,7 +465,7 @@ int main (void)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			draw(simpleShader, vao_id);
+			//draw(simpleShader, vao_id);
 			rootScene->draw();
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
@@ -498,6 +498,7 @@ int main (void)
 		}
 
 		release_vbo_vao(vbo_id, &vao_id);
+	//	delete rootScene;
 	}
 
 	glfwTerminate();

@@ -205,16 +205,22 @@ void ModelLoader::travers(domNode *node)
 			my_glBindVertexArray(vao_id);
 
 			//komischer vector error, reihnfolge bind und shader binds müssen noch angepasst werden (verlagerung in model klasse)
-			//vbo_id = GenerateVBO(3);
-			//bindVBO(vbo_id[0],&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
-			//bindVBO(vbo_id[1],&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
-			//Model model(vbo_id,vao_id,&indexlist[0]); 
+			vbo_id = GenerateVBO(3);
+			Model *model=new Model(vbo_id,vao_id,&indexlist[0],indexlist.size());
+			model->bindVertex(&pointlist[0],pointlist.size() * 4 * sizeof(GLfloat));
+			model->bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
+
+			std::vector<glm::vec4> colorlist;
+			for(size_t i = 0; i < indexlist.size();i++){
+				colorlist.push_back(glm::vec4(1, 0, 0.5, 1));
+			}
+			model->bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
 
 			my_glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-			//rootScene->add((SceneObject*)&model);
+			rootScene->add((SceneObject*)model);
 			
 			
 
