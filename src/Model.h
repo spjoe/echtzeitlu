@@ -19,7 +19,7 @@ private:
 	GLuint vao_id;		// Vertex Array Object
 	
 public:
-	
+	Model(GLuint[3], GLuint);
 	/** @brief draws the model */
 	virtual void draw();
 	

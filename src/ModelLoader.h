@@ -4,6 +4,8 @@
 #include <dom.h>
 #include <dom/domVisual_scene.h>
 
+namespace echtzeitlu{
+
 class ModelLoader
 {
 private:
@@ -14,5 +16,7 @@ public:
 	void loadScene();
 private:
 	void ReadScene(domVisual_scene *scene);
+	void travers(domNode *node);
 };
 
+};

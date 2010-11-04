@@ -9,7 +9,9 @@
 #include <glm/glm.hpp>
 
 #include "common.hpp"
+#include "Model.h"
 
+using namespace echtzeitlu;
 
 ModelLoader::ModelLoader(const std::string path)
 {
@@ -31,7 +33,7 @@ ModelLoader::~ModelLoader(void)
 {
 }
 
-void travers(domNode *node)
+void ModelLoader::travers(domNode *node)
 {
 	for(unsigned int i = 0; i < node->getNode_array().getCount(); i++)
 	{
@@ -117,11 +119,12 @@ void travers(domNode *node)
 					}
 				}
 				unsigned int numPoints = position_floats->getCount()/3;
-				glm::vec3 * points = new glm::vec3[numPoints];
+				glm::vec4 * points = new glm::vec4[numPoints];
 				for(unsigned int i=0;i< numPoints;i++){
 					points[i].x = position_floats->get(i*3+0);
 					points[i].y = position_floats->get(i*3+1);
 					points[i].z = position_floats->get(i*3+2);
+					points[i].w = 1.f;
 				}
 				int * pointIndices;
 				pointIndices = new int[dom_triangles->getCount() * 3];
@@ -154,8 +157,12 @@ void travers(domNode *node)
 // 				}
 
 				//VBO's erstellen
-
-				int pointsVBO = GenerateVBO(1);
+				//GLuint *vbo_id;
+				//vbo_id = GenerateVBO(3);
+				//bindVBO(vbo_id[0],points, numPoints * 4 *sizeof(GLfloat));
+				//bindVBO(vbo_id[1],normals, numNormals * 3 *sizeof(GLfloat));
+				//Model model(vbo_id,0);
+				
 
 			}
 

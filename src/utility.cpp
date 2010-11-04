@@ -43,8 +43,20 @@ void get_errors(void)
 	}
 }
 
-int GenerateVBO(size_t count){
-	unsigned int vbo;
-	glGenBuffers(count,&vbo);
+GLuint * GenerateVBO(const size_t count){
+	GLuint * vbo = new GLuint[count];
+	glGenBuffers(count,vbo);
 	return vbo;
+}
+
+GLuint GenerateVBO(){
+	unsigned int vbo;
+	glGenBuffers(1,&vbo);
+	return vbo;
+}
+
+void bindVBO(GLuint id, void * datapointer, size_t size)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, size, datapointer, GL_STATIC_DRAW);
 }
