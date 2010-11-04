@@ -1,5 +1,7 @@
 
 #include "Model.h"
+#include <stdio.h>
+#include <string.h>
 
 using namespace echtzeitlu;
 

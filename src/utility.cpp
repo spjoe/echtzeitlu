@@ -44,7 +44,7 @@ void get_errors(void)
 }
 
 GLuint * GenerateVBO(const size_t count){
-	GLuint * vbo = new GLuint[count];
+	GLuint * vbo = new GLuint[count]; // TODO delete
 	glGenBuffers(count,vbo);
 	return vbo;
 }
