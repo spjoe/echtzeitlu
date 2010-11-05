@@ -10,6 +10,8 @@
 #include "SceneObject.h"
 #include "common.hpp"
 #include "shader.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp> 
 
 namespace echtzeitlu{
   
@@ -19,11 +21,12 @@ private:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vao_id;		// Vertex Array Object
 	GLuint *indices;	// Indices Array
-	size_t numIndices;
-	Shader shader;
+	size_t numVertecies;  // 
+	Shader *shader;
+	glm::mat4 model;
 	
 public:
-	Model(GLuint[3], GLuint,GLuint *,size_t numIndices);
+	Model(GLuint[3], GLuint,GLuint *,size_t numVertecies,Shader*);
 	Model();
 	/** @brief draws the model */
 	virtual void draw();

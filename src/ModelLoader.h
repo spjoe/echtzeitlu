@@ -1,3 +1,12 @@
+/**
+* @file ModelLoader.h
+* @author Thomas Mörwald, Camillo Dell'mour
+* @date November 2010
+* @version unstable
+* @brief Loads the dae int internal fomrat
+* @namespace echtzeitlu
+*/
+
 #pragma once
 
 #include <dae.h>

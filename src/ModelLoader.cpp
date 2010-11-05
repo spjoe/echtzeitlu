@@ -12,10 +12,12 @@
 #include "common.hpp"
 #include "Model.h"
 #include "SceneObject.h"
+#include "shader.hpp"
 
 using namespace echtzeitlu;
 
 extern SceneObject* rootScene;
+extern Shader* defaultShader;
 
 ModelLoader::ModelLoader(const std::string path)
 {
@@ -39,7 +41,7 @@ ModelLoader::~ModelLoader(void)
 
 void ModelLoader::travers(domNode *node)
 {
-	for(unsigned int i = 0; i < node->getNode_array().getCount(); i++)
+	for(size_t i = 0; i < node->getNode_array().getCount(); i++)
 	{
 		domNode * currNode = node->getNode_array()[i];
 		daeElement * daeElem = (daeElement *) currNode;
@@ -47,7 +49,7 @@ void ModelLoader::travers(domNode *node)
 			travers(currNode);
 	}
 	
-	for (int i = 0; i < node->getInstance_geometry_array().getCount(); i++)
+	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
 	{
 		//Suche geometrie im dokument
 		domInstance_geometryRef lib = node->getInstance_geometry_array()[i];
@@ -88,7 +90,7 @@ void ModelLoader::travers(domNode *node)
 
 			for(unsigned int i=0; i<inputs.getCount(); i++)
 			{
-				unsigned int thisoffset  = inputs[i]->getOffset();
+				domUint thisoffset  = inputs[i]->getOffset();
 				if (max_offset < thisoffset) max_offset++;
 
 				domSource * source = (domSource*) (domElement*) inputs[i]->getSource().getElement();
@@ -199,26 +201,28 @@ void ModelLoader::travers(domNode *node)
 			//VBO's erstellen
 			GLuint *vbo_id;
 			GLuint vao_id;
+			get_errors();
 			PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 			my_glGenVertexArrays(1, &vao_id);
 			PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 			my_glBindVertexArray(vao_id);
-
-			//komischer vector error, reihnfolge bind und shader binds müssen noch angepasst werden (verlagerung in model klasse)
+			get_errors();
 			vbo_id = GenerateVBO(3);
-			Model *model=new Model(vbo_id,vao_id,&indexlist[0],indexlist.size());
-			model->bindVertex(&pointlist[0],pointlist.size() * 4 * sizeof(GLfloat));
-			model->bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
-
+			Model *model=new Model(vbo_id,vao_id,&indexlist[0],indexlist.size(),defaultShader);
+			get_errors();
+			model->bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
 			std::vector<glm::vec4> colorlist;
-			for(size_t i = 0; i < indexlist.size();i++){
-				colorlist.push_back(glm::vec4(1, 0, 0.5, 1));
+			for(size_t i = 0; i < pointlist.size();i++){
+				colorlist.push_back(glm::vec4(0.5, 0.5, 0.5, 1));
 			}
 			model->bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
+			model->bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
+			get_errors();
+			
 
 			my_glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+			get_errors();
 
 			rootScene->add((SceneObject*)model);
 			

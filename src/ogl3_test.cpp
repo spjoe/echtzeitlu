@@ -13,6 +13,7 @@
 
 #include <AL/alut.h>
 
+//const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
@@ -27,6 +28,7 @@ GLfloat distance = -4.0f;
 using namespace echtzeitlu;
 Camera m_camera_1;
 SceneObject *rootScene;
+Shader *defaultShader;
 
 static const glm::vec4 vertices[24] =
 {
@@ -442,16 +444,18 @@ int main (void)
 		}
 
 		simpleShader.bind_frag_data_location("fragColor");
+		defaultShader = &simpleShader;
 		get_errors();
-		init_vbo_vao(simpleShader, vbo_id, &vao_id);
-		
+		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
+		get_errors();
+		init_matrixs();
+		get_errors();
+
 		cout << "Loading Scene" << endl;
 		m.loadScene();
 		cout << "Done loading Scene" << endl;
 		
-		get_errors();
-		init_matrixs();
-		get_errors();
+		
 		// workaround 2: 
 		// if user closes window, there is no context left to query the proc-address from
 		// therefore get the proc address now and use it at the end of the program
@@ -497,7 +501,7 @@ int main (void)
 
 		}
 
-		release_vbo_vao(vbo_id, &vao_id);
+	//	release_vbo_vao(vbo_id, &vao_id);
 	//	delete rootScene;
 	}
 

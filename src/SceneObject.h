@@ -36,10 +36,17 @@ class SceneObject
 				childrenIterator != children.end();
 				childrenIterator++)
 		{
-			SceneObject* tmp = *childrenIterator;
-			tmp->draw();
+			(*childrenIterator)->draw();
 		}
-
+	};
+	void updateAll(float ftime){
+		std::vector<SceneObject*>::iterator childrenIterator;
+		for(childrenIterator = children.begin(); 
+				childrenIterator != children.end();
+				childrenIterator++)
+		{
+			(*childrenIterator)->update(ftime);
+		}
 	};
 };
 
