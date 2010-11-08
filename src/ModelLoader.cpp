@@ -186,7 +186,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 
 			SceneObject* model = new Model(pointlist, normallist, indexlist, defaultShader);
 			sceneObject->add( (SceneObject*)model );
-			printf("[ModelLoader::travers] added a Scene Object (%e sec)\n", rearr);
+			printf("[ModelLoader::travers] added a Scene Object\n");
 		}
 
 		unsigned int numTriStripsGroups = meshElement->getTristrips_array().getCount();

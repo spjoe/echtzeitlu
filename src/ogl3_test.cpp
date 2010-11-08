@@ -156,12 +156,12 @@ void mouseMovementCb (int x, int y)
 	GLfloat alpha = 40.0f*(GLfloat)dx/(GLfloat)width;
 	GLfloat beta = 40.0f*(GLfloat)dy/(GLfloat)height;
 	
-// 	m_camera_1.rotateY(alpha);
-// 	m_camera_1.rotateS(beta);
+	m_camera_1.rotateY(alpha);
+	m_camera_1.rotateS(beta);
 	
 	// rotate camera about origin (0,0,0) and the vector y and s respectively
-	m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,1,0), alpha);
-	m_camera_1.orbit(glm::vec3(0,0,0),m_camera_1.s, beta);
+// 	m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,1,0), alpha);
+// 	m_camera_1.orbit(glm::vec3(0,0,0),m_camera_1.s, beta);
 }
 
 void init_matrixs()
