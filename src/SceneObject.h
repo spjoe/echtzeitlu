@@ -23,29 +23,31 @@ class SceneObject
 	  SceneObject() : children(){};
 	~SceneObject();
 	
-	virtual void draw()=0;
-	virtual void update(float fTime)=0;
+	virtual void draw(){ drawChildren(); };
+	virtual void update(float fTime){ updateChildren(fTime); };
 
 	void add(SceneObject * child){
 		children.push_back(child);
 	};
   protected:
-	void drawAll(){
+	void drawChildren(){
 		std::vector<SceneObject*>::iterator childrenIterator;
 		for(childrenIterator = children.begin(); 
 				childrenIterator != children.end();
 				childrenIterator++)
 		{
 			(*childrenIterator)->draw();
+			(*childrenIterator)->drawChildren();
 		}
 	};
-	void updateAll(float ftime){
+	void updateChildren(float ftime){
 		std::vector<SceneObject*>::iterator childrenIterator;
 		for(childrenIterator = children.begin(); 
 				childrenIterator != children.end();
 				childrenIterator++)
 		{
 			(*childrenIterator)->update(ftime);
+			(*childrenIterator)->updateChildren(ftime);
 		}
 	};
 };

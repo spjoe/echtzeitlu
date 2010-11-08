@@ -7,6 +7,9 @@
 * @namespace echtzeitlu
 */
 
+#ifndef _MODEL_H_
+#define _MODEL_H_
+
 #include "SceneObject.h"
 #include "common.hpp"
 #include "shader.hpp"
@@ -17,18 +20,24 @@ namespace echtzeitlu{
   
 class Model : public SceneObject
 {
-private:
+protected:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vao_id;		// Vertex Array Object
-	
-	std::vector<GLuint> indices;
-	size_t numVertecies;  // 
 	Shader *shader;
+	
+	// Die Vertexliste sollten wir erst mal im Speicher lassen (debugging, animation, ...)
+	std::vector<glm::vec4> pointlist;
+	std::vector<glm::vec3> normallist;
+	std::vector<glm::vec4> colorlist;
+	std::vector<unsigned> indexlist;
 	glm::mat4 model;
 	
 public:
-	Model(GLuint[3], GLuint, std::vector<GLuint> &, size_t numVertecies, Shader*);
+	Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
+			std::vector<unsigned> &indexlist, Shader* shader);
 	Model();
+	void print();
+	
 	/** @brief draws the model */
 	virtual void draw();
 	
@@ -42,4 +51,6 @@ public:
 };
   
 }; // namespace echtzeitlu
+
+#endif
 

@@ -13,24 +13,14 @@
 #include "Model.h"
 #include "SceneObject.h"
 #include "shader.hpp"
+#include "Timer.h"
 
 using namespace echtzeitlu;
 
-extern SceneObject* rootScene;
-extern Shader* defaultShader;
+extern Shader* defaultShader;		// TODO der hat hier nix verloren!
 
-ModelLoader::ModelLoader(const std::string path)
+ModelLoader::ModelLoader()
 {
-	DAE *dae = new DAE;	// TODO delete
-	domCOLLADA* domRoot = dae->open(path);
-	domCOLLADA::domSceneRef domScene = domRoot->getScene();
-	defaultScene = NULL;
-	if (domScene)
-		if (domScene->getInstance_visual_scene())
-			if (domScene->getInstance_visual_scene())
-				defaultScene = domScene->getInstance_visual_scene()->getUrl().getElement();
-	
-	//int geometrieCount = root->getDatabase()->getElementCount(NULL, COLLADA_TYPE_IMAGE, NULL);
 
 }
 
@@ -39,14 +29,14 @@ ModelLoader::~ModelLoader(void)
 {
 }
 
-void ModelLoader::travers(domNode *node)
+void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 {
 	for(size_t i = 0; i < node->getNode_array().getCount(); i++)
 	{
 		domNode * currNode = node->getNode_array()[i];
 		daeElement * daeElem = (daeElement *) currNode;
 		if(daeElem->getElementType()== COLLADA_TYPE::NODE)
-			travers(currNode);
+			travers(currNode, sceneObject);
 	}
 	
 	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
@@ -152,6 +142,8 @@ void ModelLoader::travers(domNode *node)
 			
 			//
 			printf("re-arranging vertexlist\n");
+			Timer timer;
+			timer.Update();
 			std::vector<glm::vec4> pointlist;
 			std::vector<glm::vec3> normallist;
 			std::vector<unsigned> indexlist;
@@ -181,8 +173,8 @@ void ModelLoader::travers(domNode *node)
 					}
 				}
 			}
+			double rearr = timer.Update();
 			
-
 			// TODO causes segmentation fault when no texture used
 // 				unsigned int numTexture = texture1_floats->getCount()/2;
 // 				glm::vec2 * texture = new glm::vec2[numTexture];
@@ -195,34 +187,9 @@ void ModelLoader::travers(domNode *node)
 // 						textureIndices[i] = P[i*max_offset + texture1_offset];
 // 				}
 
-			//VBO's erstellen
-			GLuint *vbo_id;
-			GLuint vao_id;
-			get_errors();
-			PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
-			my_glGenVertexArrays(1, &vao_id);
-			PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
-			my_glBindVertexArray(vao_id);
-			get_errors();
-			vbo_id = GenerateVBO(3);
-			Model *model=new Model(vbo_id,vao_id,indexlist,indexlist.size(),defaultShader);
-			get_errors();
-			model->bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
-			std::vector<glm::vec4> colorlist;
-			colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-			model->bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
-			model->bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
-			get_errors();
-			
-
-			my_glBindVertexArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			get_errors();
-
-			rootScene->add((SceneObject*)model);
-			
-			
-
+			SceneObject* model = new Model(pointlist, normallist, indexlist, defaultShader);
+			sceneObject->add( (SceneObject*)model );
+			printf("[ModelLoader::travers] added a Scene Object (%e sec)\n", rearr);
 		}
 
 		unsigned int numTriStripsGroups = meshElement->getTristrips_array().getCount();
@@ -256,16 +223,27 @@ void ModelLoader::travers(domNode *node)
 }
 
 
-void ModelLoader::ReadScene(domVisual_scene *scene)
+SceneObject* ModelLoader::ReadScene(domVisual_scene *scene)
 {
+	SceneObject* rootScene = new SceneObject();
 	for ( int i = 0; i < scene->getNode_array().getCount(); i++){
 		domNode* currNode = scene->getNode_array()[i];
-		travers(currNode);
+		travers(currNode, rootScene);
 	}
+	return rootScene;
 }
 
-void ModelLoader::loadScene()
+SceneObject* ModelLoader::loadScene(const std::string path)
 {
+	DAE *dae = new DAE;	// TODO delete
+	domCOLLADA* domRoot = dae->open(path);
+	domCOLLADA::domSceneRef domScene = domRoot->getScene();
+	daeElement* defaultScene = NULL;
+	if (domScene)
+		if (domScene->getInstance_visual_scene())
+			if (domScene->getInstance_visual_scene())
+				defaultScene = domScene->getInstance_visual_scene()->getUrl().getElement();
+			
 	if(defaultScene)
-		ReadScene( (domVisual_scene *)defaultScene );
+		return ReadScene( (domVisual_scene *)defaultScene );
 }

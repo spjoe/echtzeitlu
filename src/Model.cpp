@@ -14,34 +14,70 @@ extern glm::vec4 light_color;
 extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
 //extern glm::mat4 model;
+// extern Shader* defaultShader;
 
-Model::Model(GLuint vbo_id[3], GLuint vao_id , std::vector<GLuint> &indices, size_t numVertecies, Shader* shader) : model(1.0f)
+Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
+			std::vector<GLuint> &indexlist, Shader* shader)
 {
-	//memcpy (this->vbo_id,vbo_id, 3 * sizeof(GLuint));
-	this->vbo_id[0] = vbo_id[0];
-	this->vbo_id[1] = vbo_id[1];
-	this->vbo_id[2] = vbo_id[2];
-	this->vao_id = vao_id;
-	this->indices = indices;
-	this->numVertecies = numVertecies;
+	if(pointlist.size() != normallist.size()){
+		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
+		return;
+	}
+	
+	this->pointlist = pointlist;
+	this->normallist = normallist;
+	this->indexlist = indexlist;
+	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
+	
+	get_errors();
+	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
+	my_glGenVertexArrays(1, &vao_id);
+	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+	my_glBindVertexArray(vao_id);
+	get_errors();
+	GLuint* tmp_vbo_id = GenerateVBO(3);
+	vbo_id[0] = tmp_vbo_id[0];
+	vbo_id[1] = tmp_vbo_id[1];
+	vbo_id[2] = tmp_vbo_id[2];
+	
 	this->shader = shader;
-	//shader.bind_frag_data_location("fragColor");
-
+	get_errors();
+	
+	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
+	bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
+	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
+	get_errors();
+	
+	my_glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors();
 }
+
 Model::Model()
 {
 	this->vbo_id[0] = this->vbo_id[1] = this->vbo_id[2] = 0;
 	this->vao_id = 0;
-// 	this->indices = NULL;
+	this->shader = 0;
+}
+
+void Model::print()
+{
+	for(unsigned i=0; i<pointlist.size(); i++){
+		printf("%f %f %f, %f %f %f\n", pointlist[i].x, pointlist[i].y, pointlist[i].z, normallist[i].x, normallist[i].y, normallist[i].z);
+	}
+	for(unsigned i=0; i<indexlist.size(); i++){
+		printf("%d ", indexlist[i]);
+	}
+	printf("\n");
+	
+	printf("Vertices: %d, Indices: %d\n", pointlist.size(), indexlist.size());
 }
 
 void Model::draw()
 {
-	drawAll();
-// 	if(indices == NULL) //rootScene
-	if(indices.empty())
+	if(indexlist.empty())
 		return;
-
+	
 	get_errors();
 	shader->bind();
 	get_errors();
@@ -66,14 +102,13 @@ void Model::draw()
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 	get_errors();
-	glDrawElements(GL_TRIANGLES, numVertecies, GL_UNSIGNED_INT, &indices[0]);
+	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
 	get_errors();
 	my_glBindVertexArray(0);
 	get_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
 	shader->unbind();
-
 }
 
 void Model::update(float fTime)

@@ -13,8 +13,8 @@
 
 #include <AL/alut.h>
 
-//const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
-const std::string daeModelPath = "../resources/trianglebox.dae";
+const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
+// const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
 
@@ -387,7 +387,7 @@ void draw (const Shader &shader, GLuint vao_id)
 
 int main (void)
 {
-	ModelLoader m(daeModelPath);
+	ModelLoader m_loader;
 	glfwInit();
 
 	// Set flags so GLFW creates the desired OpenGL context
@@ -452,7 +452,7 @@ int main (void)
 		get_errors();
 
 		cout << "Loading Scene" << endl;
-		m.loadScene();
+		rootScene = m_loader.loadScene(daeModelPath);
 		cout << "Done loading Scene" << endl;
 		
 		
