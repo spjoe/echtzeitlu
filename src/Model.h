@@ -20,13 +20,14 @@ class Model : public SceneObject
 private:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vao_id;		// Vertex Array Object
-	GLuint *indices;	// Indices Array
+	
+	std::vector<GLuint> indices;
 	size_t numVertecies;  // 
 	Shader *shader;
 	glm::mat4 model;
 	
 public:
-	Model(GLuint[3], GLuint,GLuint *,size_t numVertecies,Shader*);
+	Model(GLuint[3], GLuint, std::vector<GLuint> &, size_t numVertecies, Shader*);
 	Model();
 	/** @brief draws the model */
 	virtual void draw();

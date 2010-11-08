@@ -15,7 +15,7 @@ extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
 //extern glm::mat4 model;
 
-Model::Model(GLuint vbo_id[3], GLuint vao_id,GLuint * indices, size_t numVertecies,Shader* shader) : model(1.0f)
+Model::Model(GLuint vbo_id[3], GLuint vao_id , std::vector<GLuint> &indices, size_t numVertecies, Shader* shader) : model(1.0f)
 {
 	//memcpy (this->vbo_id,vbo_id, 3 * sizeof(GLuint));
 	this->vbo_id[0] = vbo_id[0];
@@ -32,13 +32,14 @@ Model::Model()
 {
 	this->vbo_id[0] = this->vbo_id[1] = this->vbo_id[2] = 0;
 	this->vao_id = 0;
-	this->indices = NULL;
+// 	this->indices = NULL;
 }
 
 void Model::draw()
 {
 	drawAll();
-	if(indices == NULL) //rootScene
+// 	if(indices == NULL) //rootScene
+	if(indices.empty())
 		return;
 
 	get_errors();
@@ -65,7 +66,7 @@ void Model::draw()
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 	get_errors();
-	glDrawElements(GL_TRIANGLES, numVertecies, GL_UNSIGNED_INT, indices);
+	glDrawElements(GL_TRIANGLES, numVertecies, GL_UNSIGNED_INT, &indices[0]);
 	get_errors();
 	my_glBindVertexArray(0);
 	get_errors();

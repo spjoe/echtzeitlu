@@ -182,9 +182,6 @@ void ModelLoader::travers(domNode *node)
 				}
 			}
 			
-			printf("%d %d %d\n", pointlist.size(), normallist.size(), indexlist.size());
-			
-			
 
 			// TODO causes segmentation fault when no texture used
 // 				unsigned int numTexture = texture1_floats->getCount()/2;
@@ -208,13 +205,11 @@ void ModelLoader::travers(domNode *node)
 			my_glBindVertexArray(vao_id);
 			get_errors();
 			vbo_id = GenerateVBO(3);
-			Model *model=new Model(vbo_id,vao_id,&indexlist[0],indexlist.size(),defaultShader);
+			Model *model=new Model(vbo_id,vao_id,indexlist,indexlist.size(),defaultShader);
 			get_errors();
 			model->bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
 			std::vector<glm::vec4> colorlist;
-			for(size_t i = 0; i < pointlist.size();i++){
-				colorlist.push_back(glm::vec4(0.5, 0.5, 0.5, 1));
-			}
+			colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
 			model->bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
 			model->bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
 			get_errors();
