@@ -142,8 +142,6 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			
 			//
 			printf("re-arranging vertexlist\n");
-			Timer timer;
-			timer.Update();
 			std::vector<glm::vec4> pointlist;
 			std::vector<glm::vec3> normallist;
 			std::vector<unsigned> indexlist;
@@ -173,7 +171,6 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 					}
 				}
 			}
-			double rearr = timer.Update();
 			
 			// TODO causes segmentation fault when no texture used
 // 				unsigned int numTexture = texture1_floats->getCount()/2;
