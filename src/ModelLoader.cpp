@@ -145,8 +145,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			std::vector<glm::vec4> pointlist;
 			std::vector<glm::vec3> normallist;
 			std::vector<unsigned> indexlist;
-			std::map<unsigned, unsigned> pointmap;
-			std::map<unsigned, unsigned> normalmap;
+			std::multimap<unsigned,std::pair<unsigned,unsigned>> pointtonormalmap;
 
 			for(unsigned i=0; i<dom_triangles->getCount()*3; i++){
 				unsigned pI = pointIndices[i];
@@ -154,24 +153,34 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				
 				if(pointlist.empty()){
 					pointlist.push_back(points[pI]);
-					pointmap.insert(std::pair<unsigned,unsigned>(pI,0));
+					pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned>>(pI,std::pair<unsigned,unsigned>(nI,0)));
 					normallist.push_back(normals[nI]);
-					normalmap.insert(std::pair<unsigned,unsigned>(nI,0));
 					indexlist.push_back(pointlist.size()-1);
 				}else{
 					bool is_in = false; 
-					unsigned j;
-					if(pointmap.count(pI) && normalmap.count(nI)){
-						unsigned i = (*pointmap.find( pI )).second;
-						indexlist.push_back(i);
-					}else{
+					if(pointtonormalmap.count(pI)){
+						std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator nIs = pointtonormalmap.find( pI );
+						for(;  nIs != pointtonormalmap.end() && (*nIs).first == pI;nIs++)
+						{
+							if((*nIs).second.first == nI){ //element schon vorhanden
+								indexlist.push_back((*nIs).second.second);
+								is_in = true;
+								break;
+							}
+						}
+						
+					}
+					
+					if(is_in == false){
 						pointlist.push_back(points[pI]);
 						normallist.push_back(normals[nI]);
 						indexlist.push_back(pointlist.size()-1);
-						pointmap.insert(std::pair<unsigned,unsigned>(pI,pointlist.size()-1));
-						normalmap.insert(std::pair<unsigned,unsigned>(nI,pointlist.size()-1));
+						pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned>>(pI,std::pair<unsigned,unsigned>(nI,pointlist.size()-1)));
 					}
-					/*for(j=0; j<pointlist.size(); j++){
+					/*
+					bool is_in = false; 
+					unsigned j;
+					for(j=0; j<pointlist.size(); j++){
 						if( points[pI] == pointlist[j] && normals[nI] == normallist[j] ){
 							is_in = true;
 							break;
@@ -185,7 +194,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						indexlist.push_back(pointlist.size()-1);
 						pointmap.insert(std::pair<glm::vec4,unsigned>(normals[nI],pointlist.size()-1));
 						normalmap.insert(std::pair<glm::vec4,unsigned>(normals[nI],pointlist.size()-1));
-					}*/
+					}
+					*/
 				}
 			}
 			
