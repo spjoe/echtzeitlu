@@ -61,7 +61,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22-d.lib;libboost_filesystem-d.lib;libboost_system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22-d.lib;libboost_filesystem-d.lib;libboost_system-d.lib;alut.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_debug.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;$(SolutionDir)\external\collada\lib;$(SolutionDir)\external\boost\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -103,6 +103,7 @@
     <ClCompile Include="..\src\ogl3_test.cpp" />
     <ClCompile Include="..\src\SceneObject.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
+    <ClCompile Include="..\src\Timer.cpp" />
     <ClCompile Include="..\src\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +114,7 @@
     <ClInclude Include="..\src\ModelLoader.h" />
     <ClInclude Include="..\src\SceneObject.h" />
     <ClInclude Include="..\src\shader.hpp" />
+    <ClInclude Include="..\src\Timer.h" />
     <ClInclude Include="..\src\utility.hpp" />
   </ItemGroup>
   <ItemGroup>

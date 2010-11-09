@@ -14,6 +14,7 @@
 #include <AL/alut.h>
 
 const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
+const std::string wavAudioPath = "../resources/music.wav";
 // const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
@@ -144,6 +145,15 @@ int width=800,
 
 
 int oldx,oldy;
+
+static void
+reportAlutError (void)
+{
+  fprintf (stderr, "ALUT error: %s\n",
+           alutGetErrorString (alutGetError ()));
+  exit (EXIT_FAILURE);
+}
+
 
 void mouseMovementCb (int x, int y)
 {
@@ -385,9 +395,14 @@ void draw (const Shader &shader, GLuint vao_id)
 }
 
 
-int main (void)
+int main (int argc, char** argv)
 {
 	ModelLoader m_loader;
+	if (!alutInit (&argc, argv))
+    {
+      reportAlutError ();
+    }
+
 	glfwInit();
 
 	// Set flags so GLFW creates the desired OpenGL context
@@ -462,6 +477,17 @@ int main (void)
 		// (the address of the function itself, of course, remains valid)
 		my_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)glfwGetProcAddress("glDeleteVertexArrays");
 		
+		//GEHT!! habs aber auskommentiert da ich wav nicht auf svn spielen will, weil wir erst richtig musik finden müssen"
+		/*ALuint musicBuffer, musicSource;
+		musicBuffer = alutCreateBufferFromFile (wavAudioPath.data());
+
+		if(AL_NONE == musicBuffer)
+			reportAlutError();
+		alGenSources (1, &musicSource);
+		alSourcei (musicSource, AL_BUFFER, musicBuffer);
+		alSourcePlay (musicSource);*/
+
+
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		double time = glfwGetTime( );
@@ -506,6 +532,11 @@ int main (void)
 	}
 
 	glfwTerminate();
+
+	if (!alutExit ())
+    {
+      reportAlutError ();
+    }
 
 	return 0;
 }
