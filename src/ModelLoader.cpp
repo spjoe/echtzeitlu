@@ -159,8 +159,9 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				}else{
 					bool is_in = false; 
 					if(pointtonormalmap.count(pI)){
-						std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator nIs = pointtonormalmap.find( pI );
-						for(;  nIs != pointtonormalmap.end() && (*nIs).first == pI;nIs++)
+						std::pair<std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator,std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator> pairnIs = pointtonormalmap.equal_range( pI );
+						std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator nIs = pairnIs.first;
+						for(; nIs != pairnIs.second ;nIs++)
 						{
 							if((*nIs).second.first == nI){ //element schon vorhanden
 								indexlist.push_back((*nIs).second.second);
