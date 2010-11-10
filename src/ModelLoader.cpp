@@ -146,7 +146,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			std::vector<glm::vec4> pointlist;
 			std::vector<glm::vec3> normallist;
 			std::vector<unsigned> indexlist;
-			std::multimap<unsigned,std::pair<unsigned,unsigned>> pointtonormalmap;
+			std::multimap<unsigned,std::pair<unsigned,unsigned> > pointtonormalmap;
 
 			for(unsigned i=0; i<dom_triangles->getCount()*3; i++){
 				unsigned pI = pointIndices[i];
@@ -154,14 +154,14 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				
 				if(pointlist.empty()){
 					pointlist.push_back(points[pI]);
-					pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned>>(pI,std::pair<unsigned,unsigned>(nI,0)));
+					pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(pI,std::pair<unsigned,unsigned>(nI,0)));
 					normallist.push_back(normals[nI]);
 					indexlist.push_back(pointlist.size()-1);
 				}else{
 					bool is_in = false; 
 					if(pointtonormalmap.count(pI)){
-						std::pair<std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator,std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator> pairnIs = pointtonormalmap.equal_range( pI );
-						std::multimap<unsigned, std::pair<unsigned,unsigned>>::iterator nIs = pairnIs.first;
+						std::pair<std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator,std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator> pairnIs = pointtonormalmap.equal_range( pI );
+						std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator nIs = pairnIs.first;
 						for(; nIs != pairnIs.second ;nIs++)
 						{
 							if((*nIs).second.first == nI){ //element schon vorhanden
@@ -177,7 +177,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						pointlist.push_back(points[pI]);
 						normallist.push_back(normals[nI]);
 						indexlist.push_back(pointlist.size()-1);
-						pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned>>(pI,std::pair<unsigned,unsigned>(nI,pointlist.size()-1)));
+						pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(pI,std::pair<unsigned,unsigned>(nI,pointlist.size()-1)));
 					}
 					/*
 					bool is_in = false; 
