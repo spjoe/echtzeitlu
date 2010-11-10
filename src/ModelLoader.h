@@ -43,9 +43,9 @@ class ModelMaterial : public ModelObject{
 class ModelLoader
 {
 private:
-	std::map<std::string, ModelEffect> effects;
-	std::map<std::string, ModelImage> images;
-	std::map<std::string, ModelMaterial> material;
+	std::map<std::string, ModelEffect*> effects;
+	std::map<std::string, ModelImage*> images;
+	std::map<std::string, ModelMaterial*> material;
 
 public:
 	ModelLoader();
