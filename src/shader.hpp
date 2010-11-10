@@ -13,6 +13,7 @@ public:
 	// When path is "hello", the files "hello.frag" & "hello.vert"
 	// will be loaded.
 	Shader(const string &path);
+	Shader(const string vert, const string frag);
 	~Shader();
 
 	// Bind the shader to the OGL state-machine

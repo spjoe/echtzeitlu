@@ -48,6 +48,29 @@ _success(false)
 	_success = true;
 	get_errors();
 }
+Shader::Shader(const string vert, const string frag)
+{
+	_vertex_shader = compile(GL_VERTEX_SHADER, vert);
+	if (_vertex_shader == 0)
+		return;
+
+	get_errors();
+
+	_fragment_shader = compile(GL_FRAGMENT_SHADER, frag);
+	if (_fragment_shader == 0)
+		return;
+
+	get_errors();
+
+	// Link the shaders into a program
+
+	link();
+	if (_program == 0)
+		return;
+
+	_success = true;
+	get_errors();
+}
 
 Shader::~Shader()
 {

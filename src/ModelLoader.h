@@ -68,9 +68,17 @@ public:
 };
 class ModelEffect : public ModelObject{
 	std::vector<ModelImage*> images;
+public:
+	void addImage(ModelImage* img){images.push_back(img);}
 };
 class ModelMaterial : public ModelObject{
-	std::vector<ModelEffect*> effects;
+private:
+	ModelEffect* effect;
+public:
+	ModelMaterial(ModelEffect* effect){
+		this->effect = effect;
+	}
+	ModelEffect* getEffect(){ return effect; }
 };
 
 class ModelLoader
@@ -78,7 +86,7 @@ class ModelLoader
 private:
 	std::map<std::string, ModelEffect*> effects;
 	std::map<std::string, ModelImage*> images;
-	std::map<std::string, ModelMaterial*> material;
+	std::map<std::string, ModelMaterial*> materials;
 
 public:
 	ModelLoader();
@@ -94,6 +102,8 @@ private:
 	void ReadAnimationLibrary( domLibrary_animationsRef lib );
 
 	ModelImage* ReadImage(domImageRef lib);
+	ModelEffect *ReadEffect( domEffectRef lib );
+	ModelMaterial *ReadMaterial( domMaterialRef lib );
 };
 
 };

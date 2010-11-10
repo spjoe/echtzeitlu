@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/comparison.hpp>
+#include <dom/domProfile_COMMON.h>
 
 #include "common.hpp"
 #include "Model.h"
@@ -267,29 +268,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 
 						if ( MaterialElement ) 
 						{
-							if ( !MaterialElement->getInstance_effect() )
-								return; 
-
-							domElement * element = (domElement *) MaterialElement->getInstance_effect()->getUrl().getElement(); 
-							if (element==NULL)
-								return;
-
-	
-							// Get a pointer to the effect element
-							domEffect * EffectElement = (domEffect*)(domElement*)element; 
-
-							if ( EffectElement )
-							{
-								for (unsigned i = 0; i < EffectElement->getImage_array().getCount(); i++ )
-								{
-									domImage* imageElement = (domImage*)(domElement*)lib;
-	
-									if ( imageElement )
-									{
-										const char* FileName = imageElement->getInit_from()->getValue().str().c_str();
-									}
-								}
-							}
+							ModelMaterial *mat = ReadMaterial(MaterialElement);
+							mat = mat;
 						}
 					}
 				}
@@ -355,7 +335,7 @@ void ModelLoader::ReadEffectLibrary( domLibrary_effectsRef lib )
 	printf(" ModelLoader::Reading Effect Library \n" );	
 	for ( unsigned i = 0; i < lib->getEffect_array().getCount(); i++)
 	{
-		//ReadEffect( lib->getEffect_array()[i] ); 
+		ReadEffect( lib->getEffect_array()[i] ); 
 	}	
 }
 void ModelLoader::ReadMaterialLibrary( domLibrary_materialsRef lib )
@@ -363,7 +343,7 @@ void ModelLoader::ReadMaterialLibrary( domLibrary_materialsRef lib )
 	printf(" ModelLoader::Reading Material Library \n" );	
 	for ( unsigned  i = 0; i < lib->getMaterial_array().getCount(); i++)
 	{
-		//ReadMaterial( lib->getMaterial_array()[i] ); 
+		ReadMaterial( lib->getMaterial_array()[i] ); 
 	}
 }
 void ModelLoader::ReadAnimationLibrary( domLibrary_animationsRef lib )
@@ -382,4 +362,99 @@ ModelImage* ModelLoader::ReadImage(domImageRef lib){
 	images.insert(std::pair<std::string,ModelImage*>(n->getID(),n));
 
 	return n;
+}
+ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
+	if(effects.count(lib->getID()))
+		return effects[lib->getID()];
+
+	// Get a pointer to the effect element
+	domEffect * EffectElement = (domEffect*)(domElement*)lib; 
+
+	if ( EffectElement )
+	{
+		for (unsigned i = 0; i < EffectElement->getImage_array().getCount(); i++ )
+		{
+			ReadImage( EffectElement->getImage_array()[i] );
+		}
+
+		ModelEffect* newEffect = new ModelEffect();
+		newEffect->setID(EffectElement->getID());
+		
+		// How many profiles are there
+		unsigned numProfiles =  EffectElement->getFx_profile_abstract_array().getCount(); 
+
+		// Scan the profiles to find the profile_COMMON
+		for ( unsigned p = 0; p < numProfiles;  p ++)
+		{
+			std::string typeName = EffectElement->getFx_profile_abstract_array()[p]->getTypeName(); 
+			
+			if ( strcmp("profile_COMMON", typeName.c_str() ) == 0 )
+			{
+				// Found the common profile, get the technique from it as well
+				domProfile_COMMON * common = (domProfile_COMMON *)(domFx_profile_abstract*)EffectElement->getFx_profile_abstract_array()[p]; 
+
+				// Get all images in profile_COMMON
+				for (unsigned i = 0; i < common->getImage_array().getCount(); i++ )
+				{
+					ModelImage *tmp = ReadImage( common->getImage_array()[i] );
+					newEffect->addImage(tmp);
+				}
+
+				// Get all images in profile_COMMON
+				domProfile_COMMON::domTechnique *technique = common->getTechnique(); 
+				if ( technique == NULL )
+					break; 
+
+				for (unsigned i = 0; i < technique->getImage_array().getCount(); i++ )
+				{
+					ModelImage *tmp = ReadImage( technique->getImage_array()[i] );
+					newEffect->addImage(tmp);
+				}
+
+				for (unsigned i = 0; i < common->getNewparam_array().getCount(); i++ )
+				{
+					domCommon_newparam_type *newparam = common->getNewparam_array()[i];
+					domFx_surface_common *s = newparam->getSurface();
+					if(s){
+						domFx_surface_init_common* test = s->getFx_surface_init_common();
+						//todo find image,...
+					}
+				}
+				
+
+			}
+		}
+		effects.insert(std::pair<std::string,ModelEffect*>(newEffect->getID(),newEffect));
+		return newEffect;
+
+
+	}
+}
+ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
+{
+	if(materials.count(lib->getID()))
+		return materials[lib->getID()];
+	
+	domMaterial * MaterialElement = (domMaterial*)(domElement*)lib; 
+
+	if ( MaterialElement ) 
+	{
+		if ( !MaterialElement->getInstance_effect() )
+			return NULL; 
+
+		domElement * element = (domElement *) MaterialElement->getInstance_effect()->getUrl().getElement(); 
+		if (element==NULL)
+			return NULL;
+		
+		// find the effect that the material is refering too 
+		ModelEffect * effect = ReadEffect((domEffect *) element);
+		if (effect) 
+		{
+			ModelMaterial * n = new ModelMaterial(effect);
+			n->setID(MaterialElement->getID());
+			materials.insert(std::pair<std::string,ModelMaterial*>(n->getID(),n));
+			return n; 	
+		} 
+	}
+	return NULL; 
 }

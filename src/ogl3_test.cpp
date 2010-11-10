@@ -13,7 +13,8 @@
 
 #include <AL/alut.h>
 
-const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
+//const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
+const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6_original.dae";
 const std::string wavAudioPath = "../resources/music.wav";
 // const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
