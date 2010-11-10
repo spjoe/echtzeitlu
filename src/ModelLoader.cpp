@@ -41,6 +41,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 	
 	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
 	{
+		SceneObject* model = NULL;
 		//Suche geometrie im dokument
 		domInstance_geometryRef lib = node->getInstance_geometry_array()[i];
 		xsAnyURI & urltype  = lib->getUrl();
@@ -211,9 +212,13 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 // 				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
 // 						textureIndices[i] = P[i*max_offset + texture1_offset];
 // 				}
-
-			SceneObject* model = new Model(pointlist, normallist, indexlist, defaultShader);
-			sceneObject->add( (SceneObject*)model );
+			if(model == NULL){
+				model = new Model(pointlist, normallist, indexlist, defaultShader);
+				sceneObject->add( (SceneObject*)model );
+			}else{
+				SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
+				model->add(submodel);
+			}
 			printf("[ModelLoader::travers] added a Scene Object\n");
 		}
 
@@ -240,9 +245,55 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 		{
 			
 		}
-		for (unsigned int i=0; i< 0; i++)
-		{
 
+		domBind_material *bindMaterial =  lib->getBind_material();
+		if(bindMaterial)
+		{
+			// Get the <technique_common>
+			domBind_material::domTechnique_common *techniqueCommon = bindMaterial->getTechnique_common();
+			if(techniqueCommon)
+			{
+				// Get the <instance_material>s
+				domInstance_material_Array &instanceMaterialArray = techniqueCommon->getInstance_material_array();
+				for(unsigned j = 0; j < instanceMaterialArray.getCount(); j++)
+				{
+
+					domElement * element = instanceMaterialArray[j]->getTarget().getElement();
+					if (element)
+					{
+						domMaterial * material = (domMaterial *) element;
+	
+						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
+
+						if ( MaterialElement ) 
+						{
+							if ( !MaterialElement->getInstance_effect() )
+								return; 
+
+							domElement * element = (domElement *) MaterialElement->getInstance_effect()->getUrl().getElement(); 
+							if (element==NULL)
+								return;
+
+	
+							// Get a pointer to the effect element
+							domEffect * EffectElement = (domEffect*)(domElement*)element; 
+
+							if ( EffectElement )
+							{
+								for (unsigned i = 0; i < EffectElement->getImage_array().getCount(); i++ )
+								{
+									domImage* imageElement = (domImage*)(domElement*)lib;
+	
+									if ( imageElement )
+									{
+										const char* FileName = imageElement->getInit_from()->getValue().str().c_str();
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -268,7 +319,60 @@ SceneObject* ModelLoader::loadScene(const std::string path)
 		if (domScene->getInstance_visual_scene())
 			if (domScene->getInstance_visual_scene())
 				defaultScene = domScene->getInstance_visual_scene()->getUrl().getElement();
+
+	for ( unsigned  i = 0; i < domRoot->getLibrary_images_array().getCount(); i++)
+	{
+		ReadImageLibrary( domRoot->getLibrary_images_array()[i] );			
+	}
+	for ( unsigned i = 0; i < domRoot->getLibrary_effects_array().getCount(); i++)
+	{
+		ReadEffectLibrary( domRoot->getLibrary_effects_array()[i] );			
+	}
+	for ( unsigned i = 0; i < domRoot->getLibrary_materials_array().getCount(); i++)
+	{
+		ReadMaterialLibrary( domRoot->getLibrary_materials_array()[i] );			
+	}
+	for ( unsigned i = 0; i < domRoot->getLibrary_animations_array().getCount(); i++)
+	{
+		ReadAnimationLibrary( domRoot->getLibrary_animations_array()[i] );			
+	}
 			
 	if(defaultScene)
 		return ReadScene( (domVisual_scene *)defaultScene );
+}
+
+
+void ModelLoader::ReadImageLibrary( domLibrary_imagesRef lib )
+{
+	printf(" ModelLoader::Reading Image Library \n" );	
+	for ( unsigned i = 0; i < lib->getImage_array().getCount(); i++)
+	{
+		ModelImage *n = ReadImage( lib->getImage_array()[i] );
+		images.insert(std::pair<std::string,ModelImage>(n->getID(),n));
+	}	
+}
+void ModelLoader::ReadEffectLibrary( domLibrary_effectsRef lib )
+{
+	printf(" ModelLoader::Reading Effect Library \n" );	
+	for ( unsigned i = 0; i < lib->getEffect_array().getCount(); i++)
+	{
+		//ReadEffect( lib->getEffect_array()[i] ); 
+	}	
+}
+void ModelLoader::ReadMaterialLibrary( domLibrary_materialsRef lib )
+{
+	printf(" ModelLoader::Reading Material Library \n" );	
+	for ( unsigned  i = 0; i < lib->getMaterial_array().getCount(); i++)
+	{
+		//ReadMaterial( lib->getMaterial_array()[i] ); 
+	}
+}
+void ModelLoader::ReadAnimationLibrary( domLibrary_animationsRef lib )
+{//no used
+
+}
+
+ModelImage* ModelLoader::ReadImage(domImageRef lib){
+	ModelImage *n = new ModelImage();
+	n->setID(lib->getID());
 }
