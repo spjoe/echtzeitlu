@@ -28,6 +28,7 @@ protected:
 	// Die Vertexliste sollten wir erst mal im Speicher lassen (debugging, animation, ...)
 	std::vector<glm::vec4> pointlist;
 	std::vector<glm::vec3> normallist;
+	std::vector<glm::vec2> texlist;
 	std::vector<glm::vec4> colorlist;
 	std::vector<unsigned> indexlist;
 	glm::mat4 model;

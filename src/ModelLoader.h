@@ -33,7 +33,7 @@ public:
 
 class ModelImage : public ModelObject{
 private:
-	unsigned _id;
+	GLuint _id;
 public:
 	ModelImage(domImage* img){
 		domImage* imageElement = img;
@@ -61,6 +61,7 @@ public:
 					 reinterpret_cast<void*>(image.Data));
 		glfwFreeImage(&image);
 	}
+
 	unsigned getTexId(){
 		return _id;
 	}
