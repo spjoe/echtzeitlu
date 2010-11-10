@@ -12,6 +12,7 @@
 #include <dae.h>
 #include <dom.h>
 #include <dom/domVisual_scene.h>
+#include <dom/domImage.h>
 #include "Model.h"
 #include "Effect.h"
 
@@ -31,7 +32,38 @@ public:
 };
 
 class ModelImage : public ModelObject{
+private:
+	unsigned _id;
+public:
+	ModelImage(domImage* img){
+		domImage* imageElement = img;
 	
+		if ( !imageElement )
+			return;
+
+		imageElement->getInit_from()->getValue().str();
+			
+		const std::string file = cdom::uriToNativePath(imageElement->getInit_from()->getValue().str());
+
+
+		GLFWimage image;
+		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE)
+			return;
+ 
+		glGenTextures(1, &_id);
+		glBindTexture(GL_TEXTURE_2D, _id);
+ 
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ 
+		glTexImage2D(GL_TEXTURE_2D, 0, image.Format, image.Width, image.Height,
+					 0, image.Format, GL_UNSIGNED_BYTE,
+					 reinterpret_cast<void*>(image.Data));
+		glfwFreeImage(&image);
+	}
+	unsigned getTexId(){
+		return _id;
+	}
 };
 class ModelEffect : public ModelObject{
 	std::vector<ModelImage*> images;

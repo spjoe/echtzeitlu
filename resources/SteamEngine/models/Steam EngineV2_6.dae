@@ -11,40 +11,40 @@
    </asset>
    <library_images>
       <image id="Translucent_Glass_TintednoCulling-image" name="Translucent_Glass_TintednoCulling-image">
-         <init_from>../images/Translucent_Glass_TintednoCulling.jpg</init_from>
+         <init_from>../images/Translucent_Glass_TintednoCulling.TGA</init_from>
       </image>
       <image id="Metal_SeamednoCulling-image" name="Metal_SeamednoCulling-image">
-         <init_from>../images/Metal_SeamednoCulling.jpg</init_from>
+         <init_from>../images/Metal_SeamednoCulling.TGA</init_from>
       </image>
       <image id="Metal_Aluminum_AnodizednoCulling-image" name="Metal_Aluminum_AnodizednoCulling-image">
-         <init_from>../images/Metal_Aluminum_AnodizednoCulling.jpg</init_from>
+         <init_from>../images/Metal_Aluminum_AnodizednoCulling.TGA</init_from>
       </image>
       <image id="Metal_Steel_TexturednoCulling-image" name="Metal_Steel_TexturednoCulling-image">
-         <init_from>../images/Metal_Steel_TexturednoCulling.jpg</init_from>
+         <init_from>../images/Metal_Steel_TexturednoCulling.TGA</init_from>
       </image>
       <image id="Metal_RustednoCulling-image" name="Metal_RustednoCulling-image">
-         <init_from>../images/Metal_RustednoCulling.jpg</init_from>
+         <init_from>../images/Metal_RustednoCulling.TGA</init_from>
       </image>
       <image id="Metal_Steel_Textured1-image" name="Metal_Steel_Textured1-image">
-         <init_from>../images/Metal_Steel_Textured1.jpg</init_from>
+         <init_from>../images/Metal_Steel_Textured1.TGA</init_from>
       </image>
       <image id="Translucent_Glass_Tinted1-image" name="Translucent_Glass_Tinted1-image">
-         <init_from>../images/Translucent_Glass_Tinted1.jpg</init_from>
+         <init_from>../images/Translucent_Glass_Tinted1.TGA</init_from>
       </image>
       <image id="Metal_RoughnoCulling-image" name="Metal_RoughnoCulling-image">
-         <init_from>../images/Metal_RoughnoCulling.jpg</init_from>
+         <init_from>../images/Metal_RoughnoCulling.TGA</init_from>
       </image>
       <image id="Wood_Floor_ParquetnoCulling-image" name="Wood_Floor_ParquetnoCulling-image">
-         <init_from>../images/Wood_Floor_ParquetnoCulling.jpg</init_from>
+         <init_from>../images/Wood_Floor_ParquetnoCulling.TGA</init_from>
       </image>
       <image id="Metal_Aluminum_Anodized1-image" name="Metal_Aluminum_Anodized1-image">
-         <init_from>../images/Metal_Aluminum_Anodized1.jpg</init_from>
+         <init_from>../images/Metal_Aluminum_Anodized1.TGA</init_from>
       </image>
       <image id="Wood_Floor_LightnoCulling-image" name="Wood_Floor_LightnoCulling-image">
-         <init_from>../images/Wood_Floor_LightnoCulling.jpg</init_from>
+         <init_from>../images/Wood_Floor_LightnoCulling.TGA</init_from>
       </image>
       <image id="Metal_Rough1-image" name="Metal_Rough1-image">
-         <init_from>../images/Metal_Rough1.jpg</init_from>
+         <init_from>../images/Metal_Rough1.TGA</init_from>
       </image>
    </library_images>
    <library_materials>

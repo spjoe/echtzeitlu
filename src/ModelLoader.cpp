@@ -348,7 +348,6 @@ void ModelLoader::ReadImageLibrary( domLibrary_imagesRef lib )
 	for ( unsigned i = 0; i < lib->getImage_array().getCount(); i++)
 	{
 		ModelImage *n = ReadImage( lib->getImage_array()[i] );
-		images.insert(std::pair<std::string,ModelImage*>(n->getID(),n));
 	}	
 }
 void ModelLoader::ReadEffectLibrary( domLibrary_effectsRef lib )
@@ -373,7 +372,14 @@ void ModelLoader::ReadAnimationLibrary( domLibrary_animationsRef lib )
 }
 
 ModelImage* ModelLoader::ReadImage(domImageRef lib){
-	ModelImage *n = new ModelImage();
+	if(images.count(lib->getID()))
+		return images[lib->getID()];
+
+
+	ModelImage *n = new ModelImage(lib);
 	n->setID(lib->getID());
+
+	images.insert(std::pair<std::string,ModelImage*>(n->getID(),n));
+
 	return n;
 }
