@@ -31,6 +31,7 @@ uniform sampler2D texture;
 //in vec4 frag_color;
 in vec3 world_normal;
 in vec4 world_position;
+in vec2 TexCoord0;
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
@@ -46,7 +47,8 @@ void main()
     vec3 light_dir = normalize(light_position - position);
 
 	// calculate lighting
-	vec4 ctmp = texture2D( texture, gl_TexCoord[0].st);
+	//vec4 ctmp = texture2D( texture, gl_TexCoord[0].st);
+	vec4 ctmp = texture2D( texture, TexCoord0);
     vec4 ambient = ambient_color * ctmp;
     vec4 diffuse = ctmp * light_color * max(0.0, dot(normal, light_dir));
     
