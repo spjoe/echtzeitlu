@@ -53,6 +53,46 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	get_errors();
 }
 
+Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
+			std::vector<GLuint> &indexlist, GLuint texid, Shader* shader)
+{
+	if(pointlist.size() != normallist.size()){
+		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
+		return;
+	}
+	
+	this->pointlist = pointlist;
+	this->normallist = normallist;
+	this->indexlist = indexlist;
+	this->texlist = texturelist;
+	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
+	this->texid= texid;
+
+	get_errors();
+	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
+	my_glGenVertexArrays(1, &vao_id);
+	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+	my_glBindVertexArray(vao_id);
+	get_errors();
+	GLuint* tmp_vbo_id = GenerateVBO(3);
+	vbo_id[0] = tmp_vbo_id[0];
+	vbo_id[1] = tmp_vbo_id[1];
+	vbo_id[2] = tmp_vbo_id[2];
+	
+	this->shader = shader;
+	get_errors();
+	
+	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
+	//bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
+	bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
+	get_errors();
+	
+	my_glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors();
+}
+
 Model::Model()
 {
 	this->vbo_id[0] = this->vbo_id[1] = this->vbo_id[2] = 0;
@@ -87,6 +127,14 @@ void Model::draw()
     GLint light_position_uniform = shader->get_uniform_location( "light_position");
     GLint light_color_uniform    = shader->get_uniform_location( "light_color");
     GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+	if(!texlist.empty()){
+		GLint texture_uniform = shader->get_uniform_location("texture");
+		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texid);
+	}
+
+
 
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
@@ -136,5 +184,12 @@ void Model::bindColor(void* data, size_t size){
 	GLint color_location = shader->get_attrib_location("color");
 	glEnableVertexAttribArray(color_location);
 	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
+void Model::bindTexture(void* data, size_t size){
+	bindVBO(vbo_id[1], data, size);
+	GLint tex_location = shader->get_attrib_location("texkoord");
+	glEnableVertexAttribArray(tex_location);
+	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }

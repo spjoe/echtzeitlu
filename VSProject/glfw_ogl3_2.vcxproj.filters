@@ -79,10 +79,16 @@
     <None Include="..\shader\minimal.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="..\shader\simple_shader.frag">
+    <None Include="..\shader\TextureShader.frag">
       <Filter>Ressourcendateien</Filter>
     </None>
-    <None Include="..\shader\simple_shader.vert">
+    <None Include="..\shader\TextureShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\ColorShader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\ColorShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
   </ItemGroup>

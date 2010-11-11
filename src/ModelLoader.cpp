@@ -19,6 +19,7 @@
 using namespace echtzeitlu;
 
 extern Shader* defaultShader;		// TODO der hat hier nix verloren!
+extern Shader* defaultColorShader;		// TODO der hat hier nix verloren!
 
 ModelLoader::ModelLoader()
 {
@@ -77,7 +78,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			unsigned position_offset, normal_offset, texture1_offset;
 			domListOfFloats * position_floats;
 			domListOfFloats * normal_floats;
-			domListOfFloats * texture1_floats;
+			domListOfFloats * texture1_floats = NULL;
 			domListOfUInts * position_indices;
 
 			for(unsigned int i=0; i<inputs.getCount(); i++)
@@ -180,46 +181,89 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						indexlist.push_back(pointlist.size()-1);
 						pointtonormalmap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(pI,std::pair<unsigned,unsigned>(nI,pointlist.size()-1)));
 					}
-					/*
-					bool is_in = false; 
-					unsigned j;
-					for(j=0; j<pointlist.size(); j++){
-						if( points[pI] == pointlist[j] && normals[nI] == normallist[j] ){
-							is_in = true;
-							break;
-						}
-					}
-					if(is_in){
-						indexlist.push_back(j);
-					}else{
-						pointlist.push_back(points[pI]);
-						normallist.push_back(normals[nI]);
-						indexlist.push_back(pointlist.size()-1);
-						pointmap.insert(std::pair<glm::vec4,unsigned>(normals[nI],pointlist.size()-1));
-						normalmap.insert(std::pair<glm::vec4,unsigned>(normals[nI],pointlist.size()-1));
-					}
-					*/
 				}
 			}
 			
-			// TODO causes segmentation fault when no texture used
-// 				unsigned int numTexture = texture1_floats->getCount()/2;
-// 				glm::vec2 * texture = new glm::vec2[numTexture];
-// 				for(unsigned int i=0;i< numTexture;i++){
-// 						texture[i].x = texture1_floats->get(i*2+0);
-// 						texture[i].y = texture1_floats->get(i*2+1);
-// 				}
-// 				int * textureIndices = new int[dom_triangles->getCount() * 3];
-// 				for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
-// 						textureIndices[i] = P[i*max_offset + texture1_offset];
-// 				}
+			if(texture1_floats == NULL || true){ // oder true wegnehmen dann kann man texturen testen
+				if(model == NULL){
+					model = new Model(pointlist, normallist, indexlist, defaultColorShader);
+					sceneObject->add( (SceneObject*)model );
+				}else{
+					SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultColorShader);
+					model->add(submodel);
+				}
+				printf("[ModelLoader::travers] added a Scene Object\n");
+				return;
+			}
+			//else
+
+ 			unsigned int numTexture = texture1_floats->getCount()/2;
+ 			glm::vec2 * texture = new glm::vec2[numTexture];
+ 			for(unsigned int i=0;i< numTexture;i++){
+ 					texture[i].x = texture1_floats->get(i*2+0);
+ 					texture[i].y = texture1_floats->get(i*2+1);
+ 			}
+ 			int * textureIndices = new int[dom_triangles->getCount() * 3];
+ 			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
+ 					textureIndices[i] = P[i*max_offset + texture1_offset];
+ 			}
+
+
+			printf("re-arranging vertexlist with texture\n");
+			std::vector<glm::vec4> tpointlist;
+			std::vector<glm::vec3> tnormallist;
+			std::vector<glm::vec2> ttexturelist;
+			std::vector<unsigned> tindexlist;
+			std::multimap<unsigned,std::pair<unsigned,unsigned> > IndextoTextureIndexMap;
+
+			for(unsigned i=0; i<dom_triangles->getCount()*3; i++){
+				unsigned iI = indexlist[i];
+				unsigned tI = textureIndices[i];
+				
+				if(tpointlist.empty()){
+					tpointlist.push_back(pointlist[iI]);
+					tnormallist.push_back(normallist[iI]);
+					ttexturelist.push_back(texture[tI]);
+					tindexlist.push_back(tpointlist.size()-1);
+					IndextoTextureIndexMap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(iI,std::pair<unsigned,unsigned>(tI,0)));
+					
+				}else{
+					bool is_in = false; 
+					if(IndextoTextureIndexMap.count(iI)){
+						std::pair<std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator,std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator> pairnIs = IndextoTextureIndexMap.equal_range( iI );
+						std::multimap<unsigned, std::pair<unsigned,unsigned> >::iterator nIs = pairnIs.first;
+						for(; nIs != pairnIs.second ;nIs++)
+						{
+							if((*nIs).second.first == tI){ //element schon vorhanden
+								tindexlist.push_back((*nIs).second.second);
+								is_in = true;
+								break;
+							}
+						}
+						
+					}
+					
+					if(is_in == false){
+						tpointlist.push_back(pointlist[iI]);
+						tnormallist.push_back(normallist[iI]);
+						ttexturelist.push_back(texture[tI]);
+						tindexlist.push_back(tpointlist.size()-1);
+						IndextoTextureIndexMap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(iI,std::pair<unsigned,unsigned>(tI,pointlist.size()-1)));
+					}
+				}
+			}
+
+			GLuint texid = (*images.begin()).second->getTexId();
 			if(model == NULL){
-				model = new Model(pointlist, normallist, indexlist, defaultShader);
+				//model = new Model(pointlist, normallist, indexlist, defaultShader);
+				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, texid, defaultShader);
 				sceneObject->add( (SceneObject*)model );
 			}else{
-				SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
+				//SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
+				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, texid, defaultShader);
 				model->add(submodel);
 			}
+			
 			printf("[ModelLoader::travers] added a Scene Object\n");
 		}
 

@@ -32,10 +32,13 @@ protected:
 	std::vector<glm::vec4> colorlist;
 	std::vector<unsigned> indexlist;
 	glm::mat4 model;
+	GLuint texid;
 	
 public:
 	Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
 			std::vector<unsigned> &indexlist, Shader* shader);
+	Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, std::vector<glm::vec2> &texturelist,
+			std::vector<unsigned> &indexlist, GLuint _texid, Shader* shader);
 	Model();
 	void print();
 	
@@ -45,10 +48,11 @@ public:
 	/** @brief updates the model state 
 	*	@param fTime, time elapsed since last frame */
 	virtual void update(float fTime);
-
+private:
 	void bindVertex(void*, size_t size);
 	void bindColor(void*, size_t size);
     void bindNormals(void*, size_t size);
+	void bindTexture(void*, size_t size);
 };
   
 }; // namespace echtzeitlu

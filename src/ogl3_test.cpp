@@ -31,6 +31,7 @@ using namespace echtzeitlu;
 Camera m_camera_1;
 SceneObject *rootScene;
 Shader *defaultShader;
+Shader *defaultColorShader;
 
 int width=800,
 	height=800;
@@ -160,19 +161,27 @@ int main (int argc, char** argv)
 		rootScene = new Model();
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
-		Shader simpleShader("../shader/simple_shader");
+		Shader TextureShader("../shader/TextureShader");
+		Shader ColorShader("../shader/ColorShader");
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
 			return 1;
 		}
-		if (!simpleShader) {
+		if (!TextureShader) {
+			cerr << "Could not compile simple_shader program." << endl;
+			return 1;
+		}
+		if (!ColorShader) {
 			cerr << "Could not compile simple_shader program." << endl;
 			return 1;
 		}
 
-		simpleShader.bind_frag_data_location("fragColor");
-		defaultShader = &simpleShader;
+		TextureShader.bind_frag_data_location("fragColor");
+		ColorShader.bind_frag_data_location("fragColor");
+		defaultShader = &TextureShader;
+		defaultColorShader = &ColorShader;
+
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
 		get_errors();
