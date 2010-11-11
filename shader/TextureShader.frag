@@ -46,12 +46,13 @@ void main()
     vec3 light_dir = normalize(light_position - position);
 
 	// calculate lighting
-    // vec4 ambient = ambient_color * frag_color;
-    // vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
+	vec4 ctmp = texture2D( texture, gl_TexCoord[0].st);
+    vec4 ambient = ambient_color * ctmp;
+    vec4 diffuse = ctmp * light_color * max(0.0, dot(normal, light_dir));
     
     // write color to output
-    //fragColor = ambient + diffuse;
+    fragColor = ambient + diffuse;
 
-	fragColor = texture2D( texture, gl_TexCoord[0].st);
+	//fragColor = texture2D( texture, gl_TexCoord[0].st);
 
 }

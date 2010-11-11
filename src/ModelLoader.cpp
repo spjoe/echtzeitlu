@@ -184,7 +184,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				}
 			}
 			
-			if(texture1_floats == NULL || true){ // oder true wegnehmen dann kann man texturen testen
+			if(texture1_floats == NULL){ // oder true wegnehmen dann kann man texturen testen
 				if(model == NULL){
 					model = new Model(pointlist, normallist, indexlist, defaultColorShader);
 					sceneObject->add( (SceneObject*)model );
@@ -248,7 +248,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						tnormallist.push_back(normallist[iI]);
 						ttexturelist.push_back(texture[tI]);
 						tindexlist.push_back(tpointlist.size()-1);
-						IndextoTextureIndexMap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(iI,std::pair<unsigned,unsigned>(tI,pointlist.size()-1)));
+						IndextoTextureIndexMap.insert(std::pair<unsigned,std::pair<unsigned,unsigned> >(iI,std::pair<unsigned,unsigned>(tI,tpointlist.size()-1)));
 					}
 				}
 			}

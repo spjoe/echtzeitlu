@@ -16,7 +16,7 @@
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6_original.dae";
 const std::string wavAudioPath = "../resources/music.wav";
-// const std::string daeModelPath = "../resources/trianglebox.dae";
+//const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
 
