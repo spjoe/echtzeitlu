@@ -236,14 +236,14 @@ int main (int argc, char** argv)
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
 			if(glfwGetKey( 'A' ))
-				m_camera_1.translateS(-0.01f);
+				m_camera_1.translateS(-0.1f);
 			if(glfwGetKey( 'D' ))
-				m_camera_1.translateS(0.01f);
+				m_camera_1.translateS(0.1f);
 
 			if(glfwGetKey( 'W' ))
-				m_camera_1.translateF(0.01f);
+				m_camera_1.translateF(0.1f);
 			if(glfwGetKey( 'S' ))
-				m_camera_1.translateF(-0.01f);
+				m_camera_1.translateF(-0.1f);
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
 			glfwSleep(0.001);

@@ -54,7 +54,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 }
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
-			std::vector<GLuint> &indexlist, GLuint texid, Shader* shader)
+			std::vector<GLuint> &indexlist, Shader* shader)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -66,7 +66,6 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->indexlist = indexlist;
 	this->texlist = texturelist;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-	this->texid= texid;
 
 	get_errors();
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
@@ -192,4 +191,8 @@ void Model::bindTexture(void* data, size_t size){
 	glEnableVertexAttribArray(tex_location);
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
+}
+void Model::assignTextureId(GLuint texid)
+{
+	this->texid =texid;
 }

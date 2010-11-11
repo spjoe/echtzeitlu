@@ -70,6 +70,7 @@ class ModelEffect : public ModelObject{
 	std::vector<ModelImage*> images;
 public:
 	void addImage(ModelImage* img){images.push_back(img);}
+	std::vector<ModelImage*> getImages(){return images;}
 };
 class ModelMaterial : public ModelObject{
 private:

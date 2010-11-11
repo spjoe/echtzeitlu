@@ -43,7 +43,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 	
 	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
 	{
-		SceneObject* model = NULL;
+		Model* model = NULL;
 		//Suche geometrie im dokument
 		domInstance_geometryRef lib = node->getInstance_geometry_array()[i];
 		xsAnyURI & urltype  = lib->getUrl();
@@ -256,11 +256,11 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			GLuint texid = (*images.begin()).second->getTexId();
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
-				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, texid, defaultShader);
+				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader);
 				sceneObject->add( (SceneObject*)model );
 			}else{
 				//SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
-				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, texid, defaultShader);
+				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader);
 				model->add(submodel);
 			}
 			
@@ -313,7 +313,12 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						if ( MaterialElement ) 
 						{
 							ModelMaterial *mat = ReadMaterial(MaterialElement);
-							mat = mat;
+							ModelEffect *eff = mat->getEffect();
+							if(eff)
+								if(eff->getImages().empty() == false){
+									GLuint id = eff->getImages()[0]->getTexId();
+									model->assignTextureId(id);
+								}
 						}
 					}
 				}
@@ -458,9 +463,18 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 				for (unsigned i = 0; i < common->getNewparam_array().getCount(); i++ )
 				{
 					domCommon_newparam_type *newparam = common->getNewparam_array()[i];
-					domFx_surface_common *s = newparam->getSurface();
-					if(s){
-						domFx_surface_init_common* test = s->getFx_surface_init_common();
+					domFx_surface_common *surface = newparam->getSurface();
+					domFx_sampler2D_common *sampler = newparam->getSampler2D();
+					if(sampler){
+						domFx_sampler2D_common_complexType::domSource * source = sampler->getSource();
+						source=source;
+					}
+					if(surface){
+						domFx_surface_init_common* test = surface->getFx_surface_init_common();
+						daeElement* initFrom = surface->getChild("init_from");
+						std::string data = initFrom->getCharData();
+						ModelImage *img = (*images.find(data)).second;
+						newEffect->addImage(img);
 						//todo find image,...
 					}
 				}
