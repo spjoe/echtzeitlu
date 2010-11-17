@@ -33,8 +33,8 @@ SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
 
-int width=800,
-	height=800;
+int width=640,
+	height=480;
 
 
 int oldx,oldy;

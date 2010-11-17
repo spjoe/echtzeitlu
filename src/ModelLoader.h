@@ -15,72 +15,13 @@
 #include <dom/domImage.h>
 #include "Model.h"
 #include "Effect.h"
+#include "ModelObject.h"
+#include "ModelEffect.h"
+#include "ModelImage.h"
+#include "ModelMaterial.h"
 
 namespace echtzeitlu{
 
-class ModelObject
-{
-private:
-	std::string ID;
-public:
-	std::string getID(){
-		return ID;
-	}
-	void setID(std::string ID){
-		this->ID = ID;
-	}
-};
-
-class ModelImage : public ModelObject{
-private:
-	GLuint _id;
-public:
-	ModelImage(domImage* img){
-		domImage* imageElement = img;
-	
-		if ( !imageElement )
-			return;
-
-		imageElement->getInit_from()->getValue().str();
-			
-		const std::string file = cdom::uriToNativePath(imageElement->getInit_from()->getValue().str());
-
-
-		GLFWimage image;
-		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE)
-			return;
- 
-		glGenTextures(1, &_id);
-		glBindTexture(GL_TEXTURE_2D, _id);
- 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
- 
-		glTexImage2D(GL_TEXTURE_2D, 0, image.Format, image.Width, image.Height,
-					 0, image.Format, GL_UNSIGNED_BYTE,
-					 reinterpret_cast<void*>(image.Data));
-		glfwFreeImage(&image);
-	}
-
-	unsigned getTexId(){
-		return _id;
-	}
-};
-class ModelEffect : public ModelObject{
-	std::vector<ModelImage*> images;
-public:
-	void addImage(ModelImage* img){images.push_back(img);}
-	std::vector<ModelImage*> getImages(){return images;}
-};
-class ModelMaterial : public ModelObject{
-private:
-	ModelEffect* effect;
-public:
-	ModelMaterial(ModelEffect* effect){
-		this->effect = effect;
-	}
-	ModelEffect* getEffect(){ return effect; }
-};
 
 class ModelLoader
 {

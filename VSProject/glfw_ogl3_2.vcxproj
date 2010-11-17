@@ -99,7 +99,11 @@
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Effect.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
+    <ClCompile Include="..\src\ModelEffect.cpp" />
+    <ClCompile Include="..\src\ModelImage.cpp" />
     <ClCompile Include="..\src\ModelLoader.cpp" />
+    <ClCompile Include="..\src\ModelMaterial.cpp" />
+    <ClCompile Include="..\src\ModelObject.cpp" />
     <ClCompile Include="..\src\ogl3_test.cpp" />
     <ClCompile Include="..\src\SceneObject.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
@@ -111,7 +115,11 @@
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\Effect.h" />
     <ClInclude Include="..\src\Model.h" />
+    <ClInclude Include="..\src\ModelEffect.h" />
+    <ClInclude Include="..\src\ModelImage.h" />
     <ClInclude Include="..\src\ModelLoader.h" />
+    <ClInclude Include="..\src\ModelMaterial.h" />
+    <ClInclude Include="..\src\ModelObject.h" />
     <ClInclude Include="..\src\SceneObject.h" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\Timer.h" />

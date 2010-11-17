@@ -319,6 +319,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 									GLuint id = eff->getImages()[0]->getTexId();
 									model->assignTextureId(id);
 								}
+								//else
+									//model->assignTextureId(40000);
 						}
 					}
 				}
@@ -331,7 +333,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 SceneObject* ModelLoader::ReadScene(domVisual_scene *scene)
 {
 	SceneObject* rootScene = new SceneObject();
-	for ( int i = 0; i < scene->getNode_array().getCount(); i++){
+	for ( unsigned int i = 0; i < scene->getNode_array().getCount(); i++){
 		domNode* currNode = scene->getNode_array()[i];
 		travers(currNode, rootScene);
 	}
@@ -368,6 +370,8 @@ SceneObject* ModelLoader::loadScene(const std::string path)
 			
 	if(defaultScene)
 		return ReadScene( (domVisual_scene *)defaultScene );
+
+	return NULL;
 }
 
 
@@ -484,9 +488,9 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 		}
 		effects.insert(std::pair<std::string,ModelEffect*>(newEffect->getID(),newEffect));
 		return newEffect;
-
-
 	}
+
+	return NULL;
 }
 ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
 {
