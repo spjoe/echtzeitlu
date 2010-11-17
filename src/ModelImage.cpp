@@ -12,7 +12,6 @@ ModelImage::ModelImage(domImage* img){
 			
 		const std::string file = cdom::uriToNativePath(imageElement->getInit_from()->getValue().str());
 
-
 		GLFWimage image;
 		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE)
 			return;
@@ -44,7 +43,10 @@ ModelImage::ModelImage(domImage* img){
 
 		//if(glfwLoadMemoryTexture2D(image.Data, image.BytesPerPixel * image.Height * image.Width, GLFW_BUILD_MIPMAPS_BIT) == GL_FALSE);
 		//	return;
-		glTexImage2D(GL_TEXTURE_2D, 0, image.Format, image.Width, image.Height,
+		//image.Format;
+		GL_EXT_texture_sRGB; //gibts
+
+		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,
 						0, image.Format, GL_UNSIGNED_BYTE,
 						reinterpret_cast<void*>(image.Data));
 		glGenerateMipmap(GL_TEXTURE_2D);
