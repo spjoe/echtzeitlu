@@ -43,15 +43,14 @@ ModelImage::ModelImage(domImage* img){
 		//if(glfwLoadMemoryTexture2D(image.Data, image.BytesPerPixel * image.Height * image.Width, GLFW_BUILD_MIPMAPS_BIT) == GL_FALSE);
 		//	return;
 		//image.Format;
-		GL_EXT_texture_sRGB; //gibts
+		
+#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
+		printf("using gluBuild2DMipmaps()\n");
+		gluBuild2DMipmaps(GL_TEXTURE_2D, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+#else
 		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,
 						0, image.Format, GL_UNSIGNED_BYTE,
 						reinterpret_cast<void*>(image.Data));
-
-#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
-		printf("using gluBuild2DMipmaps()\n");
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
-#else
 		glGenerateMipmap(GL_TEXTURE_2D);
 #endif
 		get_errors();

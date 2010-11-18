@@ -57,11 +57,11 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <PreprocessorDefinitions>_LIB;BOOST_ALL_NO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_LIB;BOOST_ALL_NO_LIB;GL_GENERATE_MIPMAP_SEG_AVOIDANCE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22-d.lib;libboost_filesystem-d.lib;libboost_system-d.lib;alut.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22-d.lib;libboost_filesystem-d.lib;libboost_system-d.lib;alut.lib;OpenAL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_debug.exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;$(SolutionDir)\external\collada\lib;$(SolutionDir)\external\boost\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
