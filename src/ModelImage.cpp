@@ -11,7 +11,7 @@ ModelImage::ModelImage(domImage* img){
 		imageElement->getInit_from()->getValue().str();
 			
 		const std::string file = cdom::uriToNativePath(imageElement->getInit_from()->getValue().str());
-
+		
 		GLFWimage image;
 		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE)
 			return;
@@ -25,7 +25,6 @@ ModelImage::ModelImage(domImage* img){
 		//{
 		//	return;
 		//}
-		
 		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -45,16 +44,18 @@ ModelImage::ModelImage(domImage* img){
 		//	return;
 		//image.Format;
 		GL_EXT_texture_sRGB; //gibts
-
 		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,
 						0, image.Format, GL_UNSIGNED_BYTE,
 						reinterpret_cast<void*>(image.Data));
-		glGenerateMipmap(GL_TEXTURE_2D);
-		get_errors();
 
-		
-		//gluBuild2DMipmaps(GL_TEXTURE_2D, 3, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
-		//glfwFreeImage(&image);
+#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
+		printf("using gluBuild2DMipmaps()\n");
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+#else
+		glGenerateMipmap(GL_TEXTURE_2D);
+#endif
+		get_errors();
+		glfwFreeImage(&image);
 	}
 unsigned ModelImage::getTexId(){
 	return _id;
