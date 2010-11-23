@@ -1,0 +1,56 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{cite}
+
+\title{"The Boiler Makers"}
+\author{Camillo Dell'mour 0628020 e0628020@student.tuwien.ac.at\\ Thomas Moerwald 0255334 moerwald@acin.tuwien.ac.at}
+\begin{document}
+\maketitle
+%\tableofcontents
+
+\section{Content}
+In a small factory of the 18th century, there's a lot going on. Fire is burning to heat the water in a boiler. Steam is exhausted through several valves and leaks of the piston chamber. Smoke and particles of hot glowing metal are hurtling through the environment which is sparsely illuminated by several flickering light bulbs.
+
+\section{Effekts und details}
+Musts:
+\begin{itemize}
+	\item Kinematic animation
+	\item Bump mapping especially on rusty metal and wooden surfaces \cite{moeller1999realtime}, \cite{dietrich2000hardware}
+	\item Shading (Phong)
+	\item Shadowing and self-shadowing \cite{nagy2000realtime}, \cite{ing2000ground}
+	\item Steam exhausted by the engine
+\end{itemize}
+Nice to have:
+\begin{itemize}
+	\item Shading (Ambient occlusion)
+	\item Particle system simulating the effect of glowing pieces of metal produced by the hammer falling on the ambos \cite{van2000building}
+	\item Refraction mapping of water in the compensation tank for the boiler \cite{vlachos2000refraction}
+	\item Motion blur of fast moving devices such as the falling hammer, the spinning fly wheel and regulator \cite{rosado2007motion}
+	\item Fire beneath the boiler %(http://graphics.ethz.ch/teaching/former/imagesynthesis_06/miniprojects/p3/index.html)
+	\item Smoke produced by the fire %(http://graphics.ethz.ch/teaching/former/imagesynthesis_06/miniprojects/p3/index.html)
+	\item Illumination caused by flickering light bulb
+	\item Coarse dirt and dust everywhere (i.e. render whole scene gain with simplified geometry a little larger with a greyish texture, blended over the original model)
+\end{itemize}
+
+Hints regarding the model:
+\begin{itemize}
+	\item The piston of the steam engine should be round
+	\item There should be a water tank
+	\item More details
+	\item Environment needs to be modeled (e.g. walls, floor)
+	\item Tools lying around (google warehouse)
+\end{itemize}
+The functionality of a common steam engine is shown in:
+%http://en.wikipedia.org/wiki/File:Steam_engine_in_action.gif
+
+%\clearpage 
+%\addcontentsline{toc}{chapter}{\bibname}
+%\bibliographystyle{babplain} 
+\bibliography{literatur}     %BibTeX-Datei literatur.bib
+\bibliographystyle{plain} 
+\end{document}
