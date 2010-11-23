@@ -17,15 +17,22 @@
 In a small factory of the 18th century, there's a lot going on. Fire is burning to heat the water in a boiler. Steam is exhausted through several valves and leaks of the piston chamber. Smoke and particles of hot glowing metal are hurtling through the environment which is sparsely illuminated by several flickering light bulbs.
 
 \section{Effekts und details}
+Musts:
 \begin{itemize}
+	\item Kinematic animation
+	\item Bump mapping especially on rusty metal and wooden surfaces \cite{moeller1999realtime}, \cite{dietrich2000hardware}
+	\item Shading (Phong)
+	\item Shadowing and self-shadowing \cite{nagy2000realtime}, \cite{ing2000ground}
+	\item Steam exhausted by the engine
+\end{itemize}
+Nice to have:
+\begin{itemize}
+	\item Shading (Ambient occlusion)
 	\item Particle system simulating the effect of glowing pieces of metal produced by the hammer falling on the ambos \cite{van2000building}
 	\item Refraction mapping of water in the compensation tank for the boiler \cite{vlachos2000refraction}
-	\item Bump mapping especially on rusty metal and wooden surfaces \cite{moeller1999realtime}, \cite{dietrich2000hardware}
-	\item Shadowing and self-shadowing \cite{nagy2000realtime}, \cite{ing2000ground}
 	\item Motion blur of fast moving devices such as the falling hammer, the spinning fly wheel and regulator \cite{rosado2007motion}
 	\item Fire beneath the boiler %(http://graphics.ethz.ch/teaching/former/imagesynthesis_06/miniprojects/p3/index.html)
 	\item Smoke produced by the fire %(http://graphics.ethz.ch/teaching/former/imagesynthesis_06/miniprojects/p3/index.html)
-	\item Steam exhausted by the engine
 	\item Illumination caused by flickering light bulb
 	\item Coarse dirt and dust everywhere (i.e. render whole scene gain with simplified geometry a little larger with a greyish texture, blended over the original model)
 \end{itemize}
