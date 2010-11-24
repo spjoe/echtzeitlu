@@ -118,7 +118,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				}
 			}
 			unsigned int numPoints = position_floats->getCount()/3;
-			glm::vec4 * points = new glm::vec4[numPoints];	// TODO delete
+			glm::vec4 * points = new glm::vec4[numPoints];	
 			for(unsigned int i=0;i< numPoints;i++){
 				points[i].x = position_floats->get(i*3+0);
 				points[i].y = position_floats->get(i*3+1);
@@ -126,19 +126,19 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				points[i].w = 1.f;
 			}
 			int * pointIndices;
-			pointIndices = new int[dom_triangles->getCount() * 3];	// TODO delete
+			pointIndices = new int[dom_triangles->getCount() * 3];	
 			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
 				pointIndices[i] = P[i*max_offset + position_offset];
 			}
 
 			unsigned int numNormals = normal_floats->getCount()/3;
-			glm::vec3 * normals = new glm::vec3[numNormals];	// TODO delete
+			glm::vec3 * normals = new glm::vec3[numNormals];	
 			for(unsigned int i=0;i< numNormals;i++){
 					normals[i].x = normal_floats->get(i*3+0);
 					normals[i].y = normal_floats->get(i*3+1);
 					normals[i].z = normal_floats->get(i*3+2);
 			}
-			int * normalIndices = new int[dom_triangles->getCount() * 3];	// TODO delete
+			int * normalIndices = new int[dom_triangles->getCount() * 3];	
 			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
 					normalIndices[i] = P[i*max_offset + normal_offset];
 			}
@@ -184,7 +184,11 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				}
 			}
 			
-			if(texture1_floats == NULL){ // oder true wegnehmen dann kann man texturen testen
+			delete points;
+			delete normals;
+			delete pointIndices;
+			delete normalIndices;
+			if(texture1_floats == NULL){
 				if(model == NULL){
 					model = new Model(pointlist, normallist, indexlist, defaultColorShader);
 					sceneObject->add( (SceneObject*)model );
@@ -193,6 +197,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 					model->add(submodel);
 				}
 				printf("[ModelLoader::travers] added a Scene Object\n");
+				
 				return;
 			}
 			//else
@@ -253,6 +258,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 				}
 			}
 
+			delete texture;
+			delete textureIndices;
 			GLuint texid = (*images.begin()).second->getTexId();
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);

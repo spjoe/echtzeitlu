@@ -40,6 +40,7 @@ public:
 	Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, std::vector<glm::vec2> &texturelist,
 			std::vector<unsigned> &indexlist, Shader* shader);
 	Model();
+	virtual ~Model();
 	void print();
 	
 	/** @brief draws the model */

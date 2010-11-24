@@ -16,12 +16,12 @@ namespace echtzeitlu{
   
 class SceneObject
 {
-  private:
+  protected:
 	std::vector<SceneObject*> children;
 	
   public:
-	  SceneObject() : children(){};
-	~SceneObject();
+	SceneObject() : children(){};
+	virtual ~SceneObject();
 	
 	virtual void draw(){ drawChildren(); };
 	virtual void update(float fTime){ updateChildren(fTime); };
