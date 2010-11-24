@@ -203,3 +203,19 @@ void Model::assignTextureId(GLuint texid)
 {
 	this->texid = texid;
 }
+Model::~Model()
+{
+	//std::vector<SceneObject*>::iterator it = children.begin();
+	
+	//while(it != children.end()){
+	//	delete(*it);
+	//	it++;
+	//}
+
+	glDeleteVertexArrays(1, &vao_id);
+
+	glDeleteBuffers(3, vbo_id);
+
+	vao_id = 0;
+	vbo_id[0] = vbo_id[1] = vbo_id[2] = 0;
+}
