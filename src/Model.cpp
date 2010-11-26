@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <glm/gtx/transform.hpp>
 
 
 using namespace echtzeitlu;
@@ -17,7 +18,7 @@ extern Camera m_camera_1;
 // extern Shader* defaultShader;
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
-			std::vector<GLuint> &indexlist, Shader* shader)
+			std::vector<GLuint> &indexlist, Shader* shader, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -27,6 +28,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->pointlist = pointlist;
 	this->normallist = normallist;
 	this->indexlist = indexlist;
+	this->model = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
 	this->texid = 40000;
 	
@@ -55,7 +57,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 }
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
-			std::vector<GLuint> &indexlist, Shader* shader)
+			std::vector<GLuint> &indexlist, Shader* shader, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -66,9 +68,10 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->normallist = normallist;
 	this->indexlist = indexlist;
 	this->texlist = texturelist;
+	this->model = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
 	this->texid = 40000;
-
+	
 	get_errors();
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 	my_glGenVertexArrays(1, &vao_id);
@@ -129,7 +132,7 @@ void Model::draw()
     GLint light_color_uniform    = shader->get_uniform_location( "light_color");
     GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
 	get_errors();
-	if(!texlist.empty() && this->texid != 40000){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
+	if(!texlist.empty() && this->texid != 40000){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknÃ¼pfe!
 		GLint texture_uniform = shader->get_uniform_location("texture");
 		get_errors();
 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
@@ -151,6 +154,13 @@ void Model::draw()
     GLint perspective_uniform = shader->get_uniform_location( "perspective");
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
+	
+// 	for(unsigned i=0; i<4; i++){
+// 		for(unsigned j=0; j<4; j++){
+// 		  printf(" %f", model[i][j]);
+// 		}
+// 		printf("\n");
+// 	}
 
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
