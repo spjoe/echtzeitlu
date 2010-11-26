@@ -1,0 +1,7 @@
+#!/bin/bash
+for filename in *
+do
+   n=`echo $filename | tr '[:upper:]' '[:lower:]'`
+   mv $filename $n
+done
+
