@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS = -I./external/glm/include -I./external/collada/include/1.4/dom/ -I./external/collada/include/1.4/ -I./external/collada/include/ #-DGL_GENERATE_MIPMAP_SEG_AVOIDANCE
+CXXFLAGS = -I./external/glm/include -I./external/collada/include/1.4/dom/ -I./external/collada/include/1.4/ -I./external/collada/include/ -DGL_GENERATE_MIPMAP_SEG_AVOIDANCE
 FLAGS=`pkg-config --cflags libglfw glew freealut`
 LIBS=`pkg-config --libs libglfw glew freealut`
 COLLADALIBS=-L./external/collada/lib -lcollada14dom -lboost_filesystem -lminizip -lxml2 -lpcrecpp

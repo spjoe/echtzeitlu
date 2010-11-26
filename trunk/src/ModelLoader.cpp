@@ -55,6 +55,25 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 		domMesh *meshElement = geo->getMesh();
 		if(meshElement == NULL)// kein mesh andere geometrie information
 			continue;
+		
+		domFloat4x4 mat_dom_model_floats;
+		domMatrix * mat_dom_model;
+		glm::mat4 mat_model;
+		if(node->getMatrix_array().getCount() >= 1){
+			mat_dom_model = node->getMatrix_array()[0];
+			mat_dom_model_floats = mat_dom_model->getValue();
+			float tmp_mat[16];
+			if(mat_dom_model_floats.getCount() == 16){
+				for(unsigned i=0; i<16; i++){
+					tmp_mat[i] = mat_dom_model_floats.get(i);
+				}
+				mat_model = glm::mat4(	tmp_mat[0], tmp_mat[4], tmp_mat[8], tmp_mat[12], 
+										tmp_mat[1], tmp_mat[5], tmp_mat[9], tmp_mat[13], 
+										tmp_mat[2], tmp_mat[6], tmp_mat[10], tmp_mat[14], 
+										tmp_mat[3], tmp_mat[7], tmp_mat[11], tmp_mat[15]);
+			}
+		}
+		
 		//not sure if we should get primitives by groups or by whatever comes first, I think it shouldn't matter, let's confirm later.
 		unsigned int numPolylistGroups = meshElement->getPolylist_array().getCount();
 		for (unsigned int i=0; i< numPolylistGroups; i++)
@@ -69,6 +88,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 		}
 
 		unsigned int numTriangleGroups = meshElement->getTriangles_array().getCount();
+		printf("numTriangleGroups: %d\n", numTriangleGroups);
 		for (unsigned int i=0; i< numTriangleGroups; i++)
 		{
 			domTriangles *dom_triangles = meshElement->getTriangles_array()[i];
@@ -142,7 +162,6 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
 					normalIndices[i] = P[i*max_offset + normal_offset];
 			}
-			
 			//
 			printf("re-arranging vertexlist\n");
 			std::vector<glm::vec4> pointlist;
@@ -183,17 +202,17 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 					}
 				}
 			}
-			
+
 			delete points;
 			delete normals;
 			delete pointIndices;
 			delete normalIndices;
 			if(texture1_floats == NULL){
 				if(model == NULL){
-					model = new Model(pointlist, normallist, indexlist, defaultColorShader);
+					model = new Model(pointlist, normallist, indexlist, defaultColorShader, mat_model);
 					sceneObject->add( (SceneObject*)model );
 				}else{
-					SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultColorShader);
+					SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultColorShader, mat_model);
 					model->add(submodel);
 				}
 				printf("[ModelLoader::travers] added a Scene Object\n");
@@ -212,8 +231,6 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
  			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
  					textureIndices[i] = P[i*max_offset + texture1_offset];
  			}
-
-
 			printf("re-arranging vertexlist with texture\n");
 			std::vector<glm::vec4> tpointlist;
 			std::vector<glm::vec3> tnormallist;
@@ -261,13 +278,14 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			delete texture;
 			delete textureIndices;
 			GLuint texid = (*images.begin()).second->getTexId();
+
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
-				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader);
+				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, mat_model);
 				sceneObject->add( (SceneObject*)model );
 			}else{
 				//SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
-				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader);
+				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, mat_model);
 				model->add(submodel);
 			}
 			
