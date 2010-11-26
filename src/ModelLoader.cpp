@@ -88,7 +88,6 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 		}
 
 		unsigned int numTriangleGroups = meshElement->getTriangles_array().getCount();
-		printf("numTriangleGroups: %d\n", numTriangleGroups);
 		for (unsigned int i=0; i< numTriangleGroups; i++)
 		{
 			domTriangles *dom_triangles = meshElement->getTriangles_array()[i];
