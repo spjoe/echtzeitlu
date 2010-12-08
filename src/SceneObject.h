@@ -11,6 +11,7 @@
 #define _SCENE_OBJECT_H_
 
 #include <vector>
+#include <string>
 
 namespace echtzeitlu{
   
@@ -18,6 +19,7 @@ class SceneObject
 {
   protected:
 	std::vector<SceneObject*> children;
+	std::string name;
 	
   public:
 	SceneObject() : children(){};
@@ -29,6 +31,11 @@ class SceneObject
 	void add(SceneObject * child){
 		children.push_back(child);
 	};
+	
+	std::string getName(){
+		return this->name;
+	}
+	
   protected:
 	void drawChildren(){
 		std::vector<SceneObject*>::iterator childrenIterator;

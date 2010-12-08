@@ -2,6 +2,7 @@
 
 #include <fstream>
 
+
 bool file_exists(const string &filename)
 {
 	std::ifstream ifile(filename.c_str());
@@ -60,3 +61,5 @@ void bindVBO(GLuint id, void * datapointer, size_t size)
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glBufferData(GL_ARRAY_BUFFER, size, datapointer, GL_STATIC_DRAW);
 }
+
+

@@ -33,8 +33,8 @@ SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
 
-int width=640,
-	height=480;
+int width=800,
+	height=600;
 
 
 int oldx,oldy;
@@ -89,13 +89,13 @@ void test_ogl3(void)
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
 	// check if we have a core-profile
+#ifdef DEBUG
 	glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
 	if (profile == GL_CONTEXT_CORE_PROFILE_BIT) {
 		std::cout << "Having a core-profile" << std::endl;
 	} else {
 		std::cout << "Having a compatibility-profile" << std::endl;
 	}
-
 	// Try doing a fixed-function operation.
 	// Since this is a FCC, this should create an error.
 	cout << "Doing illegal operation (glTranslate) now..." << endl;
@@ -107,6 +107,7 @@ void test_ogl3(void)
 		cout << "Illegal operation caused an error message. :)" << endl;
 	else
 		cerr << "Illegal operation did NOT cause an error message. :(" << endl;
+#endif
 }
 
 int main (int argc, char** argv)
@@ -188,9 +189,9 @@ int main (int argc, char** argv)
 		init_matrixs();
 		get_errors();
 
-		cout << "Loading Scene" << endl;
+		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
-		cout << "Done loading Scene" << endl;
+		cout << "... done loading scene" << endl;
 		
 		
 		// workaround 2: 
@@ -239,7 +240,6 @@ int main (int argc, char** argv)
 				m_camera_1.translateS(-0.1f);
 			if(glfwGetKey( 'D' ))
 				m_camera_1.translateS(0.1f);
-
 			if(glfwGetKey( 'W' ))
 				m_camera_1.translateF(0.1f);
 			if(glfwGetKey( 'S' ))
@@ -250,8 +250,8 @@ int main (int argc, char** argv)
 
 		}
 
-	//	release_vbo_vao(vbo_id, &vao_id);
-	delete rootScene;
+		//	release_vbo_vao(vbo_id, &vao_id);
+		delete rootScene;
 	}
 
 	glfwTerminate();
@@ -261,5 +261,6 @@ int main (int argc, char** argv)
       reportAlutError ();
     }
 
+	printf("quit\n");
 	return 0;
 }

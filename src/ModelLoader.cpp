@@ -73,6 +73,14 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 										tmp_mat[3], tmp_mat[7], tmp_mat[11], tmp_mat[15]);
 			}
 		}
+		std::string geometry_name;
+		static int geometry_name_unknown_idx = 0;
+		if(strcmp("geometry",geo->getElementName()) == 0){
+			geometry_name.append(geo->getName());
+		}else{
+			geometry_name.append("geometry_name_unknown_");
+			geometry_name = geometry_name + to_string(geometry_name_unknown_idx++);
+		}
 		
 		//not sure if we should get primitives by groups or by whatever comes first, I think it shouldn't matter, let's confirm later.
 		unsigned int numPolylistGroups = meshElement->getPolylist_array().getCount();
@@ -162,7 +170,9 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 					normalIndices[i] = P[i*max_offset + normal_offset];
 			}
 			//
+#ifdef DEBUG
 			printf("re-arranging vertexlist\n");
+#endif
 			std::vector<glm::vec4> pointlist;
 			std::vector<glm::vec3> normallist;
 			std::vector<unsigned> indexlist;
@@ -208,14 +218,16 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			delete normalIndices;
 			if(texture1_floats == NULL){
 				if(model == NULL){
-					model = new Model(pointlist, normallist, indexlist, defaultColorShader, mat_model);
+					model = new Model(pointlist, normallist, indexlist, defaultColorShader, geometry_name, mat_model);
 					sceneObject->add( (SceneObject*)model );
 				}else{
-					SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultColorShader, mat_model);
+					SceneObject *submodel = new Model(pointlist, normallist, indexlist, 
+													  defaultColorShader, geometry_name, mat_model);
 					model->add(submodel);
 				}
+#ifdef DEBUG
 				printf("[ModelLoader::travers] added a Scene Object\n");
-				
+#endif
 				return;
 			}
 			//else
@@ -230,7 +242,9 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
  			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
  					textureIndices[i] = P[i*max_offset + texture1_offset];
  			}
+#ifdef DEBUG
 			printf("re-arranging vertexlist with texture\n");
+#endif
 			std::vector<glm::vec4> tpointlist;
 			std::vector<glm::vec3> tnormallist;
 			std::vector<glm::vec2> ttexturelist;
@@ -280,15 +294,17 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
-				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, mat_model);
+				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, geometry_name, mat_model);
 				sceneObject->add( (SceneObject*)model );
 			}else{
 				//SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
-				SceneObject *submodel = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, mat_model);
+				SceneObject *submodel = new Model(	tpointlist, tnormallist, ttexturelist, 
+													tindexlist, defaultShader, geometry_name, mat_model);
 				model->add(submodel);
 			}
-			
+#ifdef DEBUG
 			printf("[ModelLoader::travers] added a Scene Object\n");
+#endif
 		}
 
 		unsigned int numTriStripsGroups = meshElement->getTristrips_array().getCount();
@@ -401,7 +417,9 @@ SceneObject* ModelLoader::loadScene(const std::string path)
 
 void ModelLoader::ReadImageLibrary( domLibrary_imagesRef lib )
 {
+#ifdef DEBUG
 	printf(" ModelLoader::Reading Image Library \n" );	
+#endif
 	for ( unsigned i = 0; i < lib->getImage_array().getCount(); i++)
 	{
 		ModelImage *n = ReadImage( lib->getImage_array()[i] );
@@ -409,7 +427,9 @@ void ModelLoader::ReadImageLibrary( domLibrary_imagesRef lib )
 }
 void ModelLoader::ReadEffectLibrary( domLibrary_effectsRef lib )
 {
+#ifdef DEBUG
 	printf(" ModelLoader::Reading Effect Library \n" );	
+#endif
 	for ( unsigned i = 0; i < lib->getEffect_array().getCount(); i++)
 	{
 		ReadEffect( lib->getEffect_array()[i] ); 
@@ -417,7 +437,9 @@ void ModelLoader::ReadEffectLibrary( domLibrary_effectsRef lib )
 }
 void ModelLoader::ReadMaterialLibrary( domLibrary_materialsRef lib )
 {
-	printf(" ModelLoader::Reading Material Library \n" );	
+#ifdef DEBUG
+	printf(" ModelLoader::Reading Material Library \n" );
+#endif
 	for ( unsigned  i = 0; i < lib->getMaterial_array().getCount(); i++)
 	{
 		ReadMaterial( lib->getMaterial_array()[i] ); 
