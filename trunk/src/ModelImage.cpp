@@ -45,7 +45,9 @@ ModelImage::ModelImage(domImage* img){
 		//image.Format;
 		
 #ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
+#ifdef DEBUG
 		printf("using gluBuild2DMipmaps()\n");
+#endif
 		gluBuild2DMipmaps(GL_TEXTURE_2D, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
 #else
 		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,

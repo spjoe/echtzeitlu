@@ -2,6 +2,7 @@
 #define _UTILITY_HPP_
 
 #include "common.hpp"
+#include <sstream>
 
 bool file_exists(const string &filename);
 
@@ -12,4 +13,12 @@ void get_errors(void);
 GLuint * GenerateVBO(size_t count);
 GLuint GenerateVBO();
 void bindVBO(GLuint id, void * datapointer, size_t size);
+
+template <class T>
+inline std::string to_string (const T& t)
+{
+std::stringstream ss;
+ss << t;
+return ss.str();
+}
 #endif //#ifndef _UTILITY_HPP_

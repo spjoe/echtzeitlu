@@ -18,7 +18,7 @@ extern Camera m_camera_1;
 // extern Shader* defaultShader;
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
-			std::vector<GLuint> &indexlist, Shader* shader, glm::mat4 model)
+			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -30,7 +30,9 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->indexlist = indexlist;
 	this->model = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-	this->texid = 40000;
+	this->texidlist.push_back(40000);
+	this->name = name;
+	printf("%s\n", name.c_str());
 	
 	get_errors();
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
@@ -57,7 +59,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 }
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
-			std::vector<GLuint> &indexlist, Shader* shader, glm::mat4 model)
+			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -70,7 +72,9 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->texlist = texturelist;
 	this->model = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-	this->texid = 40000;
+	this->texidlist.push_back(40000);
+	this->name = name;
+	printf("%s\n", name.c_str());
 	
 	get_errors();
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
@@ -132,14 +136,14 @@ void Model::draw()
     GLint light_color_uniform    = shader->get_uniform_location( "light_color");
     GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
 	get_errors();
-	if(!texlist.empty() && this->texid != 40000){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
+	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
 		GLint texture_uniform = shader->get_uniform_location("texture");
 		get_errors();
 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
 		get_errors();
 		glActiveTexture(GL_TEXTURE0);
 		get_errors();
-		glBindTexture(GL_TEXTURE_2D, texid);
+		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
 		get_errors();
 	}
 
@@ -211,7 +215,8 @@ void Model::bindTexture(void* data, size_t size){
 }
 void Model::assignTextureId(GLuint texid)
 {
-	this->texid = texid;
+	texidlist.clear(); // TODO very hacky ... will be removed when integrating prober multitexturing
+	this->texidlist.push_back(texid);
 }
 Model::~Model()
 {
@@ -221,11 +226,17 @@ Model::~Model()
 	//	delete(*it);
 	//	it++;
 	//}
+	if(vao_id){
+		// TODO this two commands cause Seg. faults in Linux
+		// although the vao_id was generated and does still exist (tm)
+// 		if(glIsVertexArrays(vao_id)){
+// 			glDeleteVertexArrays(1, &vao_id);
+// 		}
+		vao_id = 0;
+	}
 
-	glDeleteVertexArrays(1, &vao_id);
-
-	glDeleteBuffers(3, vbo_id);
-
-	vao_id = 0;
-	vbo_id[0] = vbo_id[1] = vbo_id[2] = 0;
+	if(vbo_id[0] && vbo_id[1] && vbo_id[2]){
+		glDeleteBuffers(3, vbo_id);
+		vbo_id[0] = vbo_id[1] = vbo_id[2] = 0;
+	}
 }
