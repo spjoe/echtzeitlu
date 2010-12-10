@@ -290,7 +290,9 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 
 			delete texture;
 			delete textureIndices;
-			GLuint texid = (*images.begin()).second->getTexId();
+			GLuint texid = 0; // wenn es im modell keine bilder gibt
+			if(images.size() > 0) 
+				texid = (*images.begin()).second->getTexId();
 
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
