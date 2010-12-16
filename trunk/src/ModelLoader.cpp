@@ -76,7 +76,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 		std::string geometry_name;
 		static int geometry_name_unknown_idx = 0;
 		if(strcmp("geometry",geo->getElementName()) == 0){
-			geometry_name.append(geo->getName());
+			geometry_name.append(node->getName());
 		}else{
 			geometry_name.append("geometry_name_unknown_");
 			geometry_name = geometry_name + to_string(geometry_name_unknown_idx++);
