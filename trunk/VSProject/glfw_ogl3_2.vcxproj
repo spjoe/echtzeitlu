@@ -105,6 +105,9 @@
     <ClCompile Include="..\src\ModelMaterial.cpp" />
     <ClCompile Include="..\src\ModelObject.cpp" />
     <ClCompile Include="..\src\ogl3_test.cpp" />
+    <ClCompile Include="..\src\Particle.cpp" />
+    <ClCompile Include="..\src\ParticleManager.cpp" />
+    <ClCompile Include="..\src\ParticleSystem.cpp" />
     <ClCompile Include="..\src\SceneObject.cpp" />
     <ClCompile Include="..\src\shader.cpp" />
     <ClCompile Include="..\src\Timer.cpp" />
@@ -120,6 +123,9 @@
     <ClInclude Include="..\src\ModelLoader.h" />
     <ClInclude Include="..\src\ModelMaterial.h" />
     <ClInclude Include="..\src\ModelObject.h" />
+    <ClInclude Include="..\src\Particle.h" />
+    <ClInclude Include="..\src\ParticleManager.h" />
+    <ClInclude Include="..\src\ParticleSystem.h" />
     <ClInclude Include="..\src\SceneObject.h" />
     <ClInclude Include="..\src\shader.hpp" />
     <ClInclude Include="..\src\Timer.h" />
