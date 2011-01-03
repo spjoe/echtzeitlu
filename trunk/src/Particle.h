@@ -1,13 +1,19 @@
 #pragma once
 #include "glm/glm.hpp"
 
-class Particle
+
+namespace echtzeitlu{
+struct tShape
 {
-private:
-	glm::vec3 position;
-	glm::vec3 oldPos;
+	glm::vec4 vertex[4];
+};
+struct Particle
+{
+	glm::vec4 position;
+	glm::vec4 oldPos;
 	glm::vec3 velocity;
 	unsigned int color;
 	int energy;
 	float size;
 };
+}//ende namespace echtzeitlu

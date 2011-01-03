@@ -133,5 +133,11 @@
     <None Include="..\shader\ColorShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\shader\SmokeShader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\SmokeShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

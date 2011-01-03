@@ -136,6 +136,8 @@
     <None Include="..\shader\ColorShader.vert" />
     <None Include="..\shader\minimal.frag" />
     <None Include="..\shader\minimal.vert" />
+    <None Include="..\shader\SmokeShader.frag" />
+    <None Include="..\shader\SmokeShader.vert" />
     <None Include="..\shader\TextureShader.frag" />
     <None Include="..\shader\TextureShader.vert" />
   </ItemGroup>
