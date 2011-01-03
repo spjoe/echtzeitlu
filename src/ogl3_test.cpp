@@ -3,6 +3,8 @@
 #include "camera.h"
 #include "ModelLoader.h"
 #include "Model.h"
+#include "ParticleManager.h"
+#include "ParticleSystem.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -115,6 +117,7 @@ void test_ogl3(void)
 int main (int argc, char** argv)
 {
 	ModelLoader m_loader;
+	ParticleManager pm;
 	if (!alutInit (&argc, argv))
     {
       reportAlutError ();
@@ -162,6 +165,7 @@ int main (int argc, char** argv)
 
 		GLuint vbo_id[3], vao_id;
 		rootScene = new Model();
+		pm.AddSystem(new SmokeParticleSystem("Smokie uno"));
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
 		Shader TextureShader("../shader/TextureShader");
@@ -222,8 +226,10 @@ int main (int argc, char** argv)
 
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
+			pm.Render();
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
+			pm.Update(tmptime-time);
 			time = tmptime;
 					
 			glfwSwapBuffers();

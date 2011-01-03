@@ -1,5 +1,5 @@
 #include "ParticleManager.h"
-
+using namespace echtzeitlu;
 
 ParticleManager::ParticleManager(void)
 {
@@ -14,21 +14,23 @@ void ParticleManager::Init()
 {
 }
 
-void ParticleManager::AddSystem(ParticleSystem& ps)
+void ParticleManager::AddSystem(ParticleSystem* ps)
 {
-	//particleSystems.push_back(ps);
+	particleSystems.insert(ps);
 }
-void ParticleManager::RemoveSystem(const ParticleSystem& ps)
+void ParticleManager::RemoveSystem(ParticleSystem* ps)
 {
-
+	//particleSystems.erase(particleSystems.find(ps));
 }
 
-void ParticleManager::Update()
+void ParticleManager::Update(float dtime)
 {
-	for(std::vector<ParticleSystem>::iterator iter = particleSystems.begin();
+	for(std::set<ParticleSystem*,ltps>::iterator iter = particleSystems.begin();
 		iter != particleSystems.end(); iter++)
 	{
-		if(!(*iter).Update()){
+		ParticleSystem* tmp = *iter;
+
+		if(tmp->Update(dtime)){
 
 		}
 	}
