@@ -37,10 +37,17 @@ void ParticleManager::Update(float dtime)
 }
 void ParticleManager::Render()
 {
+	for(std::set<ParticleSystem*,ltps>::iterator iter = particleSystems.begin();
+		iter != particleSystems.end(); iter++)
+	{
+		ParticleSystem* tmp = *iter;
+
+		tmp->Render();
+	}
 }
 bool ParticleManager::DoesExist()
 {
-	return false;
+	return false;	
 }
 void ParticleManager::Shutdown()
 {

@@ -19,13 +19,50 @@ ParticleSystem::~ParticleSystem(void)
 {
 }
 
-SmokeParticleSystem::SmokeParticleSystem(std::string name)
+SmokeParticleSystem::SmokeParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter)
 {
 	this->name = name;
 	shader = new Shader("../shader/SmokeShader");
 	shader->bind_frag_data_location("fragColor");
+	totalparticles = totalnr;
+	colorlist.assign(totalnr*4, glm::vec4(0.5, 0.5, 0.5, 1));
+
+	for(unsigned i = 0; i < totalnr; i++)
+	{
+		Particle cur;
+		cur.position = glm::vec4(1,1,1,1);
+		cur.oldPos = glm::vec4(1,1,1,1);
+		cur.size = 10;
+		cur.energy = 100;
+		cur.velocity = glm::vec4(2,2,2,0);
+		cur.color = 0;
+		particles.push_back(cur);
+		shapes.push_back(tShape());
+		SetupShape(i);
+	}
+	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
+	my_glGenVertexArrays(1, &vao_id);
+	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+	my_glBindVertexArray(vao_id);
+	get_errors();
+	GLuint* tmp_vbo_id = GenerateVBO(2);
+	vbo_id[0] = tmp_vbo_id[0];
+	vbo_id[1] = tmp_vbo_id[1];
+	delete tmp_vbo_id;
+
+	bindVBO(vbo_id[1], &colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
+	GLint color_location = shader->get_attrib_location("color");
+	glEnableVertexAttribArray(color_location);
+	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+
+	my_glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors();
+	model = glm::mat4();
+
 }
-void SmokeParticleSystem::SetupShape(int nr)
+void SmokeParticleSystem::SetupShape(unsigned nr)
 {
 	if(nr > totalparticles) return;
 
@@ -53,18 +90,6 @@ void SmokeParticleSystem::Render(void)
     GLint light_color_uniform    = shader->get_uniform_location( "light_color");
     GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
 	get_errors();
-//	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
-//		GLint texture_uniform = shader->get_uniform_location("texture");
-//		get_errors();
-//		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
-//		get_errors();
-//		glActiveTexture(GL_TEXTURE0);
-//		get_errors();
-//		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
-//		get_errors();
-//	}
-
-
 
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
@@ -91,8 +116,8 @@ void SmokeParticleSystem::Render(void)
 	for(size_t i = 0; i < totalparticles; i++)
 	{
 		Particle curr = particles[i];
-		this->SetupShape(i);
-		for(size_t j = 0; j < 4; i++)
+		SetupShape(i);
+		for(size_t j = 0; j < 4; j++)
 			pointlist[i*4 + j] = shapes[i].vertex[j];
 
 		indexlist[i*6 + 0] = i*4 + 0;
@@ -101,18 +126,28 @@ void SmokeParticleSystem::Render(void)
 		indexlist[i*6 + 3] = i*4 + 2;
 		indexlist[i*6 + 4] = i*4 + 3;
 		indexlist[i*6 + 5] = i*4 + 0;
-		//better all particle pos relativ to particle system, so mode stay the same draw all particles with one glDrawElements
+		//better all particle pos relativ to particle system, so model matrix stay the same draw all particles with one glDrawElements
 	}
+	bindVBO(vbo_id[0], pointlist, totalparticles * 4 * 4 * sizeof(GLfloat));
+	GLint vertex_location = shader->get_attrib_location("vertex");
+	glEnableVertexAttribArray(vertex_location);
+	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+	get_errors();
+
 	//pointlist ändert sich ist daher vbo angebracht?
+	//indexlist bleibt gleich
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 	get_errors();
-	//glDrawElements(GL_TRIANGLES, totalparticles*6, GL_UNSIGNED_INT, indexlist);
+	glDrawElements(GL_TRIANGLES, totalparticles*2, GL_UNSIGNED_INT, indexlist);
 	get_errors();
 	my_glBindVertexArray(0);
 	get_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
 	shader->unbind();
+	delete pointlist;
+	delete indexlist;
 }
 
 

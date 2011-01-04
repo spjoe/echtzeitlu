@@ -165,7 +165,7 @@ int main (int argc, char** argv)
 
 		GLuint vbo_id[3], vao_id;
 		rootScene = new Model();
-		pm.AddSystem(new SmokeParticleSystem("Smokie uno"));
+		
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
 		Shader TextureShader("../shader/TextureShader");
@@ -194,6 +194,7 @@ int main (int argc, char** argv)
 		get_errors();
 		init_matrixs();
 		get_errors();
+		pm.AddSystem(new SmokeParticleSystem("Smokie uno",1,glm::vec4(1,1,1,1)));
 
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);

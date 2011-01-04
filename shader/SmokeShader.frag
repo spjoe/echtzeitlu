@@ -29,7 +29,7 @@ uniform vec4 ambient_color;
 
 // fragment-shader input variables
 in vec4 frag_color;
-in vec3 world_normal;
+//in vec3 world_normal;
 in vec4 world_position;
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
@@ -38,8 +38,8 @@ out vec4 fragColor;
 
 void main()
 {
-	// renormalize and homogenize input variables
-	vec3 normal = normalize(world_normal);
+	// renormalize and homogenize input variables smoke always look to us!!
+	vec3 normal = vec3(0,0,1);
     vec3 position = world_position.xyz / world_position.w;
     
     // calculate the light-direction

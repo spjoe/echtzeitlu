@@ -13,15 +13,18 @@ protected:
 	std::vector<Particle> particles;
 	std::vector<tShape> shapes;
 	int nrAlive;
-	int totalparticles;
+	unsigned totalparticles;
 	//BoundingBox3 boundingBox
 	Shader *shader;
-	glm::mat4 model; //position of the hole system
+	glm::mat4 model; 
+	glm::vec4 center; //position of the hole system
+	GLuint vao_id;
+	
 public:
 	ParticleSystem(void);
 	~ParticleSystem(void);
 	virtual void Render(void) = 0;
-	virtual void SetupShape(int nr) = 0;
+	virtual void SetupShape(unsigned nr) = 0;
 	virtual bool Update(float dtime) = 0;
 
 	std::string name;
@@ -30,12 +33,14 @@ public:
 class SmokeParticleSystem : public ParticleSystem
 {
 private:
-	GLint vao_id;
+	std::vector<glm::vec4> colorlist;
+	GLuint vbo_id[2];
+	
 
 public:
-	SmokeParticleSystem(std::string name);
+	SmokeParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
 	virtual void Render(void);
-	virtual void SetupShape(int nr);
+	virtual void SetupShape(unsigned nr);
 	virtual bool Update(float dtime);
 };
 }
