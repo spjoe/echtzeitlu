@@ -19,7 +19,7 @@ ParticleSystem::~ParticleSystem(void)
 {
 }
 
-SmokeParticleSystem::SmokeParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter)
+SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter)
 {
 	this->name = name;
 	shader = new Shader("../shader/SmokeShader");
@@ -27,19 +27,9 @@ SmokeParticleSystem::SmokeParticleSystem(std::string name, unsigned totalnr, glm
 	totalparticles = totalnr;
 	colorlist.assign(totalnr*4, glm::vec4(0.5, 0.5, 0.5, 1));
 
-	for(unsigned i = 0; i < totalnr; i++)
-	{
-		Particle cur;
-		cur.position = glm::vec4(1,1,1,1);
-		cur.oldPos = glm::vec4(1,1,1,1);
-		cur.size = 10;
-		cur.energy = 100;
-		cur.velocity = glm::vec4(2,2,2,0);
-		cur.color = 0;
-		particles.push_back(cur);
-		shapes.push_back(tShape());
-		SetupShape(i);
-	}
+	srand(87435);
+	generateRandomeParticles();
+	
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 	my_glGenVertexArrays(1, &vao_id);
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
@@ -61,8 +51,10 @@ SmokeParticleSystem::SmokeParticleSystem(std::string name, unsigned totalnr, glm
 	get_errors();
 	model = glm::mat4();
 
+	center = pScenter;
+
 }
-void SmokeParticleSystem::SetupShape(unsigned nr)
+void SteamParticleSystem::SetupShape(unsigned nr)
 {
 	if(nr > totalparticles) return;
 
@@ -73,12 +65,15 @@ void SmokeParticleSystem::SetupShape(unsigned nr)
 	shapes[nr].vertex[2] = camerapos + glm::vec4(particles[nr].size, -particles[nr].size,0,1);
 	shapes[nr].vertex[3] = camerapos + glm::vec4(-particles[nr].size, -particles[nr].size,0,1);
 }
-bool SmokeParticleSystem::Update(float dtime)
+bool SteamParticleSystem::Update(float dtime)
 {
+	for(unsigned i = 0; i < totalparticles; i++){
+		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
+	}
 	return true;
 }
 
-void SmokeParticleSystem::Render(void)
+void SteamParticleSystem::Render(void)
 {
 	get_errors();
 	shader->bind();
@@ -120,12 +115,12 @@ void SmokeParticleSystem::Render(void)
 		for(size_t j = 0; j < 4; j++)
 			pointlist[i*4 + j] = shapes[i].vertex[j];
 
-		indexlist[i*6 + 0] = i*4 + 0;
+		indexlist[i*6 + 0] = i*4 + 2;
 		indexlist[i*6 + 1] = i*4 + 1;
-		indexlist[i*6 + 2] = i*4 + 2;
-		indexlist[i*6 + 3] = i*4 + 2;
+		indexlist[i*6 + 2] = i*4 + 0;
+		indexlist[i*6 + 3] = i*4 + 0;
 		indexlist[i*6 + 4] = i*4 + 3;
-		indexlist[i*6 + 5] = i*4 + 0;
+		indexlist[i*6 + 5] = i*4 + 2;
 		//better all particle pos relativ to particle system, so model matrix stay the same draw all particles with one glDrawElements
 	}
 	bindVBO(vbo_id[0], pointlist, totalparticles * 4 * 4 * sizeof(GLfloat));
@@ -150,4 +145,28 @@ void SmokeParticleSystem::Render(void)
 	delete indexlist;
 }
 
-
+void SteamParticleSystem::generateRandomeParticles()
+{
+	for(unsigned i = 0; i < totalparticles; i++)
+	{
+		Particle cur;
+		int x = rand() % 500;
+		int y = rand() % 500;
+		int z = rand() % 500;
+		float fx = (float)x / 100.0f;
+		float fy = (float)y / 100.0f;
+		float fz = (float)z / 100.0f;
+		int size = rand() % 100 + 100;
+		float sf = (float) size / 500.0f;
+		float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
+		cur.position = glm::vec4(fx,fy,fz,1);
+		cur.oldPos = glm::vec4(1,1,1,1);
+		cur.size = sf;
+		cur.energy = 100;
+		cur.velocity = glm::vec4(0,0,speed,0);
+		cur.color = 0;
+		particles.push_back(cur);
+		shapes.push_back(tShape());
+		SetupShape(i);
+	}
+}

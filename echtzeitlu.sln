@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw_ogl3_2", "VSProject\glfw_ogl3_2.vcxproj", "{4BD3E779-D4A2-4987-953D-2FFAEB4590F5}"
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "echtzeitlu", "VSProject\glfw_ogl3_2.vcxproj", "{4BD3E779-D4A2-4987-953D-2FFAEB4590F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "particletest", "particletest\particletest.vcxproj", "{F336D6D2-EBF7-4D3F-8032-0E1C23AE4A36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{4BD3E779-D4A2-4987-953D-2FFAEB4590F5}.Debug|Win32.Build.0 = Debug|Win32
 		{4BD3E779-D4A2-4987-953D-2FFAEB4590F5}.Release|Win32.ActiveCfg = Release|Win32
 		{4BD3E779-D4A2-4987-953D-2FFAEB4590F5}.Release|Win32.Build.0 = Release|Win32
+		{F336D6D2-EBF7-4D3F-8032-0E1C23AE4A36}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F336D6D2-EBF7-4D3F-8032-0E1C23AE4A36}.Debug|Win32.Build.0 = Debug|Win32
+		{F336D6D2-EBF7-4D3F-8032-0E1C23AE4A36}.Release|Win32.ActiveCfg = Release|Win32
+		{F336D6D2-EBF7-4D3F-8032-0E1C23AE4A36}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

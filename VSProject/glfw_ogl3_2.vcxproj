@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Effect.cpp" />
+    <ClCompile Include="..\src\Lighting.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
     <ClCompile Include="..\src\ModelEffect.cpp" />
     <ClCompile Include="..\src\ModelImage.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\Effect.h" />
+    <ClInclude Include="..\src\Lighting.h" />
     <ClInclude Include="..\src\Model.h" />
     <ClInclude Include="..\src\ModelEffect.h" />
     <ClInclude Include="..\src\ModelImage.h" />
