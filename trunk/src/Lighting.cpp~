@@ -1,0 +1,42 @@
+#include "Lighting.h"
+#include "camera.h"
+
+#include <glm/gtc/matrix_projection.hpp>
+#include <glm/gtx/transform2.hpp>
+
+using namespace echtzeitlu;
+
+extern Camera m_camera_1;
+extern int width;
+extern int height;
+
+void Lighting::addLight(glm::vec3 position, glm::vec4 color)
+{
+	Light light;
+	light.position = position;
+	light.color = color;
+	float aspect = float(width)/float(height);
+	light.proj = glm::perspective(60.0f, aspect, 0.1f, 10.0f);
+	light.model = glm::lookAt(light.position, glm::vec3(0,0,0), glm::vec3(0,0,1));
+	glGenTextures(1, &light.texShadowMap);
+	lightlist.push_back(light);
+}
+
+void Lighting::createShadowMaps(SceneObject* scene)
+{
+	if(lightlist.empty())
+		return;
+	
+	Light light = lightlist[0]; // HACK assume one light for testing
+	
+	Camera cam_tmp = m_camera_1;
+	
+	m_camera_1.intrinsic = light.proj;
+	m_camera_1.extrinsic = light.model;
+	
+	scene->draw();
+	
+	glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 0, 0, width, height, 0);
+	
+}

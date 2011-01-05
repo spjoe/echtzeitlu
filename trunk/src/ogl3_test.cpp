@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "ParticleManager.h"
 #include "ParticleSystem.h"
+#include "Lighting.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -33,12 +34,14 @@ GLfloat distance = -4.0f;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
+Lighting m_lighting;
 SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
+Shader *simpleShader;
 
-int width=800,
-	height=600;
+int width=800;
+int height=600;
 
 
 int oldx,oldy;
@@ -168,6 +171,7 @@ int main (int argc, char** argv)
 		
 		// Load and compile Shader files
 		Shader minimal("../shader/minimal");
+		Shader SimpleShader("../shader/simple_shader");
 		Shader TextureShader("../shader/TextureShader");
 		Shader ColorShader("../shader/ColorShader");
 
@@ -176,18 +180,24 @@ int main (int argc, char** argv)
 			return 1;
 		}
 		if (!TextureShader) {
-			cerr << "Could not compile simple_shader program." << endl;
+			cerr << "Could not compile TextureShader program." << endl;
 			return 1;
 		}
 		if (!ColorShader) {
+			cerr << "Could not compile ColorShader program." << endl;
+			return 1;
+		}
+		if (!SimpleShader){
 			cerr << "Could not compile simple_shader program." << endl;
 			return 1;
 		}
 
 		TextureShader.bind_frag_data_location("fragColor");
 		ColorShader.bind_frag_data_location("fragColor");
+		SimpleShader.bind_frag_data_location("fragColor");
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
+		simpleShader = &SimpleShader;
 
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
@@ -199,7 +209,6 @@ int main (int argc, char** argv)
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
 		cout << "... done loading scene" << endl;
-		
 		
 		// workaround 2: 
 		// if user closes window, there is no context left to query the proc-address from
@@ -217,6 +226,7 @@ int main (int argc, char** argv)
 		alSourcei (musicSource, AL_BUFFER, musicBuffer);
 		alSourcePlay (musicSource);*/
 
+		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
 
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
@@ -226,13 +236,15 @@ int main (int argc, char** argv)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//draw(simpleShader, vao_id);
-			rootScene->draw();
+			rootScene->drawSimple();
 			pm.Render();
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
 			pm.Update(tmptime-time);
 			time = tmptime;
-					
+			
+// 			m_lighting.createShadowMaps(rootScene);
+			
 			glfwSwapBuffers();
 
 			// Get OGL errors

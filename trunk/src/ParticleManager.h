@@ -2,6 +2,7 @@
 
 #include "ParticleSystem.h"
 #include <set>
+#include <cstring>
 
 namespace echtzeitlu{
 struct ltps

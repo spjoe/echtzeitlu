@@ -45,6 +45,7 @@ public:
 	
 	/** @brief draws the model */
 	virtual void draw();
+	virtual void drawSimple(); // for deph map / shadow map
 	
 	/** @brief updates the model state 
 	*	@param fTime, time elapsed since last frame */
