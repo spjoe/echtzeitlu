@@ -89,6 +89,10 @@ bool SteamParticleSystem::Update(float dtime)
 
 void SteamParticleSystem::Render(void)
 {
+	glEnable(GL_BLEND);
+	get_errors();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	get_errors();
 	get_errors();
 	shader->bind();
 	get_errors();
@@ -157,6 +161,7 @@ void SteamParticleSystem::Render(void)
 	shader->unbind();
 	delete pointlist;
 	delete indexlist;
+	glDisable(GL_BLEND);
 }
 
 void SteamParticleSystem::generateRandomeParticles()
@@ -173,11 +178,13 @@ void SteamParticleSystem::generateRandomeParticles()
 		int size = rand() % 100 + 100;
 		float sf = (float) size / 2000.0f;
 		float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
+		float speed2 = (float)(rand() % 100 - 50)  / 1000.0f;
+		float speed3 = (float)(rand() % 100 - 50) / 1000.0f;
 		cur.position = glm::vec4(fx,fy,fz,1);
 		cur.oldPos = glm::vec4(fx,fy,fz,1);
 		cur.size = sf;
 		cur.energy = 100;
-		cur.velocity = glm::vec4(0,0,speed,0);
+		cur.velocity = glm::vec4(speed2,speed3,speed,0);
 		cur.color = 0;
 		particles.push_back(cur);
 		shapes.push_back(tShape());

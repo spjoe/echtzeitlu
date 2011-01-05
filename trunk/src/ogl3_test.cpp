@@ -158,10 +158,6 @@ int main (int argc, char** argv)
 	// Clear errors. GLFW setup seems to cause an opengl error while setup.
 	glGetError(); 
 
-	glEnable(GL_BLEND);
-	get_errors();
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	get_errors();
 	test_ogl3();
 
 	{
@@ -208,7 +204,7 @@ int main (int argc, char** argv)
 		get_errors();
 		init_matrixs();
 		get_errors();
-		pm.AddSystem(new SteamParticleSystem("Smokie uno",500,glm::vec4(0,0,0,1)));
+		pm.AddSystem(new SteamParticleSystem("Smokie uno",500,glm::vec4(0,-2,0,1)));
 
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
