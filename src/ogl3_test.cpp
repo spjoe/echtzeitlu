@@ -226,24 +226,43 @@ int main (int argc, char** argv)
 		alSourcei (musicSource, AL_BUFFER, musicBuffer);
 		alSourcePlay (musicSource);*/
 
-		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
-
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
+		
+		// Create shadow map (static, because this is outside of running loop)
+		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
+		Light light = m_lighting.lightlist[0];
+		glm::mat4 biasprojview = light.bias * light.proj * light.view;
+		m_lighting.createShadowMaps(rootScene);
+		
+		defaultColorShader->bind();
+		
+		GLint biasprojview_uniform = defaultColorShader->get_uniform_location("biasprojview");
+		glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
+		
+		GLint shadowMap_uniform = defaultColorShader->get_uniform_location("shadowMap");
+		glUniform1i(shadowMap_uniform, 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
+		glActiveTexture(GL_TEXTURE0);
+		
+		defaultColorShader->unbind();
+		
 		double time = glfwGetTime( );
+// 		running  = false;
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+			
 			//draw(simpleShader, vao_id);
-			rootScene->drawSimple();
+			rootScene->draw();
 			pm.Render();
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
 			pm.Update(tmptime-time);
 			time = tmptime;
 			
-// 			m_lighting.createShadowMaps(rootScene);
+
 			
 			glfwSwapBuffers();
 

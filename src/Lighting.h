@@ -10,17 +10,17 @@ struct Light
 {
 	glm::vec3 position;
 	glm::vec4 color;
+	glm::mat4 bias;
 	glm::mat4 proj;
-	glm::mat4 model;
+	glm::mat4 view;
 	GLuint texShadowMap;
 };
 
 class Lighting
 {
-private:
+public:
 	std::vector<Light> lightlist;
 	
-public:
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
 	void createShadowMaps(SceneObject* scene);
