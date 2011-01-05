@@ -49,26 +49,33 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
-	model = glm::mat4();
+	model = glm::mat4(	1.0,  0.0, 0.0, 0.0,
+					0.0,  1.0, 0.0, 0.0,
+					0.0,  0.0, 1.0, 0.0,
+					-pScenter.x,	-pScenter.y, -pScenter.z, 1.0);
 
 	center = pScenter;
 
 }
 void SteamParticleSystem::SetupShape(unsigned nr)
 {
-	if(nr > totalparticles) return;
+	if(nr >= totalparticles) return;
 
-	glm::vec4 camerapos = m_camera_1.extrinsic * particles[nr].position;
-
-	shapes[nr].vertex[0] = camerapos + glm::vec4(-particles[nr].size, particles[nr].size,0,1);
-	shapes[nr].vertex[1] = camerapos + glm::vec4(particles[nr].size, particles[nr].size,0,1);
-	shapes[nr].vertex[2] = camerapos + glm::vec4(particles[nr].size, -particles[nr].size,0,1);
-	shapes[nr].vertex[3] = camerapos + glm::vec4(-particles[nr].size, -particles[nr].size,0,1);
+	glm::mat4 rot = m_camera_1.extrinsic; 
+	rot[3][0] = rot[3][1] =rot[3][2] = 0;
+	rot[0][3] = rot[1][3] =rot[2][3] = 0;
+	rot[3][3] = 1;
+	rot = glm::transpose(rot);
+	shapes[nr].vertex[0] = rot * glm::vec4(-particles[nr].size, particles[nr].size,0,1) + particles[nr].position ; 
+	shapes[nr].vertex[1] = rot * glm::vec4(particles[nr].size,particles[nr].size,0,1) + particles[nr].position;
+	shapes[nr].vertex[2] = rot * glm::vec4(particles[nr].size, -particles[nr].size,0,1) + particles[nr].position;
+	shapes[nr].vertex[3] = rot * glm::vec4(-particles[nr].size, -particles[nr].size,0,1) + particles[nr].position;
 }
 bool SteamParticleSystem::Update(float dtime)
 {
 	for(unsigned i = 0; i < totalparticles; i++){
-		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
+		//particles[i].position = particles[i].position + (particles[i].velocity * dtime);
+		SetupShape(i);
 	}
 	return true;
 }
@@ -111,7 +118,7 @@ void SteamParticleSystem::Render(void)
 	for(size_t i = 0; i < totalparticles; i++)
 	{
 		Particle curr = particles[i];
-		SetupShape(i);
+		
 		for(size_t j = 0; j < 4; j++)
 			pointlist[i*4 + j] = shapes[i].vertex[j];
 
@@ -157,7 +164,7 @@ void SteamParticleSystem::generateRandomeParticles()
 		float fy = (float)y / 100.0f;
 		float fz = (float)z / 100.0f;
 		int size = rand() % 100 + 100;
-		float sf = (float) size / 500.0f;
+		float sf = (float) size / 2000.0f;
 		float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
 		cur.position = glm::vec4(fx,fy,fz,1);
 		cur.oldPos = glm::vec4(1,1,1,1);
