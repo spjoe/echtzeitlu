@@ -158,6 +158,10 @@ int main (int argc, char** argv)
 	// Clear errors. GLFW setup seems to cause an opengl error while setup.
 	glGetError(); 
 
+	glEnable(GL_BLEND);
+	get_errors();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	get_errors();
 	test_ogl3();
 
 	{
