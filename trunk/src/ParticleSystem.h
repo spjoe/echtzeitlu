@@ -24,7 +24,7 @@ public:
 	ParticleSystem(void);
 	~ParticleSystem(void);
 	virtual void Render(void) = 0;
-	virtual void SetupShape(unsigned nr) = 0;
+	//virtual void SetupShape(unsigned nr) = 0;
 	virtual bool Update(float dtime) = 0;
 
 	std::string name;
@@ -40,7 +40,7 @@ private:
 public:
 	SteamParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
 	virtual void Render(void);
-	virtual void SetupShape(unsigned nr);
+	void SetupShape(unsigned nr, glm::mat4 rot);
 	virtual bool Update(float dtime);
 
 private:

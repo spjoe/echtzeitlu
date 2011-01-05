@@ -25,7 +25,7 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	shader = new Shader("../shader/SmokeShader");
 	shader->bind_frag_data_location("fragColor");
 	totalparticles = totalnr;
-	colorlist.assign(totalnr*4, glm::vec4(0.5, 0.5, 0.5, 1));
+	colorlist.assign(totalnr*4, glm::vec4(0.5, 0.5, 0.5, 0.5));
 
 	srand(87435);
 	generateRandomeParticles();
@@ -57,15 +57,15 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	center = pScenter;
 
 }
-void SteamParticleSystem::SetupShape(unsigned nr)
+void SteamParticleSystem::SetupShape(unsigned nr, glm::mat4 rot)
 {
 	if(nr >= totalparticles) return;
 
-	glm::mat4 rot = m_camera_1.extrinsic; 
+	/*glm::mat4 rot = m_camera_1.extrinsic; 
 	rot[3][0] = rot[3][1] =rot[3][2] = 0;
 	rot[0][3] = rot[1][3] =rot[2][3] = 0;
 	rot[3][3] = 1;
-	rot = glm::transpose(rot);
+	rot = glm::transpose(rot);*/
 	shapes[nr].vertex[0] = rot * glm::vec4(-particles[nr].size, particles[nr].size,0,1) + particles[nr].position ; 
 	shapes[nr].vertex[1] = rot * glm::vec4(particles[nr].size,particles[nr].size,0,1) + particles[nr].position;
 	shapes[nr].vertex[2] = rot * glm::vec4(particles[nr].size, -particles[nr].size,0,1) + particles[nr].position;
@@ -73,9 +73,16 @@ void SteamParticleSystem::SetupShape(unsigned nr)
 }
 bool SteamParticleSystem::Update(float dtime)
 {
+	glm::mat4 rot = m_camera_1.extrinsic; 
+	rot[3][0] = rot[3][1] =rot[3][2] = 0;
+	rot[0][3] = rot[1][3] =rot[2][3] = 0;
+	rot[3][3] = 1;
+	rot = glm::transpose(rot);
 	for(unsigned i = 0; i < totalparticles; i++){
-		//particles[i].position = particles[i].position + (particles[i].velocity * dtime);
-		SetupShape(i);
+		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
+		if(particles[i].position.z > 5)
+			particles[i].position = particles[i].oldPos;
+		SetupShape(i,rot);
 	}
 	return true;
 }
@@ -160,20 +167,20 @@ void SteamParticleSystem::generateRandomeParticles()
 		int x = rand() % 500;
 		int y = rand() % 500;
 		int z = rand() % 500;
-		float fx = (float)x / 100.0f;
-		float fy = (float)y / 100.0f;
-		float fz = (float)z / 100.0f;
+		float fx = (float)x / 200.0f;
+		float fy = (float)y / 200.0f;
+		float fz = (float)z / 200.0f;
 		int size = rand() % 100 + 100;
 		float sf = (float) size / 2000.0f;
 		float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
 		cur.position = glm::vec4(fx,fy,fz,1);
-		cur.oldPos = glm::vec4(1,1,1,1);
+		cur.oldPos = glm::vec4(fx,fy,fz,1);
 		cur.size = sf;
 		cur.energy = 100;
 		cur.velocity = glm::vec4(0,0,speed,0);
 		cur.color = 0;
 		particles.push_back(cur);
 		shapes.push_back(tShape());
-		SetupShape(i);
+		//SetupShape(i);
 	}
 }
