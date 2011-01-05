@@ -24,6 +24,7 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat4 biasprojview;
 
 // vertex-shader input variables
 in vec4 vertex;
@@ -35,6 +36,7 @@ in vec3 normal;
 out vec4 frag_color;
 out vec3 world_normal;
 out vec4 world_position;
+out vec4 proj_shadow;
 
 
 void main()
@@ -45,6 +47,8 @@ void main()
     
     // transform vertex to world-space
     world_position = model * vertex;
+    
+    proj_shadow = biasprojview * world_position;
     
     // just pass color to fragment-shader
     frag_color = color;

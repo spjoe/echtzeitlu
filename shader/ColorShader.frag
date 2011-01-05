@@ -20,6 +20,8 @@
 #version 130              // delete this line if using GLSL 1.2
 precision mediump float;  // delete this line if using GLSL 1.2
 
+uniform sampler2DShadow shadowMap;
+
 // uniform shader-parameters
 uniform vec3 light_position;
 uniform vec4 light_color;
@@ -31,6 +33,7 @@ uniform vec4 ambient_color;
 in vec4 frag_color;
 in vec3 world_normal;
 in vec4 world_position;
+in vec4 proj_shadow;
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
@@ -49,8 +52,14 @@ void main()
     vec4 ambient = ambient_color * frag_color;
     vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
     
+    float shadow = 1.0;
+	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
+	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
+		shadow = texture(shadowMap, coordPos) < coordPos.z - 0.001 ? 0.2 : 1.0;
+	}
+	
     // write color to output
-    fragColor = ambient + diffuse;
+    fragColor = shadow * (ambient + diffuse);
 
 	//fragColor = texture2D( texture, gl_TexCoord[0].st);
 
