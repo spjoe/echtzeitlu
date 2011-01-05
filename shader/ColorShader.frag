@@ -55,9 +55,13 @@ void main()
     float shadow = 1.0;
 	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
 	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
-		shadow = texture(shadowMap, coordPos) < coordPos.z - 0.001 ? 0.2 : 1.0;
+		if( texture(shadowMap, coordPos) < (coordPos.z - 0.001))
+			shadow = 0.2;
+		else
+			shadow = 1.0;
 	}
-	
+
+
     // write color to output
     fragColor = shadow * (ambient + diffuse);
 
