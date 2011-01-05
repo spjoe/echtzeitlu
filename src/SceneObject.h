@@ -25,8 +25,9 @@ class SceneObject
 	SceneObject() : children(){};
 	virtual ~SceneObject();
 	
-	virtual void draw(){ drawChildren(); };
-	virtual void update(float fTime){ updateChildren(fTime); };
+	virtual void draw(){ drawChildren(); }
+	virtual void drawSimple(){ drawSimpleChildren(); } // for deph map / shadow map
+	virtual void update(float fTime){ updateChildren(fTime); }
 
 	void add(SceneObject * child){
 		children.push_back(child);
@@ -44,9 +45,18 @@ class SceneObject
 				childrenIterator++)
 		{
 			(*childrenIterator)->draw();
-			(*childrenIterator)->drawChildren();
+			//(*childrenIterator)->drawChildren(); // called in draw()
 		}
-	};
+	}
+	void drawSimpleChildren(){
+		std::vector<SceneObject*>::iterator childrenIterator;
+		for(childrenIterator = children.begin(); 
+				childrenIterator != children.end();
+				childrenIterator++)
+		{
+			(*childrenIterator)->drawSimple();
+		}
+	}
 	void updateChildren(float ftime){
 		std::vector<SceneObject*>::iterator childrenIterator;
 		for(childrenIterator = children.begin(); 
@@ -54,7 +64,7 @@ class SceneObject
 				childrenIterator++)
 		{
 			(*childrenIterator)->update(ftime);
-			(*childrenIterator)->updateChildren(ftime);
+			//(*childrenIterator)->updateChildren(ftime); // called in update()
 		}
 	};
 };

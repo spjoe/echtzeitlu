@@ -1,6 +1,7 @@
 
 #include "Model.h"
 #include "camera.h"
+#include "Lighting.h"
 
 
 #include <stdio.h>
@@ -14,8 +15,10 @@ extern glm::vec3 light_position;
 extern glm::vec4 light_color;
 extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
+extern Lighting m_lighting;
 //extern glm::mat4 model;
 // extern Shader* defaultShader;
+extern Shader* simpleShader;
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
 			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
@@ -112,7 +115,12 @@ void Model::print()
 {
 	for(unsigned i=0; i<pointlist.size(); i++){
 		printf("%f %f %f, %f %f %f\n", pointlist[i].x, pointlist[i].y, pointlist[i].z, normallist[i].x, normallist[i].y, normallist[i].z);
-	}
+	}// 	for(unsigned i=0; i<4; i++){
+// 		for(unsigned j=0; j<4; j++){
+// 		  printf(" %f", model[i][j]);
+// 		}
+// 		printf("\n");
+// 	}
 	for(unsigned i=0; i<indexlist.size(); i++){
 		printf("%d ", indexlist[i]);
 	}
@@ -146,9 +154,7 @@ void Model::draw()
 		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
 		get_errors();
 	}
-
-
-
+	
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
     glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
@@ -159,13 +165,6 @@ void Model::draw()
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
 	
-// 	for(unsigned i=0; i<4; i++){
-// 		for(unsigned j=0; j<4; j++){
-// 		  printf(" %f", model[i][j]);
-// 		}
-// 		printf("\n");
-// 	}
-
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
@@ -177,11 +176,55 @@ void Model::draw()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
 	shader->unbind();
+	
+	drawChildren();
+}
+
+void Model::drawSimple(){ // for deph map / shadow map
+	// TODO should be much simpler (no lighting / shading at all)
+	// 
+	if(indexlist.empty())
+		return;
+	
+	get_errors();
+	simpleShader->bind();
+	get_errors();
+	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+	my_glBindVertexArray(vao_id);
+	get_errors();
+    GLint light_position_uniform = shader->get_uniform_location( "light_position");
+    GLint light_color_uniform    = shader->get_uniform_location( "light_color");
+    GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+	get_errors();
+	
+	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
+    glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
+    glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
+	get_errors();
+
+    // set matrix-uniforms
+    GLint perspective_uniform = shader->get_uniform_location( "perspective");
+    GLint view_uniform        = shader->get_uniform_location( "view");
+    GLint model_uniform       = shader->get_uniform_location( "model");
+	
+	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
+	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
+	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
+	get_errors();
+	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
+	get_errors();
+	my_glBindVertexArray(0);
+	get_errors();
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors();
+	simpleShader->unbind();
+	
+	drawSimpleChildren();
 }
 
 void Model::update(float fTime)
 {
-  
+	updateChildren(fTime);
 }
 void Model::bindVertex(void* data, size_t size){
 	bindVBO(vbo_id[0], data, size);
