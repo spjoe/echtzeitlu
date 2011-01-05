@@ -234,6 +234,7 @@ int main (int argc, char** argv)
 		Light light = m_lighting.lightlist[0];
 		glm::mat4 biasprojview = light.bias * light.proj * light.view;
 		m_lighting.createShadowMaps(rootScene);
+		get_errors();
 		
 		defaultColorShader->bind();
 		
@@ -241,18 +242,20 @@ int main (int argc, char** argv)
 		glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
 		
 		GLint shadowMap_uniform = defaultColorShader->get_uniform_location("shadowMap");
-		glUniform1i(shadowMap_uniform, 1);
-		glActiveTexture(GL_TEXTURE1);
+		//glUniform1i(shadowMap_uniform, 0);
+		//glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-		glActiveTexture(GL_TEXTURE0);
 		
 		defaultColorShader->unbind();
+		
+		get_errors();
 		
 		double time = glfwGetTime( );
 // 		running  = false;
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 			
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
@@ -261,8 +264,6 @@ int main (int argc, char** argv)
 			rootScene->update(tmptime-time);
 			pm.Update(tmptime-time);
 			time = tmptime;
-			
-
 			
 			glfwSwapBuffers();
 

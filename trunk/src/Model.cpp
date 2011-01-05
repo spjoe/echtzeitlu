@@ -140,20 +140,20 @@ void Model::draw()
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
 	get_errors();
-    GLint light_position_uniform = shader->get_uniform_location( "light_position");
-    GLint light_color_uniform    = shader->get_uniform_location( "light_color");
-    GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+	GLint light_position_uniform = shader->get_uniform_location( "light_position");
+	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
+	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
 	get_errors();
-	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
-		GLint texture_uniform = shader->get_uniform_location("texture");
-		get_errors();
-		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
-		get_errors();
-		glActiveTexture(GL_TEXTURE0);
-		get_errors();
-		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
-		get_errors();
-	}
+// 	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
+// 		GLint texture_uniform = shader->get_uniform_location("texture");
+// 		get_errors();
+// 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
+// 		get_errors();
+// 		glActiveTexture(GL_TEXTURE0);
+// 		get_errors();
+// 		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
+// 		get_errors();
+// 	}
 	
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
