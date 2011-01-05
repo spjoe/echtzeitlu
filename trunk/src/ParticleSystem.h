@@ -30,7 +30,7 @@ public:
 	std::string name;
 };
 
-class SmokeParticleSystem : public ParticleSystem
+class SteamParticleSystem : public ParticleSystem
 {
 private:
 	std::vector<glm::vec4> colorlist;
@@ -38,9 +38,12 @@ private:
 	
 
 public:
-	SmokeParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
+	SteamParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
 	virtual void Render(void);
 	virtual void SetupShape(unsigned nr);
 	virtual bool Update(float dtime);
+
+private:
+	void generateRandomeParticles();
 };
 }

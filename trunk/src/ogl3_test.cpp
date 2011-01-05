@@ -204,7 +204,7 @@ int main (int argc, char** argv)
 		get_errors();
 		init_matrixs();
 		get_errors();
-		pm.AddSystem(new SmokeParticleSystem("Smokie uno",1,glm::vec4(1,1,1,1)));
+		pm.AddSystem(new SteamParticleSystem("Smokie uno",500,glm::vec4(1,1,1,1)));
 
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
