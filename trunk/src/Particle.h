@@ -13,7 +13,7 @@ struct Particle
 	glm::vec4 oldPos;
 	glm::vec4 velocity;
 	glm::vec4 color;
-	int energy;
+	float energy;
 	float size;
 };
 }//ende namespace echtzeitlu

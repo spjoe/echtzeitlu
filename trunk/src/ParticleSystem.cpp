@@ -86,8 +86,8 @@ bool SteamParticleSystem::Update(float dtime)
 {
 	for(unsigned i = 0; i < totalparticles; i++){
 		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
-		particles[i].energy = std::max(0, particles[i].energy - (rand() % 2));
-		particles[i].color.a = float(particles[i].energy)/ 50.0f;
+		particles[i].energy = std::max(0.0, particles[i].energy - (double)(rand() % 40) * dtime);
+		particles[i].color.a = float(particles[i].energy)/ 200.0f;
 		if(particles[i].color.a < 0.01){
 			particles[i] = generateOneRandomParticle();
 		}
@@ -176,12 +176,12 @@ Particle SteamParticleSystem::generateOneRandomParticle()
 	float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
 	float speed2 = (float)(rand() % 100 - 50)  / 100.0f;
 	float speed3 = (float)(rand() % 100 - 50) / 100.0f;
-	float bright = (float)(rand() % 50 + 30) / 100.0f; 
+	float bright = (float)(rand() % 30 + 40) / 100.0f; 
 
 	par.position = glm::vec4(fx,fy,fz,1);
 	par.oldPos = glm::vec4(fx,fy,fz,1);
 	par.size = sf;
-	par.energy = rand() % 100;
+	par.energy = (float) (rand() % 100);
 	par.velocity = glm::vec4(speed2,speed3,speed,0);
 	par.color = glm::vec4(bright,bright,bright+0.05,0.5);
 
