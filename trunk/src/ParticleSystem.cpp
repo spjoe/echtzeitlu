@@ -25,7 +25,7 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	shader = new Shader("../shader/SmokeShader");
 	shader->bind_frag_data_location("fragColor");
 	totalparticles = totalnr;
-	colorlist.assign(totalnr*4, glm::vec4(0.5, 0.5, 0.5, 0.5));
+	colorlist.assign(4, glm::vec4(0.5, 0.5, 0.5, 0.5));
 
 	srand(87435);
 	generateRandomeParticles();
@@ -40,24 +40,45 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	vbo_id[1] = tmp_vbo_id[1];
 	delete tmp_vbo_id;
 
-	bindVBO(vbo_id[1], &colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
-	GLint color_location = shader->get_attrib_location("color");
-	glEnableVertexAttribArray(color_location);
-	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
+	//bindVBO(vbo_id[1], &colorlist[0], 4 * 4 * sizeof(GLfloat));
+	//GLint color_location = shader->get_attrib_location("color");
+	//glEnableVertexAttribArray(color_location);
+	//glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
+	//						GL_FALSE, 0, NULL);
+
+	
+	pointlist[0] = glm::vec4(-1, 1, 0, 1); 
+	pointlist[1] = glm::vec4( 1, 1, 0, 1);
+	pointlist[2] = glm::vec4( 1,-1, 0, 1);
+	pointlist[3] = glm::vec4(-1,-1, 0, 1);
+
+	
+	//ccw
+	indexlist[0] = 2;
+	indexlist[1] = 1;
+	indexlist[2] = 0;
+	indexlist[3] = 0;
+	indexlist[4] = 3;
+	indexlist[5] = 2;
+
+	bindVBO(vbo_id[0], pointlist, 4 * 4 * sizeof(GLfloat));
+	GLint vertex_location = shader->get_attrib_location("vertex");
+	glEnableVertexAttribArray(vertex_location);
+	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
-	model = glm::mat4(	1.0,  0.0, 0.0, 0.0,
-					0.0,  1.0, 0.0, 0.0,
-					0.0,  0.0, 1.0, 0.0,
-					-pScenter.x,	-pScenter.y, -pScenter.z, 1.0);
+	model = glm::mat4(	1.0, 0.0, 0.0, 0.0,
+						0.0, 1.0, 0.0, 0.0,
+						0.0, 0.0, 1.0, 0.0,
+						-pScenter.x, -pScenter.y, -pScenter.z, 1.0);
 
 	center = pScenter;
 
 }
-void SteamParticleSystem::SetupShape(unsigned nr, glm::mat4 rot)
+void SteamParticleSystem::SetupShape(unsigned nr)
 {
 	if(nr >= totalparticles) return;
 
@@ -66,23 +87,23 @@ void SteamParticleSystem::SetupShape(unsigned nr, glm::mat4 rot)
 	rot[0][3] = rot[1][3] =rot[2][3] = 0;
 	rot[3][3] = 1;
 	rot = glm::transpose(rot);*/
-	shapes[nr].vertex[0] = rot * glm::vec4(-particles[nr].size, particles[nr].size,0,1) + particles[nr].position ; 
-	shapes[nr].vertex[1] = rot * glm::vec4(particles[nr].size,particles[nr].size,0,1) + particles[nr].position;
-	shapes[nr].vertex[2] = rot * glm::vec4(particles[nr].size, -particles[nr].size,0,1) + particles[nr].position;
-	shapes[nr].vertex[3] = rot * glm::vec4(-particles[nr].size, -particles[nr].size,0,1) + particles[nr].position;
+	
 }
 bool SteamParticleSystem::Update(float dtime)
 {
-	glm::mat4 rot = m_camera_1.extrinsic; 
-	rot[3][0] = rot[3][1] =rot[3][2] = 0;
-	rot[0][3] = rot[1][3] =rot[2][3] = 0;
-	rot[3][3] = 1;
-	rot = glm::transpose(rot);
+	//glm::mat4 rot = m_camera_1.extrinsic; 
+	//rot[3][0] = rot[3][1] =rot[3][2] = 0;
+	//rot[0][3] = rot[1][3] =rot[2][3] = 0;
+	//rot[3][3] = 1;
+	//rot = glm::transpose(rot);
 	for(unsigned i = 0; i < totalparticles; i++){
 		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
-		if(particles[i].position.z > 5)
+		particles[i].color.a = std::max(0.0, particles[i].color.a - dtime * 0.5);
+		if(particles[i].position.z > 5){
 			particles[i].position = particles[i].oldPos;
-		SetupShape(i,rot);
+			particles[i].color.a = 0.5;
+		}
+		//SetupShape(i);
 	}
 	return true;
 }
@@ -92,7 +113,6 @@ void SteamParticleSystem::Render(void)
 	glEnable(GL_BLEND);
 	get_errors();
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	get_errors();
 	get_errors();
 	shader->bind();
 	get_errors();
@@ -113,6 +133,10 @@ void SteamParticleSystem::Render(void)
     GLint perspective_uniform = shader->get_uniform_location( "perspective");
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
+	GLint rot_uniform       = shader->get_uniform_location( "rot");
+	GLint size_uniform       = shader->get_uniform_location( "size");
+	GLint particle_position_uniform       = shader->get_uniform_location( "particle_position");
+	GLint color_uniform       = shader->get_uniform_location( "color");
 	
 // 	for(unsigned i=0; i<4; i++){
 // 		for(unsigned j=0; j<4; j++){
@@ -123,44 +147,45 @@ void SteamParticleSystem::Render(void)
 
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
+	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 
-	glm::vec4 *pointlist = new glm::vec4[totalparticles*4];
-	unsigned *indexlist = new unsigned[totalparticles*6];
+	glm::mat4 rot = m_camera_1.extrinsic; 
+	rot[3][0] = rot[3][1] =rot[3][2] = 0;
+	rot[0][3] = rot[1][3] =rot[2][3] = 0;
+	rot[3][3] = 1;
+	rot = glm::transpose(rot);
+	glUniformMatrix4fv(rot_uniform,       1, GL_FALSE, glm::value_ptr(rot));
+
+	//glm::vec4 *pointlist = new glm::vec4[totalparticles*4];
+	//unsigned *indexlist = new unsigned[totalparticles*6];
 	for(size_t i = 0; i < totalparticles; i++)
 	{
-		Particle curr = particles[i];
+		Particle particle = particles[i];
 		
-		for(size_t j = 0; j < 4; j++)
-			pointlist[i*4 + j] = shapes[i].vertex[j];
+		glUniform1f(size_uniform, (GLfloat)particle.size);
+		glUniform4fv(particle_position_uniform,1, glm::value_ptr(particle.position));
+		glUniform4fv(color_uniform,1, glm::value_ptr(particle.color));
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indexlist);
+		get_errors();
 
-		indexlist[i*6 + 0] = i*4 + 2;
-		indexlist[i*6 + 1] = i*4 + 1;
-		indexlist[i*6 + 2] = i*4 + 0;
-		indexlist[i*6 + 3] = i*4 + 0;
-		indexlist[i*6 + 4] = i*4 + 3;
-		indexlist[i*6 + 5] = i*4 + 2;
+		//for(size_t j = 0; j < 4; j++)
+			//pointlist[i*4 + j] = shapes[i].vertex[j];
 		//better all particle pos relativ to particle system, so model matrix stay the same draw all particles with one glDrawElements
 	}
-	bindVBO(vbo_id[0], pointlist, totalparticles * 4 * 4 * sizeof(GLfloat));
-	GLint vertex_location = shader->get_attrib_location("vertex");
-	glEnableVertexAttribArray(vertex_location);
-	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
-							GL_FALSE, 0, NULL);
-	get_errors();
 
 	//pointlist ändert sich ist daher vbo angebracht?
 	//indexlist bleibt gleich
-	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
-	get_errors();
-	glDrawElements(GL_TRIANGLES, totalparticles*2, GL_UNSIGNED_INT, indexlist);
+	
+	//get_errors();
+	//glDrawElements(GL_TRIANGLES, totalparticles*2, GL_UNSIGNED_INT, indexlist);
 	get_errors();
 	my_glBindVertexArray(0);
 	get_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
 	shader->unbind();
-	delete pointlist;
-	delete indexlist;
+	//delete pointlist;
+	//delete indexlist;
 	glDisable(GL_BLEND);
 }
 
@@ -180,14 +205,16 @@ void SteamParticleSystem::generateRandomeParticles()
 		float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
 		float speed2 = (float)(rand() % 100 - 50)  / 1000.0f;
 		float speed3 = (float)(rand() % 100 - 50) / 1000.0f;
+		float bright = (float)(rand() % 50 + 30) / 100.0f; 
+
 		cur.position = glm::vec4(fx,fy,fz,1);
 		cur.oldPos = glm::vec4(fx,fy,fz,1);
-		cur.size = sf;
+		cur.size = sf;//sf;
 		cur.energy = 100;
 		cur.velocity = glm::vec4(speed2,speed3,speed,0);
-		cur.color = 0;
+		cur.color = glm::vec4(bright,bright,bright,0.5);
 		particles.push_back(cur);
-		shapes.push_back(tShape());
+		//shapes.push_back(tShape());
 		//SetupShape(i);
 	}
 }
