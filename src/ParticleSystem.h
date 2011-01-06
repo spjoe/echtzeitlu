@@ -35,12 +35,13 @@ class SteamParticleSystem : public ParticleSystem
 private:
 	std::vector<glm::vec4> colorlist;
 	GLuint vbo_id[2];
-	
+	glm::vec4 pointlist[4];
+	unsigned indexlist[6];
 
 public:
 	SteamParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
 	virtual void Render(void);
-	void SetupShape(unsigned nr, glm::mat4 rot);
+	void SetupShape(unsigned nr);
 	virtual bool Update(float dtime);
 
 private:

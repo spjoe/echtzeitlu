@@ -12,7 +12,7 @@ struct Particle
 	glm::vec4 position;
 	glm::vec4 oldPos;
 	glm::vec4 velocity;
-	unsigned int color;
+	glm::vec4 color;
 	int energy;
 	float size;
 };

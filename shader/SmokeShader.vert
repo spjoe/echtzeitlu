@@ -24,16 +24,20 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat4 rot;
+uniform vec4 particle_position;
+uniform float size;
+uniform vec4 color;
 
 // vertex-shader input variables
 in vec4 vertex;
-in vec4 color;
+//in vec4 color;
 //in vec3 normal;
 //in vec2 texkoord;
 
 // vertex-shader output variables (passed to fragment-shader)
 out vec4 frag_color;
-out vec3 world_normal;
+//out vec3 world_normal;
 out vec4 world_position;
 
 
@@ -42,14 +46,19 @@ void main()
 	// transform normal into world space
 	//vec4 normal4 = vec4(normal, 0.0f);
     //world_normal = (model * normal4).xyz;
+
+	vec4 vertex2 = vertex;
+	vertex2.xy *= size;
+	vertex2 = rot * vertex2;
+	vertex2 = vertex2 + particle_position;
     
     // transform vertex to world-space
-    world_position = model * vertex;
+    world_position = model * vertex2;
     
     // just pass color to fragment-shader
     frag_color = color;
 	//gl_TexCoord[0].st = texkoord;
 
     // transform vertex down the pipeline
-    gl_Position = perspective * view * model * vertex;
+    gl_Position = perspective * view * model * vertex2;
 }
