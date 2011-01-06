@@ -45,6 +45,7 @@ public:
 	virtual bool Update(float dtime);
 
 private:
-	void generateRandomeParticles();
+	void generateRandomParticles();
+	Particle generateOneRandomParticle();
 };
 }
