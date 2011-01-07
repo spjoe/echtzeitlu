@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\camera.cpp" />
+    <ClCompile Include="..\src\CameraMotion.cpp" />
     <ClCompile Include="..\src\Effect.cpp" />
     <ClCompile Include="..\src\Lighting.cpp" />
     <ClCompile Include="..\src\Model.cpp" />
@@ -116,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\camera.h" />
+    <ClInclude Include="..\src\CameraMotion.h" />
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\Effect.h" />
     <ClInclude Include="..\src\Lighting.h" />

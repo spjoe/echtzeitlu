@@ -6,6 +6,7 @@
 #include "ParticleManager.h"
 #include "ParticleSystem.h"
 #include "Lighting.h"
+#include "CameraMotion.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -121,6 +122,7 @@ int main (int argc, char** argv)
 {
 	ModelLoader m_loader;
 	ParticleManager pm;
+	CameraMotion cm(&m_camera_1);
 	if (!alutInit (&argc, argv))
     {
       reportAlutError ();
@@ -157,7 +159,7 @@ int main (int argc, char** argv)
 
 	// Clear errors. GLFW setup seems to cause an opengl error while setup.
 	glGetError(); 
-
+	cm.moveto(glm::vec3(-10,-10,-10),10);
 	test_ogl3();
 
 	{
@@ -251,6 +253,7 @@ int main (int argc, char** argv)
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
 			pm.Update(tmptime-time);
+			//cm.update(tmptime-time); //Move Camera
 			time = tmptime;
 			
 			glfwSwapBuffers();

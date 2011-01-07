@@ -1,6 +1,8 @@
 
 #include <glm/glm.hpp>
 
+#pragma once;
+
 
 namespace echtzeitlu{
   
