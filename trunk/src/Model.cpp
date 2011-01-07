@@ -147,30 +147,23 @@ void Model::draw()
 		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
 		get_errors();
 	}
-// 	GLint light_position_uniform = shader->get_uniform_location( "light_position");
-// 	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
-// 	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
-// 	get_errors("Model::draw() D");
-// 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
-//     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
-//     glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
-	get_errors("Model::draw() E");
+	get_errors("Model::draw() D");
 
     // set matrix-uniforms
     GLint perspective_uniform = shader->get_uniform_location( "perspective");
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
-	get_errors("Model::draw() F");
+	get_errors("Model::draw() E");
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
-	get_errors("Model::draw() G");
+	get_errors("Model::draw() F");
 	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
-	get_errors("Model::draw() H");
+	get_errors("Model::draw() G");
 	my_glBindVertexArray(0);
-	get_errors("Model::draw() I");
+	get_errors("Model::draw() H");
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors("Model::draw() J");
+	get_errors("Model::draw() I");
 	shader->unbind();
 	
 	drawChildren();
