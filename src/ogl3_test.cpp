@@ -242,8 +242,8 @@ int main (int argc, char** argv)
 		glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
 		
 		GLint shadowMap_uniform = defaultColorShader->get_uniform_location("shadowMap");
-		//glUniform1i(shadowMap_uniform, 0);
-		//glActiveTexture(GL_TEXTURE0);
+		glUniform1i(shadowMap_uniform, 0);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
 		
 		defaultColorShader->unbind();
@@ -256,6 +256,7 @@ int main (int argc, char** argv)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
+// 			m_lighting.createShadowMaps(rootScene);
 			
 			//draw(simpleShader, vao_id);
 			rootScene->draw();

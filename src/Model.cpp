@@ -134,16 +134,16 @@ void Model::draw()
 	if(indexlist.empty())
 		return;
 	
-	get_errors();
+	get_errors("Model::draw() A");
 	shader->bind();
-	get_errors();
+	get_errors("Model::draw() B");
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
-	get_errors();
+	get_errors("Model::draw() C");
 	GLint light_position_uniform = shader->get_uniform_location( "light_position");
 	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
 	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
-	get_errors();
+	get_errors("Model::draw() D");
 // 	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
 // 		GLint texture_uniform = shader->get_uniform_location("texture");
 // 		get_errors();
@@ -158,23 +158,25 @@ void Model::draw()
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
     glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
-	get_errors();
+	get_errors("Model::draw() E");
 
     // set matrix-uniforms
     GLint perspective_uniform = shader->get_uniform_location( "perspective");
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
-	
+	get_errors("Model::draw() F");
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
+	get_errors("Model::draw() G");
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
+	get_errors("Model::draw() H");
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
-	get_errors();
+	get_errors("Model::draw() I");
 	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
-	get_errors();
+	get_errors("Model::draw() J");
 	my_glBindVertexArray(0);
-	get_errors();
+	get_errors("Model::draw() K");
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors();
+	get_errors("Model::draw() L");
 	shader->unbind();
 	
 	drawChildren();
@@ -192,9 +194,9 @@ void Model::drawSimple(){ // for deph map / shadow map
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
 	get_errors();
-    GLint light_position_uniform = shader->get_uniform_location( "light_position");
-    GLint light_color_uniform    = shader->get_uniform_location( "light_color");
-    GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+    GLint light_position_uniform = simpleShader->get_uniform_location( "light_position");
+    GLint light_color_uniform    = simpleShader->get_uniform_location( "light_color");
+    GLint ambient_color_uniform  = simpleShader->get_uniform_location( "ambient_color");
 	get_errors();
 	
 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
@@ -203,9 +205,9 @@ void Model::drawSimple(){ // for deph map / shadow map
 	get_errors();
 
     // set matrix-uniforms
-    GLint perspective_uniform = shader->get_uniform_location( "perspective");
-    GLint view_uniform        = shader->get_uniform_location( "view");
-    GLint model_uniform       = shader->get_uniform_location( "model");
+    GLint perspective_uniform = simpleShader->get_uniform_location( "perspective");
+    GLint view_uniform        = simpleShader->get_uniform_location( "view");
+    GLint model_uniform       = simpleShader->get_uniform_location( "model");
 	
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));

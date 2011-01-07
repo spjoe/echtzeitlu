@@ -29,6 +29,7 @@ uniform mat4 model;
 in vec4 vertex;
 in vec4 color;
 in vec3 normal;
+//in vec2 texkoord;
 
 // vertex-shader output variables (passed to fragment-shader)
 out vec4 frag_color;
@@ -47,6 +48,7 @@ void main()
     
     // just pass color to fragment-shader
     frag_color = color;
+	//gl_TexCoord[0].st = texkoord;
 
     // transform vertex down the pipeline
     gl_Position = perspective * view * model * vertex;

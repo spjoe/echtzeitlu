@@ -24,6 +24,8 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform vec3 light_position;
 uniform vec4 light_color;
 uniform vec4 ambient_color;
+//uniform sampler2D texture;
+
 
 // fragment-shader input variables
 in vec4 frag_color;
@@ -32,7 +34,6 @@ in vec4 world_position;
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
-
 
 void main()
 {
@@ -49,4 +50,7 @@ void main()
     
     // write color to output
     fragColor = ambient + diffuse;
+
+	//fragColor = texture2D( texture, gl_TexCoord[0].st);
+
 }

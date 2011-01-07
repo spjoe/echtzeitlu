@@ -44,6 +44,33 @@ void get_errors(void)
 	}
 }
 
+void get_errors(std::string msg)
+{
+	GLenum error = glGetError();
+
+	if (error != GL_NO_ERROR) {
+		switch (error) {
+		case GL_INVALID_ENUM:
+			cerr << msg.c_str() << " GL: enum argument out of range." << endl;
+			break;
+		case GL_INVALID_VALUE:
+			cerr << msg.c_str() << " GL: Numeric argument out of range." << endl;
+			break;
+		case GL_INVALID_OPERATION:
+			cerr << msg.c_str() << " GL: Operation illegal in current state." << endl;
+			break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			cerr << msg.c_str() << " GL: Framebuffer object is not complete." << endl;
+			break;
+		case GL_OUT_OF_MEMORY:
+			cerr << msg.c_str() << " GL: Not enough memory left to execute command." << endl;
+			break;
+		default:
+			cerr << msg.c_str() << " GL: Unknown error." << endl;
+		}
+	}
+}
+
 GLuint * GenerateVBO(const size_t count){
 	GLuint * vbo = new GLuint[count]; // TODO delete
 	glGenBuffers(count,vbo);

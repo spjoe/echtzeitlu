@@ -1,4 +1,5 @@
 #include "Lighting.h"
+#include "shader.hpp"
 #include "camera.h"
 
 #include <glm/gtc/matrix_projection.hpp>
@@ -9,6 +10,8 @@ using namespace echtzeitlu;
 extern Camera m_camera_1;
 extern int width;
 extern int height;
+extern Shader *defaultColorShader;
+extern Shader *simpleShader;
 
 void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 {
@@ -40,11 +43,13 @@ void Lighting::createShadowMaps(SceneObject* scene)
 	m_camera_1.intrinsic = light.proj;
 	m_camera_1.extrinsic = light.view;
 	
-	scene->draw();
+	scene->drawSimple();
 	
 	glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 0, 0, width, height, 0);
 	
 	m_camera_1 = cam_tmp;
