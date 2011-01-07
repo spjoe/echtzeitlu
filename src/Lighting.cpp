@@ -8,7 +8,6 @@
 
 using namespace echtzeitlu;
 
-extern glm::vec3 light_position;
 extern glm::vec4 light_color;
 extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
