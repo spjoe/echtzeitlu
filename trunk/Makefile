@@ -3,7 +3,7 @@ CXXFLAGS = -I./external/glm/include -I./external/collada/include/1.4/dom/ -I./ex
 FLAGS=`pkg-config --cflags libglfw glew freealut`
 LIBS=`pkg-config --libs libglfw glew freealut`
 COLLADALIBS=-L./external/collada/lib -lcollada14dom -lboost_filesystem -lminizip -lxml2 -lpcrecpp
-SRC = src/ogl3_test.o src/shader.o src/utility.o src/camera.o src/ModelLoader.o src/SceneObject.o src/Model.o src/Effect.o src/Timer.o src/ModelObject.o src/ModelImage.o src/ModelEffect.o src/ModelMaterial.o src/Particle.o src/ParticleSystem.o src/ParticleManager.o src/Lighting.o
+SRC = src/ogl3_test.o src/shader.o src/utility.o src/camera.o src/ModelLoader.o src/SceneObject.o src/Model.o src/Effect.o src/Timer.o src/ModelObject.o src/ModelImage.o src/ModelEffect.o src/ModelMaterial.o src/Particle.o src/ParticleSystem.o src/ParticleManager.o src/Lighting.o src/CameraMotion.o
 
 all: gl32release gl32debug
 
