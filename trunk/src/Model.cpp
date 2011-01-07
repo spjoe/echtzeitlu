@@ -11,9 +11,6 @@
 
 using namespace echtzeitlu;
 
-extern glm::vec3 light_position;
-extern glm::vec4 light_color;
-extern glm::vec4 ambient_color;
 extern Camera m_camera_1;
 extern Lighting m_lighting;
 //extern glm::mat4 model;
@@ -140,24 +137,23 @@ void Model::draw()
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
 	get_errors("Model::draw() C");
-	GLint light_position_uniform = shader->get_uniform_location( "light_position");
-	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
-	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
-	get_errors("Model::draw() D");
-// 	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
-// 		GLint texture_uniform = shader->get_uniform_location("texture");
-// 		get_errors();
-// 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
-// 		get_errors();
-// 		glActiveTexture(GL_TEXTURE0);
-// 		get_errors();
-// 		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
-// 		get_errors();
-// 	}
-	
-	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
-    glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
-    glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
+	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
+		GLint texture_uniform = shader->get_uniform_location("texture");
+		get_errors();
+		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
+		get_errors();
+		glActiveTexture(GL_TEXTURE0);
+		get_errors();
+		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
+		get_errors();
+	}
+// 	GLint light_position_uniform = shader->get_uniform_location( "light_position");
+// 	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
+// 	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+// 	get_errors("Model::draw() D");
+// 	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
+//     glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
+//     glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
 	get_errors("Model::draw() E");
 
     // set matrix-uniforms
@@ -166,17 +162,15 @@ void Model::draw()
     GLint model_uniform       = shader->get_uniform_location( "model");
 	get_errors("Model::draw() F");
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
-	get_errors("Model::draw() G");
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
-	get_errors("Model::draw() H");
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
-	get_errors("Model::draw() I");
+	get_errors("Model::draw() G");
 	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
-	get_errors("Model::draw() J");
+	get_errors("Model::draw() H");
 	my_glBindVertexArray(0);
-	get_errors("Model::draw() K");
+	get_errors("Model::draw() I");
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors("Model::draw() L");
+	get_errors("Model::draw() J");
 	shader->unbind();
 	
 	drawChildren();
@@ -193,15 +187,6 @@ void Model::drawSimple(){ // for deph map / shadow map
 	get_errors();
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
-	get_errors();
-    GLint light_position_uniform = simpleShader->get_uniform_location( "light_position");
-    GLint light_color_uniform    = simpleShader->get_uniform_location( "light_color");
-    GLint ambient_color_uniform  = simpleShader->get_uniform_location( "ambient_color");
-	get_errors();
-	
-	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light_position));
-    glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
-    glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
 	get_errors();
 
     // set matrix-uniforms
@@ -226,6 +211,11 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
+	if( name.compare("flywheel") == 0 ||
+		name.compare("crank") == 0){
+		glm::mat4 rot = glm::rotate(-fTime * 20, 0.0f, 0.0f, 1.0f);
+		model = model * rot;
+	}
 	updateChildren(fTime);
 }
 void Model::bindVertex(void* data, size_t size){

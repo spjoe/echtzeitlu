@@ -231,24 +231,9 @@ int main (int argc, char** argv)
 		
 		// Create shadow map (static, because this is outside of running loop)
 		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
-		Light light = m_lighting.lightlist[0];
-		glm::mat4 biasprojview = light.bias * light.proj * light.view;
-		m_lighting.createShadowMaps(rootScene);
 		get_errors();
 		
-		defaultColorShader->bind();
-		
-		GLint biasprojview_uniform = defaultColorShader->get_uniform_location("biasprojview");
-		glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
-		
-		GLint shadowMap_uniform = defaultColorShader->get_uniform_location("shadowMap");
-		glUniform1i(shadowMap_uniform, 0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-		
-		defaultColorShader->unbind();
-		
-		get_errors();
+
 		
 		double time = glfwGetTime( );
 // 		running  = false;
@@ -256,7 +241,9 @@ int main (int argc, char** argv)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-// 			m_lighting.createShadowMaps(rootScene);
+			m_lighting.createShadow(rootScene, defaultColorShader);
+			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
