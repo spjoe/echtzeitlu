@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "SceneObject.h"
+#include "shader.hpp"
 #include "common.hpp"
 #include <vector>
 
@@ -23,7 +24,7 @@ public:
 	
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
-	void createShadowMaps(SceneObject* scene);
+	void createShadow(SceneObject* scene, Shader* shader);
 	
 };
 

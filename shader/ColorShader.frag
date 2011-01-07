@@ -38,11 +38,13 @@ in vec4 proj_shadow;
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
-const float dark = 0.2;
+const float dark = 0.5;
 
 
 void main()
 {
+	float shadow = 1.0;
+	
 	// renormalize and homogenize input variables
 	vec3 normal = normalize(world_normal);
     vec3 position = world_position.xyz / world_position.w;
@@ -54,15 +56,17 @@ void main()
     vec4 ambient = ambient_color * frag_color;
     vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
     
-    float shadow = 1.0;
-	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
-	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
-		if( texture(shadowMap, coordPos) < coordPos.z - 0.0001)
-			shadow = dark;
-		else
-			shadow = 1.0;
+    if( dot(normal, light_dir) < 0 ){
+    	shadow = dark;
+    }else{
+		vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
+		if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
+			if( texture(shadowMap, coordPos) < coordPos.z - 0.001)
+				shadow = dark;
+			else
+				shadow = 1.0;
+		}
 	}
-
 
     // write color to output
     fragColor = shadow * (ambient + diffuse);
