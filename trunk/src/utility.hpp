@@ -10,6 +10,7 @@ string read_file(const string &filename);
 
 // Query OpenGL errors and print error messages to STDERR.
 void get_errors(void);
+void get_errors(std::string msg);
 GLuint * GenerateVBO(size_t count);
 GLuint GenerateVBO();
 void bindVBO(GLuint id, void * datapointer, size_t size);

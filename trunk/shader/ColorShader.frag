@@ -38,6 +38,8 @@ in vec4 proj_shadow;
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
+const float dark = 0.2;
+
 
 void main()
 {
@@ -55,8 +57,8 @@ void main()
     float shadow = 1.0;
 	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
 	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
-		if( texture(shadowMap, coordPos) < (coordPos.z - 0.001))
-			shadow = 0.2;
+		if( texture(shadowMap, coordPos) < coordPos.z - 0.0001)
+			shadow = dark;
 		else
 			shadow = 1.0;
 	}
