@@ -35,7 +35,7 @@ GLfloat distance = -4.0f;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
-Lighting m_lighting;
+Lighting *m_lighting;
 SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
@@ -232,7 +232,8 @@ int main (int argc, char** argv)
 		glEnable(GL_DEPTH_TEST);
 		
 		// Create shadow map (static, because this is outside of running loop)
-		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
+		m_lighting = new Lighting;
+		m_lighting->addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
 		get_errors();
 		
 		double time = glfwGetTime( );
@@ -242,7 +243,7 @@ int main (int argc, char** argv)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			m_lighting.createShadow(rootScene, defaultColorShader);
+			m_lighting->createShadow(rootScene, defaultColorShader);
 			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
@@ -283,6 +284,7 @@ int main (int argc, char** argv)
 
 		//	release_vbo_vao(vbo_id, &vao_id);
 		delete rootScene;
+		delete m_lighting;
 	}
 
 	glfwTerminate();
