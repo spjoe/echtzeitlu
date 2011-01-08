@@ -19,7 +19,20 @@ struct Light
 
 class Lighting
 {
+private:
+	PFNGLGENFRAMEBUFFERSPROC my_glGenFramebuffers;
+	PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer;
+	PFNGLFRAMEBUFFERTEXTURE2DPROC my_glFramebufferTexture2D;
+	PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffers;
+
+	bool isinit;
+	GLuint fbo_tex_color;
+	
+	void init();
+	
 public:
+	Lighting();
+	~Lighting();
 	
 	std::vector<Light> lightlist;
 	

@@ -12,7 +12,7 @@
 using namespace echtzeitlu;
 
 extern Camera m_camera_1;
-extern Lighting m_lighting;
+// extern Lighting *m_lighting;
 //extern glm::mat4 model;
 // extern Shader* defaultShader;
 extern Shader* simpleShader;
