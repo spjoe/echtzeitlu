@@ -20,7 +20,11 @@ struct Light
 class Lighting
 {
 public:
+	
 	std::vector<Light> lightlist;
+	
+	GLuint fbo;
+	GLuint shadow_map;
 	
 	void addLight(glm::vec3 position, glm::vec4 color);
 	

@@ -69,7 +69,7 @@ void main()
 	}
 
     // write color to output
-    fragColor = shadow * (ambient + diffuse);
+    fragColor = ambient + shadow * diffuse;
 
 	//fragColor = texture2D( texture, gl_TexCoord[0].st);
 
