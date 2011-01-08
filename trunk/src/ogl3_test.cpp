@@ -235,8 +235,6 @@ int main (int argc, char** argv)
 		m_lighting.addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
 		get_errors();
 		
-
-		
 		double time = glfwGetTime( );
 		cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, false);
 // 		running  = false;

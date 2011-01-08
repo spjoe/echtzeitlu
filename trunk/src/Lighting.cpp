@@ -2,6 +2,7 @@
 #include "shader.hpp"
 #include "camera.h"
 
+#include <stdio.h>
 #include <glm/gtc/matrix_projection.hpp>
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/type_ptr.hpp> 
@@ -15,6 +16,8 @@ extern int width;
 extern int height;
 extern Shader *defaultColorShader;
 extern Shader *simpleShader;
+
+int fbo_res = 1024;
 
 void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 {
@@ -31,6 +34,15 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 	light.view = glm::lookAt(light.position, glm::vec3(0,0,0), glm::vec3(0,0,1));
 	
 	glGenTextures(1, &light.texShadowMap);
+	glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, fbo_res, fbo_res, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE); // for attaching to fbo texture must be mipmap complete
+
+	
 	lightlist.push_back(light);
 }
 
@@ -43,46 +55,70 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 	
 	Light light = lightlist[0]; // HACK assume one light for testing
 	
+// PFNGLGENFRAMEBUFFERSPROC my_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)glfwGetProcAddress("glGenFramebuffers");
+// PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glfwGetProcAddress("glBindFramebuffer");
+// PFNGLFRAMEBUFFERTEXTURE2DPROC my_glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)glfwGetProcAddress("glFramebufferTexture2D");
+// PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)glfwGetProcAddress("glDeleteFramebuffers");
+
+// 	GLuint col_tex;
+// 	glGenTextures(1, &col_tex);
+// 	glBindTexture(GL_TEXTURE_2D, col_tex);
+// 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+// 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fbo_res, fbo_res, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+// 	get_errors("Lighting::createShadow() A 1");
+// 	
+// 	my_glGenFramebuffers(1,&fbo);
+// 	my_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+// 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, col_tex, 0);
+// 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light.texShadowMap, 0);
+// 	glViewport(0,0,fbo_res,fbo_res);
+// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 	get_errors("Lighting::createShadow() A 3");
+	
 	Camera cam_tmp = m_camera_1;
 	
 	m_camera_1.intrinsic = light.proj;
 	m_camera_1.extrinsic = light.view;
 	
 	scene->drawSimple();
-	get_errors("Lighting::createShadow() A");
+	get_errors("Lighting::createShadow() B");
+	
+// 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+// 	my_glDeleteFramebuffers(1, &fbo);
 	
 	glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 0, 0, width, height, 0);
-	get_errors("Lighting::createShadow() B");
+	
+
+	get_errors("Lighting::createShadow() C");
 	
 	
 	shader->bind();
-	
-	GLint light_position_uniform = shader->get_uniform_location( "light_position");
-	GLint light_color_uniform    = shader->get_uniform_location( "light_color");
-	GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
-	get_errors("Lighting::createShadow() C");
-	glUniform3fv(light_position_uniform, 1, glm::value_ptr(light.position));
-    glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
-    glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
-	get_errors("Lighting::createShadow() D");
-	
-	glm::mat4 biasprojview = light.bias * light.proj * light.view;
-	GLint biasprojview_uniform = shader->get_uniform_location("shadowProjView");
-	glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
-	get_errors("Lighting::createShadow() E");
-	
-	GLint shadowMap_uniform = shader->get_uniform_location("shadowMap");
-	glUniform1i(shadowMap_uniform, 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-	get_errors("Lighting::createShadow() F");
-	
+		GLint light_position_uniform = shader->get_uniform_location( "light_position");
+		GLint light_color_uniform    = shader->get_uniform_location( "light_color");
+		GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+		get_errors("Lighting::createShadow() D");
+		glUniform3fv(light_position_uniform, 1, glm::value_ptr(light.position));
+		glUniform4fv(light_color_uniform,    1, glm::value_ptr(light_color));
+		glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
+		get_errors("Lighting::createShadow() E");
+		
+		glm::mat4 biasprojview = light.bias * light.proj * light.view;
+		GLint biasprojview_uniform = shader->get_uniform_location("shadowProjView");
+		glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
+		get_errors("Lighting::createShadow() F");
+		
+		GLint shadowMap_uniform = shader->get_uniform_location("shadowMap");
+		glUniform1i(shadowMap_uniform, 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
+		get_errors("Lighting::createShadow() G");
 	shader->unbind();
+	
+	
 	
 	m_camera_1 = cam_tmp;
 	
