@@ -75,18 +75,20 @@ void CameraMotion::flyaround(float dTime)
 	glm::vec3 nepsilon = glm::cross(cp1,cp2);
 	glm::vec3 nh = cp1;
 	glm::vec3 ag = glm::cross(nepsilon,nh);
-	glm::vec3 Y = c + r * cos(alpha) * glm::normalize(cp1);
+        float tmp  = r * cos(alpha);
+        float tmp2 = r * sin(alpha);
+        glm::vec3 Y = c + tmp * glm::normalize(cp1);
 	glm::vec3 X;
 	if(!ccw){
-		X = Y - r*sin(alpha) * glm::normalize(ag);
+                X = Y - tmp2 * glm::normalize(ag);
 		glm::mat3 m(c,Y,X);
 		if(glm::determinant(m) > 0)
-			X = Y + r*sin(alpha) * glm::normalize(ag);
+                        X = Y + tmp2 * glm::normalize(ag);
 	}else{
-		X = Y + r*sin(alpha) * glm::normalize(ag);
+                X = Y + tmp2 * glm::normalize(ag);
 		glm::mat3 m(c,Y,X);
 		if(glm::determinant(m) < 0)
-			X = Y - r*sin(alpha) * glm::normalize(ag);
+                        X = Y - tmp2 * glm::normalize(ag);
 	}
 
 	//camera->p = X;
