@@ -61,7 +61,8 @@ void main()
     }else{
 		vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
 		if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
-			if( texture(shadowMap, coordPos) < coordPos.z - 0.001)
+			//if( texture(shadowMap, coordPos) < coordPos.z - 0.001)
+			if( texture(shadowMap, coordPos) < coordPos.z)
 				shadow = dark;
 			else
 				shadow = 1.0;

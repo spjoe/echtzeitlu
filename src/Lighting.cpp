@@ -54,7 +54,7 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, fbo_res, fbo_res, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, fbo_res, fbo_res, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 	
 	lightlist.push_back(light);
 }
@@ -78,7 +78,6 @@ void Lighting::init()
 	my_glGenFramebuffers(1,&fbo);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo_tex_color, 0);
-// 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light.texShadowMap, 0);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	get_errors("Lighting::init() B");
 	
@@ -103,10 +102,13 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light.texShadowMap, 0);
 	glViewport(0,0,fbo_res,fbo_res);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(0.1f, 0.1f);
 	
 	scene->drawSimple();
-	get_errors("Lighting::createShadow() B");
 	
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	get_errors("Lighting::createShadow() B");
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0,0,width,height);
 
