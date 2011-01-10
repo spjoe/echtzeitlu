@@ -24,6 +24,7 @@ protected:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vao_id;		// Vertex Array Object
 	Shader *shader;
+	float angle;
 	
 	// Die Vertexliste sollten wir erst mal im Speicher lassen (debugging, animation, ...)
 	std::vector<glm::vec4> pointlist;
@@ -32,6 +33,7 @@ protected:
 	std::vector<glm::vec4> colorlist;
 	std::vector<unsigned> indexlist;
 	glm::mat4 model;
+	glm::mat4 model_orig;
 	std::vector<GLuint> texidlist;
 	
 public:
