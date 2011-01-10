@@ -24,7 +24,16 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 model;
-uniform mat4 shadowProjView;
+
+// light & shadows
+uniform mat4 shadowProjView0;
+uniform mat4 shadowProjView1;
+uniform mat4 shadowProjView2;
+uniform mat4 shadowProjView3;
+out vec4 proj_shadow0;
+out vec4 proj_shadow1;
+out vec4 proj_shadow2;
+out vec4 proj_shadow3;
 
 // vertex-shader input variables
 in vec4 vertex;
@@ -36,8 +45,6 @@ in vec3 normal;
 out vec4 frag_color;
 out vec3 world_normal;
 out vec4 world_position;
-out vec4 proj_shadow;
-
 
 void main()
 {
@@ -48,7 +55,11 @@ void main()
     // transform vertex to world-space
     world_position = model * vertex;
     
-    proj_shadow = shadowProjView * world_position;
+    // calculate shadow projection
+    proj_shadow0 = shadowProjView0 * world_position;
+    proj_shadow1 = shadowProjView1 * world_position;
+    proj_shadow2 = shadowProjView2 * world_position;
+    proj_shadow3 = shadowProjView3 * world_position;
     
     // just pass color to fragment-shader
     frag_color = color;
