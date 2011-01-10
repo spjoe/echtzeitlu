@@ -206,7 +206,7 @@ void Model::update(float fTime)
 {
 	if( name.compare("flywheel") == 0 ||
 		name.compare("crank") == 0){
-		glm::mat4 rot = glm::rotate(-fTime * 20, 0.0f, 0.0f, 1.0f);
+		glm::mat4 rot = glm::rotate(-fTime * 57.295827f, 0.0f, 0.0f, 1.0f);
 		model = model * rot;
 	}
 	updateChildren(fTime);
