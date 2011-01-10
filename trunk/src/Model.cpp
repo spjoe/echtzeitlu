@@ -215,7 +215,7 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
-	float scale = 300.0f;
+	float scale = 30.0f;
 	angle = (angle + fTime * scale);
 	if(angle > 360.0f)
 		angle = angle - 360.0f;
@@ -226,17 +226,21 @@ void Model::update(float fTime)
 		model = model_orig * rot;
 	}
 	if( name.compare("shaft") == 0 ||
-		name.compare("shaft2") == 0 ||
 		name.compare("hammer") == 0){
+		float start = 40.0f;
+		float top = 130.0f;
+		float fall = 140.0f;
 		glm::mat4 rot;
-		if(angle > 40.0f && angle <= 125.0f){
-			rot = glm::rotate(fTime * scale * 0.3f, 0.0f, 1.0f, 0.0f);
-		}else if(angle > 120.0f && angle <= 130.0f){
-			rot = glm::rotate(-fTime * scale * 5.0f, 0.0f, 1.0f, 0.0f);
-		}else if(angle > 130.0f && angle <= 360.0f){
-			model = model_orig;
+		if(angle > 0.0f && angle < start){
+			;
+		}else if(angle > start && angle <= top){
+			rot = glm::rotate(0.3f*(angle-start), 0.0f, 1.0f, 0.0f);
+		}else if(angle > top && angle <= fall){
+// 			rot = glm::rotate(top, 0.0f, 1.0f, 0.0f);
+		}else if(angle > fall && angle <= 360.0f){
+			;
 		}
-		model = model * rot;
+		model = model_orig * rot;
 	}
 	if( name.compare("piston") == 0 ){
 		glm::mat4 rot;
