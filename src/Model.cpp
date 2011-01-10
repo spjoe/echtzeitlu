@@ -215,7 +215,7 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
-	float scale = 30.0f;
+	float scale = 100.0f;
 	angle = (angle + fTime * scale);
 	if(angle > 360.0f)
 		angle = angle - 360.0f;
@@ -236,7 +236,7 @@ void Model::update(float fTime)
 		}else if(angle > start && angle <= top){
 			rot = glm::rotate(0.3f*(angle-start), 0.0f, 1.0f, 0.0f);
 		}else if(angle > top && angle <= fall){
-// 			rot = glm::rotate(top, 0.0f, 1.0f, 0.0f);
+// 			TODO rot = glm::rotate(top, 0.0f, 1.0f, 0.0f);
 		}else if(angle > fall && angle <= 360.0f){
 			;
 		}
