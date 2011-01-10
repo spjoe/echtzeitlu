@@ -240,7 +240,7 @@ void Model::update(float fTime)
 	}
 	if( name.compare("piston") == 0 ){
 		glm::mat4 rot;
-		rot = glm::translate(0.0f, 0.0f, (float)sin(angle*PI/180.0f - PI*0.5f));
+		rot = glm::translate(0.0f, 0.0f, 0.8f * (float)sin(angle*PI/180.0f - PI*0.5f));
 		model = model_orig * rot;
 	}
 	if( name.compare("connectionbolt") == 0 ){
