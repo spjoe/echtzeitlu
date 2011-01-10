@@ -8,6 +8,9 @@
 #include <string.h>
 #include <glm/gtx/transform.hpp>
 
+#ifndef PI
+#define PI 3.141592654
+#endif
 
 using namespace echtzeitlu;
 
@@ -29,6 +32,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->normallist = normallist;
 	this->indexlist = indexlist;
 	this->model = model;
+	this->model_orig = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
 	this->texidlist.push_back(40000);
 	this->name = name;
@@ -56,6 +60,8 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
+	
+	angle = 0.0f;
 }
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
@@ -71,6 +77,7 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->indexlist = indexlist;
 	this->texlist = texturelist;
 	this->model = model;
+	this->model_orig = model;
 	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
 	this->texidlist.push_back(40000);
 	this->name = name;
@@ -99,6 +106,8 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
+	
+	angle = 0.0f;
 }
 
 Model::Model()
@@ -106,6 +115,8 @@ Model::Model()
 	this->vbo_id[0] = this->vbo_id[1] = this->vbo_id[2] = 0;
 	this->vao_id = 0;
 	this->shader = 0;
+	
+	angle = 0.0f;
 }
 
 void Model::print()
@@ -204,11 +215,46 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
+	float scale = 300.0f;
+	angle = (angle + fTime * scale);
+	if(angle > 360.0f)
+		angle = angle - 360.0f;
+	
 	if( name.compare("flywheel") == 0 ||
 		name.compare("crank") == 0){
-		glm::mat4 rot = glm::rotate(-fTime * 57.295827f, 0.0f, 0.0f, 1.0f);
+		glm::mat4 rot = glm::rotate(-angle, 0.0f, 0.0f, 1.0f);
+		model = model_orig * rot;
+	}
+	if( name.compare("shaft") == 0 ||
+		name.compare("shaft2") == 0 ||
+		name.compare("hammer") == 0){
+		glm::mat4 rot;
+		if(angle > 40.0f && angle <= 125.0f){
+			rot = glm::rotate(fTime * scale * 0.3f, 0.0f, 1.0f, 0.0f);
+		}else if(angle > 120.0f && angle <= 130.0f){
+			rot = glm::rotate(-fTime * scale * 5.0f, 0.0f, 1.0f, 0.0f);
+		}else if(angle > 130.0f && angle <= 360.0f){
+			model = model_orig;
+		}
 		model = model * rot;
 	}
+	if( name.compare("piston") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.0f, 0.0f, (float)sin(angle*PI/180.0f - PI*0.5f));
+		model = model_orig * rot;
+	}
+	if( name.compare("connectionbolt") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.8f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+		model = model_orig * rot;
+	}
+	if( name.compare("connection") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.8f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+		rot = rot * glm::rotate((float)sin(angle*PI/180.0f)*15.0f,0.0f,1.0f,0.0f);
+		model = model_orig * rot;
+	}
+	
 	updateChildren(fTime);
 }
 void Model::bindVertex(void* data, size_t size){

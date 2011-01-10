@@ -66,6 +66,7 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, fbo_res, fbo_res, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	get_errors("Lighting::addLight()");
 	
 	lightlist.push_back(light);
 }
@@ -81,8 +82,8 @@ void Lighting::init()
 	glBindTexture(GL_TEXTURE_2D, fbo_tex_color);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fbo_res, fbo_res, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	get_errors("Lighting::init() A");
 	
@@ -95,7 +96,7 @@ void Lighting::init()
 	isinit = true;
 }
 
-char uniform[64];
+char uniform_name[64];
 
 void Lighting::createShadow(SceneObject* scene, Shader* shader)
 {
@@ -110,10 +111,10 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 		
 		Light light = lightlist[i];
 		
+		// Draw Scene from light point of view into depth buffer
 		m_camera_1.intrinsic = light.proj;
 		m_camera_1.extrinsic = light.view;
-
-		// Draw Scene into depth buffer
+		
 		my_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light.texShadowMap, 0);
 		glViewport(0,0,fbo_res,fbo_res);
@@ -121,33 +122,31 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(0.1f, 0.1f);
 
-		scene->drawSimple();
+			scene->drawSimple();
 
 		glDisable(GL_POLYGON_OFFSET_FILL);
-		get_errors("Lighting::createShadow() B");
 		my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0,0,width,height);
-
 		get_errors("Lighting::createShadow() C");
 
 		// Apply light matrices and shadow map to shader
 		shader->bind();
-			sprintf(uniform, "%s%d", "light_position", i);
-			GLint light_position_uniform = shader->get_uniform_location( uniform );
-			sprintf(uniform, "%s%d", "light_color", i);
-			GLint light_color_uniform    = shader->get_uniform_location( uniform );
+			sprintf(uniform_name, "%s%d", "light_position", i);
+			GLint light_position_uniform = shader->get_uniform_location( uniform_name );
+			sprintf(uniform_name, "%s%d", "light_color", i);
+			GLint light_color_uniform    = shader->get_uniform_location( uniform_name );
 			glUniform3fv(light_position_uniform, 1, glm::value_ptr(light.position));
 			glUniform4fv(light_color_uniform,    1, glm::value_ptr(light.color));
 			get_errors("Lighting::createShadow() E");
 			
 			glm::mat4 biasprojview = light.bias * light.proj * light.view;
-			sprintf(uniform, "%s%d", "shadowProjView", i);
-			GLint biasprojview_uniform = shader->get_uniform_location( uniform );
+			sprintf(uniform_name, "%s%d", "shadowProjView", i);
+			GLint biasprojview_uniform = shader->get_uniform_location( uniform_name );
 			glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
 			get_errors("Lighting::createShadow() F");
 			
-			sprintf(uniform, "%s%d", "shadowMap", i);
-			GLint shadowMap_uniform = shader->get_uniform_location( uniform );
+			sprintf(uniform_name, "%s%d", "shadowMap", i);
+			GLint shadowMap_uniform = shader->get_uniform_location( uniform_name );
 			glUniform1i(shadowMap_uniform, 1+i);
 			glActiveTexture(GL_TEXTURE1 + i);
 			glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
