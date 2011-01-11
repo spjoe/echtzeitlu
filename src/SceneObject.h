@@ -20,6 +20,7 @@ class SceneObject
   protected:
 	std::vector<SceneObject*> children;
 	std::string name;
+// 	Lighting* m_lighting;
 	
   public:
 	SceneObject() : children(){};
