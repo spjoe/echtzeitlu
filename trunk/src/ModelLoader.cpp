@@ -10,6 +10,8 @@
 #include <glm/gtx/comparison.hpp>
 #include <dom/domProfile_COMMON.h>
 
+#include <fstream>
+
 #include "common.hpp"
 #include "Model.h"
 #include "SceneObject.h"
@@ -588,7 +590,8 @@ ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
 
 void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 {
-	std::ifstream dateiLese ("../resources/effects/" + name + ".eff");	 // Eingabe Datei
+	std::string filename = "../resources/effects/" + name + ".eff";
+	std::ifstream dateiLese (filename.c_str());	 // Eingabe Datei
 	std::string zeile;
 	char czeile[1001];
 	if (dateiLese)
@@ -610,8 +613,4 @@ void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 
 	dateiLese.close ();	 // Datei schliessen
 	}
-	
-	
-
-
 }
