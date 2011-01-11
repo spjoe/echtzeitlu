@@ -274,6 +274,28 @@ void Model::update(float fTime)
 		rot = rot * glm::rotate((float)sin(angle*PI/180.0f)*15.0f,0.0f,1.0f,0.0f);
 		model = model_orig * rot;
 	}
+	if( name.compare("piston2") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f + PI*0.5f));
+		model = model_orig * rot;
+	}
+	if( name.compare("bolt3") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
+		model = model_orig * rot;
+	}
+	if( name.compare("rod") == 0 ){
+		glm::mat4 rot;
+		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
+		rot = rot * glm::rotate((float)sin(angle*PI/180.0f + PI)*13.5f,0.0f,1.0f,0.0f);
+		model = model_orig * rot;
+	}
+
+	if( name.compare("regulator") == 0 ){
+		glm::mat4 rot;
+		rot = glm::rotate(10.0f*angle,0.0f,0.0f,1.0f);
+		model = model_orig * rot;
+	}
 	
 	updateChildren(fTime);
 }

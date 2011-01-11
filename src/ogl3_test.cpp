@@ -19,7 +19,8 @@
 
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
-const std::string daeModelPath = "../resources/tmSteamEnginecm.dae";
+// const std::string daeModelPath = "../resources/tmSteamEnginecm.dae";
+const std::string daeModelPath = "../resources/tmSteamEngine.dae";
 
 const std::string wavAudioPath = "../resources/music.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
@@ -254,7 +255,7 @@ int main (int argc, char** argv)
 			double tmptime = glfwGetTime();
 			rootScene->update(tmptime-time);
 			pm.Update(tmptime-time);
- 			cm.update(tmptime-time); //Move Camera
+//  			cm.update(tmptime-time); //Move Camera
 			time = tmptime;
 			
 			glfwSwapBuffers();
