@@ -20,7 +20,7 @@
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 // const std::string daeModelPath = "../resources/tmSteamEnginecm.dae";
-const std::string daeModelPath = "../resources/tmSteamEnginecm.dae";
+const std::string daeModelPath = "../resources/tmSteamEngine.dae";
 
 const std::string wavAudioPath = "../resources/music.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
@@ -243,12 +243,15 @@ int main (int argc, char** argv)
 		
 		double time = glfwGetTime( );
 		cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, false);
+		std::vector<Shader*> shaders;
+		shaders.push_back(defaultShader);
+		shaders.push_back(defaultColorShader);
 // 		running  = false;
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-			m_lighting->createShadow(rootScene, defaultColorShader);
+			m_lighting->createShadow(rootScene, shaders);
 			
 // 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
