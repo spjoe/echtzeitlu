@@ -24,6 +24,7 @@ class Model : public SceneObject
 {
 protected:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
+	GLuint vbo_bump_id[3];
 	GLuint vao_id;		// Vertex Array Object
 	//Shader *shader;
 	float angle;
@@ -72,6 +73,10 @@ private:
 	void bindColor(void*, size_t size);
     void bindNormals(void*, size_t size);
 	void bindTexture(void*, size_t size);
+
+	void bindInvNormal(void*, size_t size);
+	void bindInvBinormal(void*, size_t size);
+	void bindInvTangent(void*, size_t size);
 
 	//adaptiert von http://gpwiki.org/index.php/OpenGL:Tutorials:GLSL_Bump_Mapping
 	void FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
