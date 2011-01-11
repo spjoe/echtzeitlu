@@ -65,6 +65,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 	
 	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
 	{
+		ModelEffect *effect = new ModelEffect(defaultShader);
 		Model* model = NULL;	
 		//Suche geometrie im dokument
 		domInstance_geometryRef lib = node->getInstance_geometry_array()[i];
@@ -324,7 +325,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			//GLuint texid = 0; // wenn es im modell keine bilder gibt
 			//if(images.size() > 0) 
 			//	texid = (*images.begin()).second->getTexId();
-			ModelEffect *effect = new ModelEffect(defaultShader);
+			//ModelEffect *effect = new ModelEffect(defaultShader);
 
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
@@ -365,50 +366,50 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			
 		}
 
-// 		domBind_material *bindMaterial =  lib->getBind_material();
-// 		if(bindMaterial)
-// 		{
-// 			// Get the <technique_common>
-// 			domBind_material::domTechnique_common *techniqueCommon = bindMaterial->getTechnique_common();
-// 			if(techniqueCommon)
-// 			{
-// 				// Get the <instance_material>s
-// 				domInstance_material_Array &instanceMaterialArray = techniqueCommon->getInstance_material_array();
-// 				for(unsigned j = 0; j < instanceMaterialArray.getCount(); j++)
-// 				{
-// 
-// 					domElement * element = instanceMaterialArray[j]->getTarget().getElement();
-// 					if (element)
-// 					{
-// 						domMaterial * material = (domMaterial *) element;
-// 						ModelEffect *effect = new ModelEffect(defaultColorShader);
-// 						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
-// 						string name = MaterialElement->getID();
-// 						fillEffect(effect,name);
-// 						if(effect->hasBumpMap())
-// 							model->initBumpMap();
-// 						//if(name.compare("fx-floor") == 0){ //hier einlesen aus name.eff datei
-// 							
-// 							//model->assignTextureId(m1.getTexId());
-// 							//model->assignBumpMapId(m2.getTexId());
-// 						//}
-// 						/*
-// 						if ( MaterialElement ) 
-// 						{
-// 							ModelMaterial *mat = ReadMaterial(MaterialElement);
-// 							ModelEffect *eff = mat->getEffect();
-// 							if(eff)
-// 								if(eff->getImages().empty() == false){
-// 									GLuint id = eff->getImages()[0]->getTexId();
-// 									model->assignTextureId(id);
-// 								}
-// 								//else
-// 									//model->assignTextureId(40000);
-// 						}*/
-// 					}
-// 				}
-// 			}
-// 		}
+ 		domBind_material *bindMaterial =  lib->getBind_material();
+ 		if(bindMaterial)
+ 		{
+ 			// Get the <technique_common>
+ 			domBind_material::domTechnique_common *techniqueCommon = bindMaterial->getTechnique_common();
+ 			if(techniqueCommon)
+ 			{
+ 				// Get the <instance_material>s
+ 				domInstance_material_Array &instanceMaterialArray = techniqueCommon->getInstance_material_array();
+ 				for(unsigned j = 0; j < instanceMaterialArray.getCount(); j++)
+ 				{
+ 
+ 					domElement * element = instanceMaterialArray[j]->getTarget().getElement();
+ 					if (element)
+ 					{
+ 						domMaterial * material = (domMaterial *) element;
+ 						//ModelEffect *effect = new ModelEffect(defaultColorShader);
+ 						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
+ 						string name = MaterialElement->getID();
+ 						fillEffect(effect,name);
+ 						if(effect->hasBumpMap())
+ 							model->initBumpMap();
+ 						//if(name.compare("fx-floor") == 0){ //hier einlesen aus name.eff datei
+ 							
+ 							//model->assignTextureId(m1.getTexId());
+ 							//model->assignBumpMapId(m2.getTexId());
+ 						//}
+ 						/*
+ 						if ( MaterialElement ) 
+ 						{
+ 							ModelMaterial *mat = ReadMaterial(MaterialElement);
+ 							ModelEffect *eff = mat->getEffect();
+ 							if(eff)
+ 								if(eff->getImages().empty() == false){
+ 									GLuint id = eff->getImages()[0]->getTexId();
+ 									model->assignTextureId(id);
+ 								}
+ 								//else
+ 									//model->assignTextureId(40000);
+ 						}*/
+ 					}
+ 				}
+ 			}
+ 		}
 	}
 }
 

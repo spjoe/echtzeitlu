@@ -103,9 +103,9 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
 	if(effect->hasColorList()){
 		bindColor(&(*(effect->getColorList()))[0], effect->getColorList()->size() * 4 * sizeof(GLfloat));
-	}else
-	
-	bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	}else{
+		bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	}
 	get_errors("Model::Model() D");
 	
 	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
