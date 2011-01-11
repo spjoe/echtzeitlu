@@ -27,6 +27,7 @@ private:
 
 	bool isinit;
 	GLuint fbo_tex_color;
+	unsigned max_lights;
 	
 	void init();
 	

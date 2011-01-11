@@ -64,6 +64,8 @@ extern Shader* simpleShader;
 	angle = 0.0f;
 }*/
 
+char errmsg[128];
+
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
 			std::vector<GLuint> &indexlist, std::string name, ModelEffect *effect, glm::mat4 model)
 {
@@ -84,30 +86,35 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->effect = effect;
 	printf("%s\n", name.c_str());
 	
-	get_errors();
+	get_errors("Model::Model() A");
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 	my_glGenVertexArrays(1, &vao_id);
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
-	get_errors();
+	get_errors("Model::Model() B");
 	GLuint* tmp_vbo_id = GenerateVBO(3);
 	vbo_id[0] = tmp_vbo_id[0];
 	vbo_id[1] = tmp_vbo_id[1];
 	vbo_id[2] = tmp_vbo_id[2];
 	
-	get_errors();
+	get_errors("Model::Model() C");
+	
 	
 	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
 	if(effect->hasColorList()){
 		bindColor(&(*(effect->getColorList()))[0], effect->getColorList()->size() * 4 * sizeof(GLfloat));
 	}else
-		bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	
+	bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	get_errors("Model::Model() D");
+	
 	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
-	get_errors();
+	sprintf(errmsg, "Model::Model() E %d %d %d", pointlist.size(), texlist.size(), normallist.size());
+	get_errors(errmsg);
 	
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors();
+	get_errors("Model::Model() F");
 	
 	angle = 0.0f;
 }
@@ -151,7 +158,7 @@ void Model::draw()
 	my_glBindVertexArray(vao_id);
 	get_errors("Model::draw() C");
 	if(effect->hasTexture()){ //sehr komischees verhalten
-		GLint texture_uniform = shader->get_uniform_location("texture");
+		GLint texture_uniform = shader->get_uniform_location("colorMap");
 		get_errors("Model::draw()::hasTexture A");
 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
 		get_errors("Model::draw()::hasTexture B");
@@ -227,7 +234,7 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
-	float scale = 100.0f;
+	float scale = 200.0f;
 	angle = (angle + fTime * scale);
 	if(angle > 360.0f)
 		angle = angle - 360.0f;
@@ -260,17 +267,17 @@ void Model::update(float fTime)
 	}
 	if( name.compare("piston") == 0 ){
 		glm::mat4 rot;
-		rot = glm::translate(0.0f, 0.0f, 0.8f * (float)sin(angle*PI/180.0f - PI*0.5f));
+		rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f - PI*0.5f));
 		model = model_orig * rot;
 	}
 	if( name.compare("bolt2") == 0 ){
 		glm::mat4 rot;
-		rot = glm::translate(0.8f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
 		model = model_orig * rot;
 	}
 	if( name.compare("connection") == 0 ){
 		glm::mat4 rot;
-		rot = glm::translate(0.8f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
 		rot = rot * glm::rotate((float)sin(angle*PI/180.0f)*15.0f,0.0f,1.0f,0.0f);
 		model = model_orig * rot;
 	}
@@ -293,7 +300,7 @@ void Model::update(float fTime)
 
 	if( name.compare("regulator") == 0 ){
 		glm::mat4 rot;
-		rot = glm::rotate(10.0f*angle,0.0f,0.0f,1.0f);
+		rot = glm::rotate(4.0f*angle,0.0f,0.0f,1.0f);
 		model = model_orig * rot;
 	}
 	
@@ -310,7 +317,9 @@ void Model::bindVertex(void* data, size_t size){
 void Model::bindNormals(void* data, size_t size){
 	bindVBO(vbo_id[2], data, size);
 	GLint normal_location = effect->getShader()->get_attrib_location("normal");
+	get_errors("Model::bindNormals() A");
 	glEnableVertexAttribArray(normal_location);
+	get_errors("Model::bindNormals() B");
 	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -326,6 +335,7 @@ void Model::bindTexture(void* data, size_t size){
 	bindVBO(vbo_id[1], data, size);
 	GLint tex_location = effect->getShader()->get_attrib_location("texkoord");
 	glEnableVertexAttribArray(tex_location);
+	get_errors("Model::bindTexture() A");
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -429,16 +439,16 @@ void Model::initBumpMap()
 	vbo_bump_id[0] = tmp_vbo_id[0];
 	vbo_bump_id[1] = tmp_vbo_id[1];
 	vbo_bump_id[2] = tmp_vbo_id[2];
-	get_errors();
+	get_errors("Model::initBumpMap() A");
 	bindInvNormal(&this->InvNormals[0], this->InvNormals.size() * 3 * sizeof(GLfloat));
-	get_errors();
+	get_errors("Model::initBumpMap() B");
 	bindInvBinormal(&this->InvBinormals[0], this->InvBinormals.size() * 3 * sizeof(GLfloat));
-	get_errors();
+	get_errors("Model::initBumpMap() C");
 	bindInvTangent(&this->InvTangents[0], this->InvTangents.size() * 3 * sizeof(GLfloat));
-	get_errors();
+	get_errors("Model::initBumpMap() D");
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors();
+	get_errors("Model::initBumpMap() E");
 
 
 }

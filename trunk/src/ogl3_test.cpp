@@ -201,13 +201,16 @@ int main (int argc, char** argv)
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
 		simpleShader = &SimpleShader;
-
+		
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
 		get_errors();
 		init_matrixs();
 		get_errors();
 		pm.AddSystem(new SteamParticleSystem("Smokie uno",2000,glm::vec4(0,-2,-1,1)));
+		
+		// init lighting
+		m_lighting = new Lighting;
 
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
@@ -233,10 +236,10 @@ int main (int argc, char** argv)
 		glEnable(GL_DEPTH_TEST);
 		
 		// Create shadow map (static, because this is outside of running loop)
-		m_lighting = new Lighting;
+// 		m_lighting = new Lighting;
 		m_lighting->addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
-		m_lighting->addLight(glm::vec3(10.0f, -10.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
-		get_errors();
+		m_lighting->addLight(glm::vec3(10.0f, 5.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
+// 		get_errors();
 		
 		double time = glfwGetTime( );
 		cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, false);

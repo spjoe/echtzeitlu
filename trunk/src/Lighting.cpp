@@ -22,6 +22,7 @@ int fbo_res = 1024;
 Lighting::Lighting()
 {
 	isinit = false;
+	max_lights = 4;
 	init();
 }
 
@@ -42,7 +43,7 @@ Lighting::~Lighting()
 
 void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 {
-	if(lightlist.size() >= 4){
+	if(lightlist.size() >= max_lights){
 		printf("Lighting::addLight() Warning, number of lights limited to 4\n");
 		return;
 	}
@@ -107,7 +108,7 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 	
 	Camera cam_tmp = m_camera_1;
 	
-	for(unsigned i=0; i<lightlist.size() && i<4; i++){
+	for(unsigned i=0; i<lightlist.size() && i<max_lights; i++){
 		
 		Light light = lightlist[i];
 		
@@ -120,7 +121,7 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 		glViewport(0,0,fbo_res,fbo_res);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(0.1f, 0.1f);
+		glPolygonOffset(0.8f, 0.8f);
 
 			scene->drawSimple();
 

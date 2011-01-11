@@ -46,6 +46,7 @@ out vec4 frag_color;
 out vec3 world_normal;
 out vec4 world_position;
 
+
 void main()
 {
 	// transform normal into world space
@@ -63,6 +64,7 @@ void main()
     
     // just pass color to fragment-shader
     frag_color = color;
+    //TexCoord0 = texkoord;
 	//gl_TexCoord[0].st = texkoord;
 
     // transform vertex down the pipeline

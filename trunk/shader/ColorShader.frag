@@ -52,11 +52,25 @@ in vec4 world_position;
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
-const float dark = 0.5;
+vec4 getShadow(vec3 light_position, vec4 light_color, vec4 proj_shadow, sampler2DShadow shadowMap,
+				vec3 position, vec3 normal)
+{
+    vec3 light_dir = normalize(light_position - position);
+	vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
+	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
+	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
+		if( texture(shadowMap, coordPos) < coordPos.z)
+			diffuse = 0.5 * diffuse;
+		else
+			diffuse = diffuse;
+	}else{
+		diffuse = diffuse;
+	}
+	return diffuse;
+}
 
 void main()
 {
-	
 	// renormalize and homogenize input variables
 	vec3 normal = normalize(world_normal);
     vec3 position = world_position.xyz / world_position.w;
@@ -66,54 +80,18 @@ void main()
     // calculate lighting + shadows
     vec4 diffuse = vec4(0,0,0,0);
     
-    if(num_lights > 0){
-    	vec3 light_dir0 = normalize(light_position0 - position);
-		vec4 diffuse0 = frag_color * light_color0 * max(0.0, dot(normal, light_dir0));
-		float shadow0 = 1.0;
-		vec3 coordPos0  = proj_shadow0.xyz / proj_shadow0.w;
-		if(coordPos0.x >= 0.0 && coordPos0.y >= 0.0 && coordPos0.x <= 1.0 && coordPos0.y <= 1.0 ){
-			if( texture(shadowMap0, coordPos0) < coordPos0.z)
-				diffuse = 0.5 * diffuse0;
-			else
-				diffuse = diffuse0;
-		}
-	}
-	if(num_lights > 1){
-		vec3 light_dir1 = normalize(light_position1 - position);
-		vec4 diffuse1 = frag_color * light_color1 * max(0.0, dot(normal, light_dir1));
-		float shadow1 = 1.0;
-		vec3 coordPos1  = proj_shadow1.xyz / proj_shadow1.w;
-		if(coordPos1.x >= 0.0 && coordPos1.y >= 0.0 && coordPos1.x <= 1.0 && coordPos1.y <= 1.0 ){
-			if( texture(shadowMap1, coordPos1) < coordPos1.z)
-				diffuse = diffuse + 0.5 * diffuse1;
-			else
-				diffuse = diffuse + diffuse1;
-		}
-	}
-	if(num_lights > 2){
-		vec3 light_dir2 = normalize(light_position2 - position);
-		vec4 diffuse2 = frag_color * light_color2 * max(0.0, dot(normal, light_dir2));
-		float shadow2 = 1.0;
-		vec3 coordPos2  = proj_shadow2.xyz / proj_shadow2.w;
-		if(coordPos2.x >= 0.0 && coordPos2.y >= 0.0 && coordPos2.x <= 1.0 && coordPos2.y <= 1.0 ){
-			if( texture(shadowMap2, coordPos2) < coordPos2.z)
-				diffuse = diffuse + 0.5 * diffuse2;
-			else
-				diffuse = diffuse + diffuse2;
-		}
-	}
-	if(num_lights > 3){
-		vec3 light_dir3 = normalize(light_position3 - position);
-		vec4 diffuse3 = frag_color * light_color3 * max(0.0, dot(normal, light_dir3));
-		float shadow3 = 1.0;
-		vec3 coordPos3  = proj_shadow3.xyz / proj_shadow3.w;
-		if(coordPos3.x >= 0.0 && coordPos3.y >= 0.0 && coordPos3.x <= 1.0 && coordPos3.y <= 1.0 ){
-			if( texture(shadowMap3, coordPos3) < coordPos3.z)
-				diffuse = diffuse + 0.5 * diffuse3;
-			else
-				diffuse = diffuse + diffuse3;
-		}
-	}
+    if(num_lights > 0)
+    	diffuse = getShadow(light_position0, light_color0, proj_shadow0, shadowMap0, position, normal);
+	
+	if(num_lights > 1)
+		diffuse = diffuse + getShadow(light_position1, light_color1, proj_shadow1, shadowMap1, position, normal);
+	
+	if(num_lights > 2)
+		diffuse = diffuse + getShadow(light_position2, light_color2, proj_shadow2, shadowMap2, position, normal);
+	
+	if(num_lights > 3)
+		diffuse = diffuse + getShadow(light_position3, light_color3, proj_shadow3, shadowMap3, position, normal);
+	
 
     // write color to output
     fragColor = ambient + diffuse / num_lights;
