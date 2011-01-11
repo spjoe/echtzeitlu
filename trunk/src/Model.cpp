@@ -307,6 +307,28 @@ void Model::bindTexture(void* data, size_t size){
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
+
+void Model::bindInvBinormal(void* data, size_t size){
+	bindVBO(vbo_bump_id[0], data, size);
+	GLint InvBinormal_location = effect->getShader()->get_attrib_location("InvBinormal");
+	glEnableVertexAttribArray(InvBinormal_location);
+	glVertexAttribPointer(	InvBinormal_location, 3, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
+void Model::bindInvNormal(void* data, size_t size){
+	bindVBO(vbo_bump_id[1], data, size);
+	GLint Normal_location = effect->getShader()->get_attrib_location("InvNormal");
+	glEnableVertexAttribArray(Normal_location);
+	glVertexAttribPointer(	Normal_location, 3, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
+void Model::bindInvTangent(void* data, size_t size){
+	bindVBO(vbo_bump_id[2], data, size);
+	GLint InvTangent_location = effect->getShader()->get_attrib_location("InvTangent");
+	glEnableVertexAttribArray(InvTangent_location);
+	glVertexAttribPointer(	InvTangent_location, 3, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+}
 /*void Model::assignTextureId(GLuint texid)
 {
 	texidlist.clear(); // TODO very hacky ... will be removed when integrating prober multitexturing
@@ -377,6 +399,26 @@ void Model::initBumpMap()
 	delete InvNormals;
 	delete InvBinormals;
 	delete InvTangents;
+
+	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
+	my_glBindVertexArray(vao_id);
+	get_errors();
+	GLuint* tmp_vbo_id = GenerateVBO(3);
+	vbo_bump_id[0] = tmp_vbo_id[0];
+	vbo_bump_id[1] = tmp_vbo_id[1];
+	vbo_bump_id[2] = tmp_vbo_id[2];
+	get_errors();
+	bindInvNormal(&this->InvNormals[0], this->InvNormals.size() * 3 * sizeof(GLfloat));
+	get_errors();
+	bindInvBinormal(&this->InvBinormals[0], this->InvBinormals.size() * 3 * sizeof(GLfloat));
+	get_errors();
+	bindInvTangent(&this->InvTangents[0], this->InvTangents.size() * 3 * sizeof(GLfloat));
+	get_errors();
+	my_glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors();
+
+
 }
 
 void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
