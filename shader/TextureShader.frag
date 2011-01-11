@@ -25,6 +25,7 @@ uniform vec3 light_position;
 uniform vec4 light_color;
 uniform vec4 ambient_color;
 uniform sampler2D texture;
+uniform sampler2D bumpMap;
 
 
 // fragment-shader input variables
@@ -39,22 +40,39 @@ out vec4 fragColor;
 
 void main()
 {
+
+	
+
+
 	// renormalize and homogenize input variables
-	vec3 normal = normalize(world_normal);
-    vec3 position = world_position.xyz / world_position.w;
+	//vec3 normal = normalize(world_normal);
+    //vec3 position = world_position.xyz / world_position.w;
     
     // calculate the light-direction
-    vec3 light_dir = normalize(light_position - position);
+    //vec3 light_dir = normalize(light_position - position);
+
+
+	//Get the color of the bump-map
+    //vec3 BumpNorm = vec3(texture2D(bumpMap, gl_TexCoord[0].xy));
+    //Get the color of the texture
+    //vec3 DecalCol = vec3(texture2D(texture, gl_TexCoord[0].xy));
+    //Expand the bump-map into a normalized signed vector
+    //BumpNorm = (BumpNorm -0.5) * 2.0;
+	//float NdotL = max(dot(BumpNorm, light_dir), 0.0);
+    //Calculate the final color gl_FragColor
+    //vec3 diffuse = NdotL * DecalCol;
+    //Set the color of the fragment...  If you want specular lighting or other types add it here
+    //fragColor = vec4(diffuse,1);
 
 	// calculate lighting
 	//vec4 ctmp = texture2D( texture, gl_TexCoord[0].st);
-	vec4 ctmp = texture2D( texture, TexCoord0);
-    vec4 ambient = ambient_color * ctmp;
-    vec4 diffuse = ctmp * light_color * max(0.0, dot(normal, light_dir));
+	//vec4 ctmp = texture2D( texture, TexCoord0);
+    //vec4 ambient = ambient_color * ctmp;
+    //vec4 diffuse = ctmp * light_color * max(0.0, dot(normal, light_dir));
     
     // write color to output
-    fragColor = ambient + diffuse;
+    //fragColor = ambient + diffuse;
 
-	//fragColor = texture2D( texture, gl_TexCoord[0].st);
+	fragColor = texture2D( texture, TexCoord0.st);
 
 }

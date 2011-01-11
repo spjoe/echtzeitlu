@@ -46,6 +46,8 @@ private:
 	ModelImage* ReadImage(domImageRef lib);
 	ModelEffect *ReadEffect( domEffectRef lib );
 	ModelMaterial *ReadMaterial( domMaterialRef lib );
+
+	void fillEffect(ModelEffect *effect, std::string name);
 };
 
 };

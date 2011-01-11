@@ -13,9 +13,8 @@
 #include <dom.h>
 #include <dom/domVisual_scene.h>
 #include <dom/domImage.h>
-#include "Model.h"
-#include "Effect.h"
 #include "ModelObject.h"
+#include "common.hpp"
 
 namespace echtzeitlu{
 
@@ -24,7 +23,7 @@ private:
 	GLuint _id;
 public:
 	ModelImage(domImage* img);
-
+	ModelImage(string file);
 	unsigned getTexId();
 };
 }
