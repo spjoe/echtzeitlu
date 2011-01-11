@@ -591,6 +591,7 @@ ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
 void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 {
 	std::string filename = "../resources/effects/" + name + ".eff";
+// 	printf("Filename: %s\n", filename.c_str());
 	std::ifstream dateiLese (filename.c_str());	 // Eingabe Datei
 	std::string zeile;
 	char czeile[1001];
