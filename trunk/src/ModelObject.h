@@ -13,8 +13,6 @@
 #include <dom.h>
 #include <dom/domVisual_scene.h>
 #include <dom/domImage.h>
-#include "Model.h"
-#include "Effect.h"
 
 namespace echtzeitlu{
 

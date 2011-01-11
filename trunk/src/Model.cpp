@@ -20,7 +20,7 @@ extern Camera m_camera_1;
 // extern Shader* defaultShader;
 extern Shader* simpleShader;
 
-Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
+/*Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
 			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
@@ -62,10 +62,10 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	get_errors();
 	
 	angle = 0.0f;
-}
+}*/
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
-			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
+			std::vector<GLuint> &indexlist, std::string name, ModelEffect *effect, glm::mat4 model)
 {
 	if(pointlist.size() != normallist.size()){
 		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
@@ -78,9 +78,10 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->texlist = texturelist;
 	this->model = model;
 	this->model_orig = model;
-	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-	this->texidlist.push_back(40000);
+	//this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
+	//this->texidlist.push_back(40000);
 	this->name = name;
+	this->effect = effect;
 	printf("%s\n", name.c_str());
 	
 	get_errors();
@@ -94,12 +95,13 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	vbo_id[1] = tmp_vbo_id[1];
 	vbo_id[2] = tmp_vbo_id[2];
 	
-	this->shader = shader;
 	get_errors();
 	
 	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
-	//bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
-	bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
+	if(effect->hasColorList()){
+		bindColor(&(*(effect->getColorList()))[0], effect->getColorList()->size() * 4 * sizeof(GLfloat));
+	}else
+		bindTexture(&texlist[0], texlist.size() * 2 * sizeof(GLfloat));
 	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
 	get_errors();
 	
@@ -114,7 +116,7 @@ Model::Model()
 {
 	this->vbo_id[0] = this->vbo_id[1] = this->vbo_id[2] = 0;
 	this->vao_id = 0;
-	this->shader = 0;
+	//this->shader = 0;
 	
 	angle = 0.0f;
 }
@@ -141,23 +143,33 @@ void Model::draw()
 {
 	if(indexlist.empty())
 		return;
-	
+	Shader *shader = effect->getShader();
 	get_errors("Model::draw() A");
 	shader->bind();
 	get_errors("Model::draw() B");
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
 	get_errors("Model::draw() C");
-	if(!texlist.empty() && !texidlist.empty()){ //very HACKY!!! fallt weg wenn ich effekte sinnvoll einlese und mit model klasse verknüpfe!
+	if(effect->hasTexture()){ //sehr komischees verhalten
 		GLint texture_uniform = shader->get_uniform_location("texture");
-		get_errors();
+		get_errors("Model::draw()::hasTexture A");
 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
-		get_errors();
+		get_errors("Model::draw()::hasTexture B");
 		glActiveTexture(GL_TEXTURE0);
-		get_errors();
-		glBindTexture(GL_TEXTURE_2D, texidlist[0]);
-		get_errors();
+		get_errors("Model::draw()::hasTexture C");
+		glBindTexture(GL_TEXTURE_2D, effect->getTexture()->getTexId());
+		get_errors("Model::draw()::hasTexture D");
 	}
+	/*if(effect->hasBumpMap()){
+		GLint bumpmap_uniform = shader->get_uniform_location("bumpMap");
+		get_errors("Model::draw()::hasBumpMap A");
+		glUniform1i(bumpmap_uniform, 10); //soll 10. textureinheit verwenden
+		get_errors("Model::draw()::hasBumpMap B");
+		glActiveTexture(GL_TEXTURE10);
+		get_errors("Model::draw()::hasBumpMap C");
+		glBindTexture(GL_TEXTURE_2D, effect->getBumpMap()->getTexId());
+		get_errors("Model::draw()::hasBumpMap D");
+	}*/
 	get_errors("Model::draw() D");
 
     // set matrix-uniforms
@@ -263,7 +275,7 @@ void Model::update(float fTime)
 }
 void Model::bindVertex(void* data, size_t size){
 	bindVBO(vbo_id[0], data, size);
-	GLint vertex_location = shader->get_attrib_location("vertex");
+	GLint vertex_location = effect->getShader()->get_attrib_location("vertex");
 	glEnableVertexAttribArray(vertex_location);
 	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
@@ -271,7 +283,7 @@ void Model::bindVertex(void* data, size_t size){
 
 void Model::bindNormals(void* data, size_t size){
 	bindVBO(vbo_id[2], data, size);
-	GLint normal_location = shader->get_attrib_location("normal");
+	GLint normal_location = effect->getShader()->get_attrib_location("normal");
 	glEnableVertexAttribArray(normal_location);
 	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
@@ -279,23 +291,27 @@ void Model::bindNormals(void* data, size_t size){
 
 void Model::bindColor(void* data, size_t size){
 	bindVBO(vbo_id[1], data, size);
-	GLint color_location = shader->get_attrib_location("color");
+	GLint color_location = effect->getShader()->get_attrib_location("color");
 	glEnableVertexAttribArray(color_location);
 	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
 void Model::bindTexture(void* data, size_t size){
 	bindVBO(vbo_id[1], data, size);
-	GLint tex_location = shader->get_attrib_location("texkoord");
+	GLint tex_location = effect->getShader()->get_attrib_location("texkoord");
 	glEnableVertexAttribArray(tex_location);
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
-void Model::assignTextureId(GLuint texid)
+/*void Model::assignTextureId(GLuint texid)
 {
 	texidlist.clear(); // TODO very hacky ... will be removed when integrating prober multitexturing
 	this->texidlist.push_back(texid);
 }
+void Model::assignBumpMapId(GLuint texid)
+{
+	this->texidlist.push_back(texid);
+}*/
 Model::~Model()
 {
 	//std::vector<SceneObject*>::iterator it = children.begin();

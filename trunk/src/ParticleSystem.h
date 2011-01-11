@@ -11,7 +11,7 @@ protected:
 	//BlendMode blendMode
 	int systemType;
 	std::vector<Particle> particles;
-	std::vector<tShape> shapes;
+	//std::vector<tShape> shapes;
 	int nrAlive;
 	unsigned totalparticles;
 	//BoundingBox3 boundingBox

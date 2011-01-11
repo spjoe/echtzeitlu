@@ -44,6 +44,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 	for (size_t i = 0; i < node->getInstance_geometry_array().getCount(); i++)
 	{
 		Model* model = NULL;
+		ModelEffect *effect = new ModelEffect(defaultShader);
 		//Suche geometrie im dokument
 		domInstance_geometryRef lib = node->getInstance_geometry_array()[i];
 		xsAnyURI & urltype  = lib->getUrl();
@@ -217,12 +218,19 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			delete pointIndices;
 			delete normalIndices;
 			if(texture1_floats == NULL){
+				std::vector<glm::vec4> colorlist;
+				colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
+				ModelEffect *effect = new ModelEffect(defaultColorShader);
+				effect->setColorList(&colorlist);
+				std::vector<glm::vec2> texturelist;
 				if(model == NULL){
-					model = new Model(pointlist, normallist, indexlist, defaultColorShader, geometry_name, mat_model);
+					
+					model = new Model(pointlist, normallist, texturelist, 
+							indexlist, geometry_name, effect, mat_model);
 					sceneObject->add( (SceneObject*)model );
 				}else{
-					SceneObject *submodel = new Model(pointlist, normallist, indexlist, 
-													  defaultColorShader, geometry_name, mat_model);
+					SceneObject *submodel = new Model(pointlist, normallist, texturelist, 
+											indexlist, geometry_name, effect, mat_model);
 					model->add(submodel);
 				}
 #ifdef DEBUG
@@ -250,6 +258,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 			std::vector<glm::vec2> ttexturelist;
 			std::vector<unsigned> tindexlist;
 			std::multimap<unsigned,std::pair<unsigned,unsigned> > IndextoTextureIndexMap;
+
+			
 
 			for(unsigned i=0; i<dom_triangles->getCount()*3; i++){
 				unsigned iI = indexlist[i];
@@ -290,18 +300,18 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 
 			delete texture;
 			delete textureIndices;
-			GLuint texid = 0; // wenn es im modell keine bilder gibt
-			if(images.size() > 0) 
-				texid = (*images.begin()).second->getTexId();
+			//GLuint texid = 0; // wenn es im modell keine bilder gibt
+			//if(images.size() > 0) 
+			//	texid = (*images.begin()).second->getTexId();
 
 			if(model == NULL){
 				//model = new Model(pointlist, normallist, indexlist, defaultShader);
-				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, defaultShader, geometry_name, mat_model);
+				model = new Model(tpointlist, tnormallist, ttexturelist, tindexlist, geometry_name, effect, mat_model);
 				sceneObject->add( (SceneObject*)model );
 			}else{
 				//SceneObject *submodel = new Model(pointlist, normallist, indexlist, defaultShader);
 				SceneObject *submodel = new Model(	tpointlist, tnormallist, ttexturelist, 
-													tindexlist, defaultShader, geometry_name, mat_model);
+													tindexlist, geometry_name, effect, mat_model);
 				model->add(submodel);
 			}
 #ifdef DEBUG
@@ -351,7 +361,14 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						domMaterial * material = (domMaterial *) element;
 	
 						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
-
+						string name = MaterialElement->getID();
+						fillEffect(effect,name);
+						//if(name.compare("fx-floor") == 0){ //hier einlesen aus name.eff datei
+							
+							//model->assignTextureId(m1.getTexId());
+							//model->assignBumpMapId(m2.getTexId());
+						//}
+						/*
 						if ( MaterialElement ) 
 						{
 							ModelMaterial *mat = ReadMaterial(MaterialElement);
@@ -363,7 +380,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 								}
 								//else
 									//model->assignTextureId(40000);
-						}
+						}*/
 					}
 				}
 			}
@@ -478,7 +495,7 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 			ReadImage( EffectElement->getImage_array()[i] );
 		}
 
-		ModelEffect* newEffect = new ModelEffect();
+		ModelEffect* newEffect = new ModelEffect(NULL);
 		newEffect->setID(EffectElement->getID());
 		
 		// How many profiles are there
@@ -498,7 +515,7 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 				for (unsigned i = 0; i < common->getImage_array().getCount(); i++ )
 				{
 					ModelImage *tmp = ReadImage( common->getImage_array()[i] );
-					newEffect->addImage(tmp);
+					//newEffect->addImage(tmp);
 				}
 
 				// Get all images in profile_COMMON
@@ -509,7 +526,7 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 				for (unsigned i = 0; i < technique->getImage_array().getCount(); i++ )
 				{
 					ModelImage *tmp = ReadImage( technique->getImage_array()[i] );
-					newEffect->addImage(tmp);
+					//newEffect->addImage(tmp);
 				}
 
 				for (unsigned i = 0; i < common->getNewparam_array().getCount(); i++ )
@@ -526,7 +543,7 @@ ModelEffect * ModelLoader::ReadEffect( domEffectRef lib ){
 						daeElement* initFrom = surface->getChild("init_from");
 						std::string data = initFrom->getCharData();
 						ModelImage *img = (*images.find(data)).second;
-						newEffect->addImage(img);
+						//newEffect->addImage(img);
 						//todo find image,...
 					}
 				}
@@ -567,4 +584,34 @@ ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
 		} 
 	}
 	return NULL; 
+}
+
+void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
+{
+	std::ifstream dateiLese ("../resources/effects/" + name + ".eff");	 // Eingabe Datei
+	std::string zeile;
+	char czeile[1001];
+	if (dateiLese)
+	{
+		// solange die Zeile nicht leer ist
+		while(dateiLese.getline (czeile, 1000)) 
+		{
+			zeile = czeile;
+			int f = zeile.find_first_of(':');
+			if(zeile.substr(0,f).compare("decal") == 0){
+				std::string file = zeile.substr(f+1,zeile.size());
+				effect->setTexture(new ModelImage("../resources/textures/" + file));
+			}
+			if(zeile.substr(0,f).compare("bump") == 0){
+				std::string file = zeile.substr(f+1,zeile.size());
+				effect->setBumpMap(new ModelImage("../resources/textures/" + file));
+			}
+		}
+
+	dateiLese.close ();	 // Datei schliessen
+	}
+	
+	
+
+
 }
