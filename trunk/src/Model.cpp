@@ -338,3 +338,134 @@ Model::~Model()
 		vbo_id[0] = vbo_id[1] = vbo_id[2] = 0;
 	}
 }
+
+void Model::initBumpMap()
+{
+	glm::vec3 *InvNormals = new glm::vec3[pointlist.size()];
+	glm::vec3 *InvBinormals = new glm::vec3[pointlist.size()];
+	glm::vec3 *InvTangents = new glm::vec3[pointlist.size()];
+
+
+	for(unsigned i = 0; (i*3 + 2) < indexlist.size(); i++){
+		glm::vec3 Vertices[3];
+		glm::vec2 TexCoords[3];
+
+		Vertices[0] = (glm::vec3)pointlist[indexlist[i*3+0]];
+		Vertices[1] = (glm::vec3)pointlist[indexlist[i*3+1]];
+		Vertices[2] = (glm::vec3)pointlist[indexlist[i*3+2]];
+
+		TexCoords[0] = texlist[indexlist[i*3+0]];
+		TexCoords[1] = texlist[indexlist[i*3+1]];
+		TexCoords[2] = texlist[indexlist[i*3+2]];
+
+		glm::vec3 InvNormal;
+		glm::vec3 InvBinormal;
+		glm::vec3 InvTangent;
+		FindInvTBN(Vertices,TexCoords,InvNormal,InvBinormal,InvTangent);
+
+		for(int j = 0; j < 3; j++){
+			InvNormals[indexlist[i*3+j]] = InvNormal;
+			InvBinormals[indexlist[i*3+j]] = InvBinormal;
+			InvTangents[indexlist[i*3+j]] = InvTangent;
+		}
+	}
+	for(unsigned i = 0; i < pointlist.size(); i++){
+		this->InvNormals.push_back(InvNormals[i]);
+		this->InvBinormals.push_back(InvBinormals[i]);
+		this->InvTangents.push_back(InvTangents[i]);
+	}
+	delete InvNormals;
+	delete InvBinormals;
+	delete InvTangents;
+}
+
+void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
+                  glm::vec3 & InvBinormal, glm::vec3 & InvTangent)
+{
+	/* Calculate the vectors from the current vertex
+        to the two other vertices in the triangle */
+ 
+    glm::vec3 v2v1 = Vertices[1] - Vertices[0];
+    glm::vec3 v3v1 = Vertices[2] - Vertices[0];
+ 
+    //Calculate the “direction” of the triangle based on texture coordinates.
+ 
+    // Calculate c2c1_T and c2c1_B
+    float c2c1_T = TexCoords[1].x - TexCoords[0].x;
+    float c2c1_B = TexCoords[1].y - TexCoords[0].y;
+ 
+    // Calculate c3c1_T and c3c1_B
+    float c3c1_T = TexCoords[2].x - TexCoords[0].x;
+    float c3c1_B = TexCoords[2].y - TexCoords[0].y;
+ 
+    //Look at the references for more explanation for this one.
+    float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
+    /*ROUNDOFF here is a macro that sets a value to 0.0f if the value is a very small
+        value, such as > -0.001f and < 0.001. */
+ 
+    /* EDIT by c programmer: you should NEVER perform an equality test against a floating point value, even if
+        your macro has set fDenominator to 0.0f.  The comparison can still fail.  The code needs fixed.
+        Instead you should check if fDenominator is within an epsilon value of 0.0f. */
+//#define ROUNDOFF(value) value < 0.001 && value > -0.001 ? value = 0.0f : value = value
+ 
+    if ( fDenominator < 0.001 && fDenominator > -0.001) 
+    {
+            /* We won't risk a divide by zero, so set the tangent matrix to the
+                identity matrix */
+            InvTangent = glm::vec3(1.0f, 0.0f, 0.0f);
+            InvBinormal = glm::vec3(0.0f, 1.0f, 0.0f);
+            InvNormal = glm::vec3(0.0f, 0.0f, 1.0f);
+    }
+    else
+    {            
+            // Calculate the reciprocal value once and for all (to achieve speed)
+            float fScale1 = 1.0f / fDenominator;
+ 
+            /* Time to calculate the tangent, binormal, and normal.
+                Look at Søren’s article for more information. */
+            glm::vec3 T, B, N;
+            T = glm::vec3((c3c1_B * v2v1.x - c2c1_B * v3v1.x) * fScale1,
+                            (c3c1_B * v2v1.y - c2c1_B * v3v1.y) * fScale1,
+                            (c3c1_B * v2v1.z - c2c1_B * v3v1.z) * fScale1);
+ 
+            B = glm::vec3((-c3c1_T * v2v1.x + c2c1_T * v3v1.x) * fScale1,
+                            (-c3c1_T * v2v1.y + c2c1_T * v3v1.y) * fScale1,
+                            (-c3c1_T * v2v1.z + c2c1_T * v3v1.z) * fScale1);
+ 
+            //N = T%B; //Cross product!
+			N = glm::cross(T,B);
+/*This is where programmers should break up the function to smooth the tangent, binormal and
+normal values. */
+ 
+//Look at “Derivation of the Tangent Space Matrix” for more information.
+ 
+            float fScale2 = 1.0f / ((T.x * B.y * N.z - T.z * B.y * N.x) + 
+                                    (B.x * N.y * T.z - B.z * N.y * T.x) + 
+                                    (N.x * T.y * B.z - N.z * T.y * B.x));
+
+            /*InvTangent.set((B%N).x() * fScale2,
+                            ((-1.0f * N)%T).x() * fScale2,
+                            (T%B).x() * fScale2);*/
+
+			InvTangent.x = glm::cross(B,N).x *  fScale2;
+			InvTangent.y = glm::cross((-1.0f * N),T).x * fScale2;
+			InvTangent.z = glm::cross(T,B).x * fScale2;
+			InvTangent = glm::normalize(InvTangent);
+ 
+            /*InvBinormal.set(((-1.0f *B)%N).y() * fScale2,
+                            (N%T).y() * fScale2,
+                            ((-1.0f * T)%B).y() * fScale2);*/
+			InvBinormal.x = glm::cross((-1.0f *B),N).y * fScale2;
+			InvBinormal.y = glm::cross(N,T).y * fScale2;
+			InvBinormal.z = glm::cross((-1.0f * T),B).y * fScale2;
+			InvBinormal = glm::normalize(InvBinormal);
+ 
+			InvNormal.x = glm::cross(B,N).z * fScale2;
+			InvNormal.y = glm::cross((-1.0f * N),T).z * fScale2;
+			InvNormal.z = glm::cross(T,B).z * fScale2;
+            /*InvNormal.set((B%N).z() * fScale2,
+                            ((-1.0f * N)%T).z() * fScale2,
+                            (T%B).z() * fScale2);*/	
+			InvNormal = glm::normalize(InvNormal);
+	}
+}
