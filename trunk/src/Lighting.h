@@ -42,7 +42,7 @@ public:
 	
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
-	void createShadow(SceneObject* scene, Shader* shader);
+	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
 	
 };
 

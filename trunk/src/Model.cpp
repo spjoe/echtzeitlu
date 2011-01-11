@@ -167,7 +167,7 @@ void Model::draw()
 		glBindTexture(GL_TEXTURE_2D, effect->getTexture()->getTexId());
 		get_errors("Model::draw()::hasTexture D");
 	}
-	/*if(effect->hasBumpMap()){
+	if(effect->hasBumpMap()){
 		GLint bumpmap_uniform = shader->get_uniform_location("bumpMap");
 		get_errors("Model::draw()::hasBumpMap A");
 		glUniform1i(bumpmap_uniform, 10); //soll 10. textureinheit verwenden
@@ -176,7 +176,7 @@ void Model::draw()
 		get_errors("Model::draw()::hasBumpMap C");
 		glBindTexture(GL_TEXTURE_2D, effect->getBumpMap()->getTexId());
 		get_errors("Model::draw()::hasBumpMap D");
-	}*/
+	}
 	get_errors("Model::draw() D");
 
     // set matrix-uniforms

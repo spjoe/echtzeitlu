@@ -99,7 +99,7 @@ void Lighting::init()
 
 char uniform_name[64];
 
-void Lighting::createShadow(SceneObject* scene, Shader* shader)
+void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 {
 	// TODO Render to fbo-texture (pbuffer)
 	
@@ -131,36 +131,42 @@ void Lighting::createShadow(SceneObject* scene, Shader* shader)
 		get_errors("Lighting::createShadow() C");
 
 		// Apply light matrices and shadow map to shader
+		for(std::vector<Shader*>::iterator iter = shaders.begin();
+			iter != shaders.end();iter++){
+			Shader * shader = *iter;
+			shader->bind();
+				sprintf(uniform_name, "%s%d", "light_position", i);
+				GLint light_position_uniform = shader->get_uniform_location( uniform_name );
+				sprintf(uniform_name, "%s%d", "light_color", i);
+				GLint light_color_uniform    = shader->get_uniform_location( uniform_name );
+				glUniform3fv(light_position_uniform, 1, glm::value_ptr(light.position));
+				glUniform4fv(light_color_uniform,    1, glm::value_ptr(light.color));
+				get_errors("Lighting::createShadow() E");
+			
+				glm::mat4 biasprojview = light.bias * light.proj * light.view;
+				sprintf(uniform_name, "%s%d", "shadowProjView", i);
+				GLint biasprojview_uniform = shader->get_uniform_location( uniform_name );
+				glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
+				get_errors("Lighting::createShadow() F");
+			
+				sprintf(uniform_name, "%s%d", "shadowMap", i);
+				GLint shadowMap_uniform = shader->get_uniform_location( uniform_name );
+				glUniform1i(shadowMap_uniform, 1+i);
+				glActiveTexture(GL_TEXTURE1 + i);
+				glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
+				get_errors("Lighting::createShadow() G");
+			shader->unbind();
+		}
+	}
+	for(std::vector<Shader*>::iterator iter = shaders.begin();
+			iter != shaders.end();iter++){
+			Shader * shader = *iter;
 		shader->bind();
-			sprintf(uniform_name, "%s%d", "light_position", i);
-			GLint light_position_uniform = shader->get_uniform_location( uniform_name );
-			sprintf(uniform_name, "%s%d", "light_color", i);
-			GLint light_color_uniform    = shader->get_uniform_location( uniform_name );
-			glUniform3fv(light_position_uniform, 1, glm::value_ptr(light.position));
-			glUniform4fv(light_color_uniform,    1, glm::value_ptr(light.color));
-			get_errors("Lighting::createShadow() E");
-			
-			glm::mat4 biasprojview = light.bias * light.proj * light.view;
-			sprintf(uniform_name, "%s%d", "shadowProjView", i);
-			GLint biasprojview_uniform = shader->get_uniform_location( uniform_name );
-			glUniformMatrix4fv(biasprojview_uniform, 1, GL_FALSE, glm::value_ptr(biasprojview));
-			get_errors("Lighting::createShadow() F");
-			
-			sprintf(uniform_name, "%s%d", "shadowMap", i);
-			GLint shadowMap_uniform = shader->get_uniform_location( uniform_name );
-			glUniform1i(shadowMap_uniform, 1+i);
-			glActiveTexture(GL_TEXTURE1 + i);
-			glBindTexture(GL_TEXTURE_2D, light.texShadowMap);
-			get_errors("Lighting::createShadow() G");
+			GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
+			glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
+			GLint num_lights_uniform  = shader->get_uniform_location( "num_lights");
+			glUniform1i(num_lights_uniform,  (int)lightlist.size());
 		shader->unbind();
 	}
-	
-	shader->bind();
-		GLint ambient_color_uniform  = shader->get_uniform_location( "ambient_color");
-		glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
-		GLint num_lights_uniform  = shader->get_uniform_location( "num_lights");
-		glUniform1i(num_lights_uniform,  (int)lightlist.size());
-	shader->unbind();
-	
 	m_camera_1 = cam_tmp;
 }
