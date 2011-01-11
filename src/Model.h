@@ -32,6 +32,12 @@ protected:
 	std::vector<glm::vec4> pointlist;
 	std::vector<glm::vec3> normallist;
 	std::vector<glm::vec2> texlist;
+
+	//BumpMap
+	std::vector<glm::vec3> InvNormals;
+	std::vector<glm::vec3> InvBinormals;
+	std::vector<glm::vec3> InvTangents;
+
 	//std::vector<glm::vec4> colorlist;
 	std::vector<unsigned> indexlist;
 	glm::mat4 model;
@@ -57,6 +63,8 @@ public:
 	*	@param fTime, time elapsed since last frame */
 	virtual void update(float fTime);
 
+	void initBumpMap();
+
 	//void assignTextureId(GLuint);
 	//void assignBumpMapId(GLuint);
 private:
@@ -64,6 +72,10 @@ private:
 	void bindColor(void*, size_t size);
     void bindNormals(void*, size_t size);
 	void bindTexture(void*, size_t size);
+
+	//adaptiert von http://gpwiki.org/index.php/OpenGL:Tutorials:GLSL_Bump_Mapping
+	void FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
+                  glm::vec3 & InvBinormal, glm::vec3 & InvTangent);
 };
   
 }; // namespace echtzeitlu

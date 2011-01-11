@@ -365,6 +365,8 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
 						string name = MaterialElement->getID();
 						fillEffect(effect,name);
+						if(effect->hasBumpMap())
+							model->initBumpMap();
 						//if(name.compare("fx-floor") == 0){ //hier einlesen aus name.eff datei
 							
 							//model->assignTextureId(m1.getTexId());
