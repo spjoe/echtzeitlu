@@ -240,15 +240,19 @@ void Model::update(float fTime)
 	if( name.compare("shaft") == 0 ||
 		name.compare("hammer") == 0){
 		float start = 40.0f;
-		float top = 130.0f;
-		float fall = 140.0f;
+		float top = 135.0f;
+		float fall = 200.0f;
 		glm::mat4 rot;
+		float alpha=0.0f;
 		if(angle > 0.0f && angle < start){
 			;
 		}else if(angle > start && angle <= top){
-			rot = glm::rotate(0.3f*(angle-start), 0.0f, 1.0f, 0.0f);
+			alpha = 0.3f*(angle-start);
+			rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
 		}else if(angle > top && angle <= fall){
-// 			TODO rot = glm::rotate(top, 0.0f, 1.0f, 0.0f);
+			alpha = 0.3f*(top-start)-2.0f*(angle-top);
+			if(alpha > 0.0f)
+				rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
 		}else if(angle > fall && angle <= 360.0f){
 			;
 		}
@@ -259,7 +263,7 @@ void Model::update(float fTime)
 		rot = glm::translate(0.0f, 0.0f, 0.8f * (float)sin(angle*PI/180.0f - PI*0.5f));
 		model = model_orig * rot;
 	}
-	if( name.compare("connectionbolt") == 0 ){
+	if( name.compare("bolt2") == 0 ){
 		glm::mat4 rot;
 		rot = glm::translate(0.8f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
 		model = model_orig * rot;
