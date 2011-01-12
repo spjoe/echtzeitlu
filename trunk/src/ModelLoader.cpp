@@ -266,7 +266,7 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
  			glm::vec2 * texture = new glm::vec2[numTexture];
  			for(unsigned int i=0;i< numTexture;i++){
  					texture[i].x = texture1_floats->get(i*2+0);
- 					texture[i].y = texture1_floats->get(i*2+1);
+ 					texture[i].y = 1.0f - texture1_floats->get(i*2+1);
  			}
  			int * textureIndices = new int[dom_triangles->getCount() * 3];
  			for(unsigned int i=0;i < dom_triangles->getCount() * 3;i++){
