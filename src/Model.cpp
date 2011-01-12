@@ -311,6 +311,8 @@ void Model::bindVertex(void* data, size_t size){
 	bindVBO(vbo_id[0], data, size);
 	GLint vertex_location = effect->getShader()->get_attrib_location("vertex");
 	glEnableVertexAttribArray(vertex_location);
+	sprintf(errmsg, "Model::bindVertex() A %d", vertex_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
