@@ -30,29 +30,36 @@ uniform mat4 shadowProjView0;
 uniform mat4 shadowProjView1;
 uniform mat4 shadowProjView2;
 uniform mat4 shadowProjView3;
+uniform vec3 light_position0;
+uniform vec3 light_position1;
+uniform vec3 light_position2;
+uniform vec3 light_position3;
 out vec4 proj_shadow0;
 out vec4 proj_shadow1;
 out vec4 proj_shadow2;
 out vec4 proj_shadow3;
-out vec3 LightDirTangentSpace0;
-out vec3 LightDirTangentSpace1;
-out vec3 LightDirTangentSpace2;
-out vec3 LightDirTangentSpace3;
 
 // vertex-shader input variables
 in vec4 vertex;
 //in vec4 color;
 in vec3 normal;
 in vec2 texkoord;
+//bumpMapping
 in vec3 InvNormal;
 in vec3 InvBinormal;
 in vec3 InvTangent;
 
 // vertex-shader output variables (passed to fragment-shader)
-// out vec4 frag_color;
+//out vec4 frag_color;
 out vec3 world_normal;
 out vec4 world_position;
 out vec2 TexCoord0;
+//bumpMapping
+out vec3 LightDirTangentSpace0;
+out vec3 LightDirTangentSpace1;
+out vec3 LightDirTangentSpace2;
+out vec3 LightDirTangentSpace3;
+out mat3 rotmat;
 
 
 void main()
@@ -63,31 +70,34 @@ void main()
     
     // transform vertex to world-space
     world_position = model * vertex;
-
-	// calculate shadow projection
+    
+    // calculate shadow projection
     proj_shadow0 = shadowProjView0 * world_position;
     proj_shadow1 = shadowProjView1 * world_position;
     proj_shadow2 = shadowProjView2 * world_position;
     proj_shadow3 = shadowProjView3 * world_position;
     
     // just pass color to fragment-shader
-    // frag_color = color;
-	TexCoord0 = texkoord;	
+    //frag_color = color;
+    TexCoord0 = texkoord;
 	//gl_TexCoord[0].st = texkoord;
-
-	 mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
-    //Rotate the light into tangent space
-	//For 4 lights max
-    LightDirTangentSpace0 = rotmat * normalize(proj_shadow0.xyz);
-	LightDirTangentSpace1 = rotmat * normalize(proj_shadow1.xyz);
-	LightDirTangentSpace2 = rotmat * normalize(proj_shadow2.xyz);
-	LightDirTangentSpace3 = rotmat * normalize(proj_shadow3.xyz);
-    //Normalize the light
-    normalize(LightDirTangentSpace0);
-	normalize(LightDirTangentSpace1);
-	normalize(LightDirTangentSpace2);
-	normalize(LightDirTangentSpace3);
 
     // transform vertex down the pipeline
     gl_Position = perspective * view * model * vertex;
+
+	//BumpMap
+	vec3 pos = world_position.xyz / world_position.w;
+	vec3 light_dir0 = normalize(light_position0 - pos);
+	vec3 light_dir1 = normalize(light_position1 - pos);
+	vec3 light_dir2 = normalize(light_position2 - pos);
+	vec3 light_dir3 = normalize(light_position3 - pos);
+
+	 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
+    //Rotate the light into tangent space
+	//For 4 lights max
+    LightDirTangentSpace0 = rotmat * normalize(light_dir0);
+	LightDirTangentSpace1 = rotmat * normalize(light_dir1);
+	LightDirTangentSpace2 = rotmat * normalize(light_dir2);
+	LightDirTangentSpace3 = rotmat * normalize(light_dir3);
+
 }
