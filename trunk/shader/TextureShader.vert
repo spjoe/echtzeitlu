@@ -61,6 +61,9 @@ out vec3 LightDirTangentSpace2;
 out vec3 LightDirTangentSpace3;
 out mat3 rotmat;
 
+out vec3 lightVec[4];
+out vec3 eyeVec;
+
 
 void main()
 {
@@ -99,5 +102,58 @@ void main()
 	LightDirTangentSpace1 = rotmat * normalize(light_dir1);
 	LightDirTangentSpace2 = rotmat * normalize(light_dir2);
 	LightDirTangentSpace3 = rotmat * normalize(light_dir3);
+
+	vec3 tangent; 
+	vec3 binormal; 
+	
+	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0)); 
+	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0)); 
+	
+	if(length(c1)>length(c2))
+	{
+		tangent = c1;	
+	}
+	else
+	{
+		tangent = c2;	
+	}
+	
+	tangent = normalize(tangent);
+	
+	binormal = cross(normal, tangent); 
+	binormal = normalize(binormal);
+
+
+	vec3 n = normalize(normal);
+	vec3 t = tangent;
+	vec3 b = binormal;
+	
+	vec3 vVertex = vec3(model * vertex);
+	
+	vec3 tmpVec = light_position0 - vVertex;
+	lightVec[0].x = dot(tmpVec, t);
+	lightVec[0].y = dot(tmpVec, b);
+	lightVec[0].z = dot(tmpVec, n);
+
+	tmpVec = light_position1 - vVertex;
+	lightVec[1].x = dot(tmpVec, t);
+	lightVec[1].y = dot(tmpVec, b);
+	lightVec[1].z = dot(tmpVec, n);
+
+	tmpVec = light_position2 - vVertex;
+	lightVec[2].x = dot(tmpVec, t);
+	lightVec[2].y = dot(tmpVec, b);
+	lightVec[2].z = dot(tmpVec, n);
+
+	tmpVec = light_position3 - vVertex;
+	lightVec[3].x = dot(tmpVec, t);
+	lightVec[3].y = dot(tmpVec, b);
+	lightVec[3].z = dot(tmpVec, n);
+
+	tmpVec = -vVertex;
+	eyeVec.x = dot(tmpVec, t);
+	eyeVec.y = dot(tmpVec, b);
+	eyeVec.z = dot(tmpVec, n);
+
 
 }

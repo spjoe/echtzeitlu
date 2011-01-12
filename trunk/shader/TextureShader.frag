@@ -58,6 +58,9 @@ in vec3 world_normal;
 in vec4 world_position;
 in vec2 TexCoord0;
 
+in vec3 lightVec[4];
+in vec3 eyeVec;
+
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
@@ -97,18 +100,30 @@ void main()
 	vec3 BumpNorm = vec3(texture2D(bumpMap, TexCoord0.xy));
     //Expand the bump-map into a normalized signed vector
     BumpNorm = (BumpNorm -0.5) * 2.0;
+
+	vec3 vVec = normalize(eyeVec);
+	vec4 base = texture2D(colorMap, TexCoord0);
+	vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
+	float distSqr = dot(lightVec[1], lightVec[1]);
+	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
+	//fragColor = light_color1 * max( dot(lVec, bump), 0.0 );
+	//return;
     
     if(num_lights > 0){
 		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
+		//float distSqr = dot(lightVec[0], lightVec[0]);
+		//vec3 lVec = lightVec[0] ;//* inversesqrt(distSqr);
 		light_dir[0] = normalize(light_position0 - position);
-		//diffuse[0]= texture(colorMap, TexCoord0) * light_color0 * max(0.0, dot(BumpNorm, LightDirTangentSpace1));
+		//diffuse[0]= base * light_color0 * max( dot(lVec, bump), 0.0 );
 		diffuse[0]= texture(colorMap, TexCoord0) * light_color0 * max(0.0, dot(normal, light_dir[0]));
 		
     }
 	if(num_lights > 1){
 		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
+		//float distSqr = dot(lightVec[1], lightVec[1]);
+		//vec3 lVec = lightVec[1] * inversesqrt(distSqr);
 		light_dir[1] = normalize(light_position1 - position);
-		//diffuse[1] = texture(colorMap, TexCoord0) * light_color1 * max(0.0, dot(BumpNorm, LightDirTangentSpace1));
+		//diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
 		diffuse[1] = texture(colorMap, TexCoord0) * light_color1 * max(0.0, dot(normal, light_dir[1]));
 	}
 	//if(num_lights > 2){
@@ -131,7 +146,10 @@ void main()
 	}
 	
 
-	//fragColor = vec4(1,1,1,1) *  max(0.0, dot(BumpNorm, light_dir[0]));//vec4(BumpNorm,1);//ambient + diffuseFinal / num_lights ;
+	//fragColor = vec4(1,1,1,1) *  max(0.0, dot(BumpNorm, LightDirTangentSpace0));
+
+
+
 
 
 	// write color to output
