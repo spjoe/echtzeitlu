@@ -623,15 +623,18 @@ void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 		// solange die Zeile nicht leer ist
 		while(dateiLese.getline (czeile, 1000)) 
 		{
+			std::string texfilename = string("../resources/textures/");
 			zeile = czeile;
 			int f = zeile.find_first_of(':');
 			if(zeile.substr(0,f).compare("decal") == 0){
 				std::string file = zeile.substr(f+1,zeile.size());
-				effect->setTexture(new ModelImage("../resources/textures/" + file));
+				texfilename.append(file);
+				effect->setTexture(new ModelImage(texfilename));
 			}
 			if(zeile.substr(0,f).compare("bump") == 0){
 				std::string file = zeile.substr(f+1,zeile.size());
-				effect->setBumpMap(new ModelImage("../resources/textures/" + file));
+				texfilename.append(file);
+				effect->setBumpMap(new ModelImage(texfilename));
 			}
 		}
 

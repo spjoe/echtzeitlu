@@ -166,6 +166,7 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 			glUniform4fv(ambient_color_uniform,  1, glm::value_ptr(ambient_color));
 			GLint num_lights_uniform  = shader->get_uniform_location( "num_lights");
 			glUniform1i(num_lights_uniform,  (int)lightlist.size());
+			get_errors("Lighting::createShadow() H");
 		shader->unbind();
 	}
 	m_camera_1 = cam_tmp;

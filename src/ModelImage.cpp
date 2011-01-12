@@ -64,8 +64,10 @@ unsigned ModelImage::getTexId(){
 ModelImage::ModelImage(string file){
 		
 		GLFWimage image;
-		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE)
+		if (glfwReadImage(file.c_str(), &image, GLFW_ORIGIN_UL_BIT) != GL_TRUE){
+			printf("\nModelImage::ModelImage::glfwReadImage Cannot load file '%s'  (Do you have unix file endings?)\n", file.c_str());
 			return;
+		}
 		get_errors();
 		glGenTextures(1, &_id);
 		get_errors();
