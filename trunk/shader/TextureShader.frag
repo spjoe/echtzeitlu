@@ -104,7 +104,7 @@ void main()
 		diffuse = diffuse + getShadow(light_position3, light_color3, proj_shadow3, shadowMap3, position, normal);
 	
 
-    // write color to output
+	// write color to output
     fragColor = ambient + diffuse / num_lights;
 	
 
@@ -138,6 +138,6 @@ void main()
     // write color to output
     //fragColor = ambient + diffuse;
 
-	fragColor = texture2D( colorMap, TexCoord0.st);
+	//fragColor = texture2D( colorMap, TexCoord0.st);
 
 }

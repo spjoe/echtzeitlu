@@ -41,7 +41,7 @@ out vec3 LightDirTangentSpace3;
 
 // vertex-shader input variables
 in vec4 vertex;
-// in vec4 color;
+//in vec4 color;
 in vec3 normal;
 in vec2 texkoord;
 in vec3 InvNormal;

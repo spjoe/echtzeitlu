@@ -158,6 +158,7 @@ void Model::draw()
 	my_glBindVertexArray(vao_id);
 	get_errors("Model::draw() C");
 	if(effect->hasTexture()){ //sehr komischees verhalten
+// 		printf("effect->hasTexture() %s\n", name.c_str());
 		GLint texture_uniform = shader->get_uniform_location("colorMap");
 		get_errors("Model::draw()::hasTexture A");
 		glUniform1i(texture_uniform, 0); //soll erste textureinheit verwenden
@@ -347,6 +348,8 @@ void Model::bindInvBinormal(void* data, size_t size){
 	bindVBO(vbo_bump_id[0], data, size);
 	GLint InvBinormal_location = effect->getShader()->get_attrib_location("InvBinormal");
 	glEnableVertexAttribArray(InvBinormal_location);
+	sprintf(errmsg, "Model::bindInvBinormal() A %d", InvBinormal_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	InvBinormal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -354,6 +357,8 @@ void Model::bindInvNormal(void* data, size_t size){
 	bindVBO(vbo_bump_id[1], data, size);
 	GLint Normal_location = effect->getShader()->get_attrib_location("InvNormal");
 	glEnableVertexAttribArray(Normal_location);
+	sprintf(errmsg, "Model::bindInvNormal() A %d", Normal_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	Normal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -361,6 +366,8 @@ void Model::bindInvTangent(void* data, size_t size){
 	bindVBO(vbo_bump_id[2], data, size);
 	GLint InvTangent_location = effect->getShader()->get_attrib_location("InvTangent");
 	glEnableVertexAttribArray(InvTangent_location);
+	sprintf(errmsg, "Model::bindInvTangent() A %d", InvTangent_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	InvTangent_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
