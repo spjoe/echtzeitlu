@@ -21,8 +21,8 @@
 precision mediump float;  // delete this line if using GLSL 1.2
 
 // uniform shader-parameters
-uniform vec3 light_position;
-uniform vec4 light_color;
+//uniform vec3 light_position;
+//uniform vec4 light_color;
 uniform vec4 ambient_color;
 uniform sampler2D colorMap;
 uniform sampler2D bumpMap;
@@ -50,8 +50,6 @@ uniform vec4 light_color2;
 uniform vec4 light_color3;
 uniform int num_lights;
 
-
-
 // fragment-shader input variables
 //in vec4 frag_color;
 in vec3 world_normal;
@@ -65,7 +63,7 @@ vec4 getShadow(vec3 light_position, vec4 light_color, vec4 proj_shadow, sampler2
 				vec3 position, vec3 normal)
 {
     vec3 light_dir = normalize(light_position - position);
-	vec4 diffuse = texture2D( colorMap, TexCoord0.st) * light_color * max(0.0, dot(normal, light_dir));
+	vec4 diffuse = texture(colorMap, TexCoord0.st) * light_color * max(0.0, dot(normal, light_dir));
 	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
 	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
 		if( texture(shadowMap, coordPos) < coordPos.z)
@@ -105,7 +103,8 @@ void main()
 	
 
 	// write color to output
-    fragColor = ambient + diffuse / num_lights;
+    //fragColor = diffuse / num_lights;
+	fragColor = ambient + diffuse / num_lights;
 	
 
 
