@@ -613,6 +613,15 @@ ModelMaterial * ModelLoader::ReadMaterial( domMaterialRef lib )
 
 void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 {
+
+#if 0
+	if(name.compare("fx-floor") == 0){
+		effect->setTexture(new ModelImage("../resources/textures/wood04.TGA"));
+		effect->setBumpMap(new ModelImage("../resources/textures/wood04b.TGA"));
+		return;
+	}
+#endif 
+
 	std::string filename = "../resources/effects/" + name + ".eff";
 // 	printf("Filename: %s\n", filename.c_str());
 	std::ifstream dateiLese (filename.c_str());	 // Eingabe Datei
