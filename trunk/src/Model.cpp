@@ -317,9 +317,9 @@ void Model::bindVertex(void* data, size_t size){
 void Model::bindNormals(void* data, size_t size){
 	bindVBO(vbo_id[2], data, size);
 	GLint normal_location = effect->getShader()->get_attrib_location("normal");
-	get_errors("Model::bindNormals() A");
 	glEnableVertexAttribArray(normal_location);
-	get_errors("Model::bindNormals() B");
+	sprintf(errmsg, "Model::bindNormals() A %d", normal_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	normal_location, 3, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -328,6 +328,8 @@ void Model::bindColor(void* data, size_t size){
 	bindVBO(vbo_id[1], data, size);
 	GLint color_location = effect->getShader()->get_attrib_location("color");
 	glEnableVertexAttribArray(color_location);
+	sprintf(errmsg, "Model::bindColor() A %d", color_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
@@ -335,7 +337,8 @@ void Model::bindTexture(void* data, size_t size){
 	bindVBO(vbo_id[1], data, size);
 	GLint tex_location = effect->getShader()->get_attrib_location("texkoord");
 	glEnableVertexAttribArray(tex_location);
-	get_errors("Model::bindTexture() A");
+	sprintf(errmsg, "Model::bindTexture() A %d", tex_location);
+	get_errors(errmsg);
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
 }
