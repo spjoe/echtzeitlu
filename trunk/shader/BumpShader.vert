@@ -54,13 +54,8 @@ in vec3 InvTangent;
 out vec3 world_normal;
 out vec4 world_position;
 out vec2 TexCoord0;
-//bumpMapping
-out vec3 LightDirTangentSpace0;
-out vec3 LightDirTangentSpace1;
-out vec3 LightDirTangentSpace2;
-out vec3 LightDirTangentSpace3;
-out mat3 rotmat;
 
+//bumpMappin
 out vec3 lightVec[4];
 out vec3 eyeVec;
 out vec3 halfVec[4];
@@ -90,13 +85,11 @@ void main()
     gl_Position = perspective * view * model * vertex;
 
 	//BumpMap
-
-
 	vec3 tangent; 
 	vec3 binormal; 
 	
-	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0)); 
-	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0)); 
+	vec3 c1 = cross(world_normal, vec3(0.0, 0.0, 1.0)); 
+	vec3 c2 = cross(world_normal, vec3(0.0, 1.0, 0.0)); 
 	
 	if(length(c1)>length(c2))
 	{
@@ -109,7 +102,7 @@ void main()
 	
 	tangent = normalize(tangent);
 	
-	binormal = cross(normal, tangent); 
+	binormal = cross(world_normal, tangent); 
 	binormal = normalize(binormal);
 
 
@@ -119,7 +112,7 @@ void main()
 	vec3 light_dir2 = normalize(light_position2 - pos);
 	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	 rotmat = transpose(mat3(tangent,binormal,normal));
+	mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
     //Rotate the light into tangent space
 	//For 4 lights max
     lightVec[0] = rotmat * light_dir0; //light direction in the Tangent Space
@@ -127,7 +120,7 @@ void main()
 	lightVec[2] = rotmat * light_dir2;
 	lightVec[3] = rotmat * light_dir3;
 
-	vec3 eyeVec = -(world_position.xyz / world_position.w);
+	vec3 eyeVec = -pos;
 	eyeVec = rotmat * normalize(eyeVec); //eye Vektor in tangent Space
 
 	for( int i = 0;  i < 4; i++){

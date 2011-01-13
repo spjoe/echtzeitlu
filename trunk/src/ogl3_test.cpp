@@ -21,6 +21,7 @@
 //const std::string daeModelPath = "../resources/SteamEngine/models/Steam EngineV2_6.dae";
 // const std::string daeModelPath = "../resources/tmSteamEnginecm.dae";
 const std::string daeModelPath = "../resources/tmSteamEngine.dae";
+//const std::string daeModelPath = "../resources/sphere.dae";
 
 const std::string wavAudioPath = "../resources/music.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
