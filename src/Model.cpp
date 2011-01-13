@@ -19,6 +19,7 @@ extern Camera m_camera_1;
 //extern glm::mat4 model;
 // extern Shader* defaultShader;
 extern Shader* simpleShader;
+bool animation = true;
 
 /*Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
 			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
@@ -237,77 +238,79 @@ void Model::drawSimple(){ // for deph map / shadow map
 
 void Model::update(float fTime)
 {
-	float scale = 200.0f;
-	angle = (angle + fTime * scale);
-	if(angle > 360.0f)
-		angle = angle - 360.0f;
-	
-	if( name.compare("flywheel") == 0 ||
-		name.compare("crank") == 0){
-		glm::mat4 rot = glm::rotate(-angle, 0.0f, 0.0f, 1.0f);
-		model = model_orig * rot;
-	}
-	if( name.compare("shaft") == 0 ||
-		name.compare("hammer") == 0){
-		float start = 40.0f;
-		float top = 135.0f;
-		float fall = 200.0f;
-		glm::mat4 rot;
-		float alpha=0.0f;
-		if(angle > 0.0f && angle < start){
-			;
-		}else if(angle > start && angle <= top){
-			alpha = 0.3f*(angle-start);
-			rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
-		}else if(angle > top && angle <= fall){
-			alpha = 0.3f*(top-start)-2.0f*(angle-top);
-			if(alpha > 0.0f)
-				rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
-		}else if(angle > fall && angle <= 360.0f){
-			;
+	if(animation){
+		float scale = 200.0f;
+		angle = (angle + fTime * scale);
+		if(angle > 360.0f)
+			angle = angle - 360.0f;
+		
+		if( name.compare("flywheel") == 0 ||
+			name.compare("crank") == 0){
+			glm::mat4 rot = glm::rotate(-angle, 0.0f, 0.0f, 1.0f);
+			model = model_orig * rot;
 		}
-		model = model_orig * rot;
-	}
-	if( name.compare("piston") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f - PI*0.5f));
-		model = model_orig * rot;
-	}
-	if( name.compare("bolt2") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
-		model = model_orig * rot;
-	}
-	if( name.compare("connection") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
-		rot = rot * glm::rotate((float)sin(angle*PI/180.0f)*15.0f,0.0f,1.0f,0.0f);
-		model = model_orig * rot;
-	}
-	if( name.compare("piston2") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f + PI*0.5f));
-		model = model_orig * rot;
-	}
-	if( name.compare("bolt3") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
-		model = model_orig * rot;
-	}
-	if( name.compare("rod") == 0 ){
-		glm::mat4 rot;
-		rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
-		rot = rot * glm::rotate((float)sin(angle*PI/180.0f + PI)*13.5f,0.0f,1.0f,0.0f);
-		model = model_orig * rot;
-	}
+		if( name.compare("shaft") == 0 ||
+			name.compare("hammer") == 0){
+			float start = 40.0f;
+			float top = 135.0f;
+			float fall = 200.0f;
+			glm::mat4 rot;
+			float alpha=0.0f;
+			if(angle > 0.0f && angle < start){
+				;
+			}else if(angle > start && angle <= top){
+				alpha = 0.3f*(angle-start);
+				rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
+			}else if(angle > top && angle <= fall){
+				alpha = 0.3f*(top-start)-2.0f*(angle-top);
+				if(alpha > 0.0f)
+					rot = glm::rotate(alpha, 0.0f, 1.0f, 0.0f);
+			}else if(angle > fall && angle <= 360.0f){
+				;
+			}
+			model = model_orig * rot;
+		}
+		if( name.compare("piston") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f - PI*0.5f));
+			model = model_orig * rot;
+		}
+		if( name.compare("bolt2") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+			model = model_orig * rot;
+		}
+		if( name.compare("connection") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f - PI*0.5f),0.0f,0.0f);
+			rot = rot * glm::rotate((float)sin(angle*PI/180.0f)*15.0f,0.0f,1.0f,0.0f);
+			model = model_orig * rot;
+		}
+		if( name.compare("piston2") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.0f, 0.0f, 0.7f * (float)sin(angle*PI/180.0f + PI*0.5f));
+			model = model_orig * rot;
+		}
+		if( name.compare("bolt3") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
+			model = model_orig * rot;
+		}
+		if( name.compare("rod") == 0 ){
+			glm::mat4 rot;
+			rot = glm::translate(0.7f * (float)sin(angle*PI/180.0f + PI*0.5f),0.0f,0.0f);
+			rot = rot * glm::rotate((float)sin(angle*PI/180.0f + PI)*13.5f,0.0f,1.0f,0.0f);
+			model = model_orig * rot;
+		}
 
-	if( name.compare("regulator") == 0 ){
-		glm::mat4 rot;
-		rot = glm::rotate(4.0f*angle,0.0f,0.0f,1.0f);
-		model = model_orig * rot;
+		if( name.compare("regulator") == 0 ){
+			glm::mat4 rot;
+			rot = glm::rotate(4.0f*angle,0.0f,0.0f,1.0f);
+			model = model_orig * rot;
+		}
+		
+		updateChildren(fTime);
 	}
-	
-	updateChildren(fTime);
 }
 void Model::bindVertex(void* data, size_t size){
 	bindVBO(vbo_id[0], data, size);
