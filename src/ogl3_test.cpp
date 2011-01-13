@@ -178,7 +178,7 @@ int main (int argc, char** argv)
 		Shader SimpleShader("../shader/simple_shader");
 		Shader TextureShader("../shader/TextureShader");
 		Shader ColorShader("../shader/ColorShader");
-		Shader BumpShader("../shader/TextureShader"); //auf BumpShader änderen wenn alle BumpMaps fertig sind und shader funktioniert!!
+		Shader BumpShader("../shader/BumpShader"); //auf BumpShader änderen wenn alle BumpMaps fertig sind und shader funktioniert!!
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
