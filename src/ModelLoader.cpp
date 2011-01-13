@@ -23,6 +23,7 @@ using namespace echtzeitlu;
 
 extern Shader* defaultShader;		// TODO der hat hier nix verloren!
 extern Shader* defaultColorShader;		// TODO der hat hier nix verloren!
+extern Shader* defaultBumpShader;		// TODO der hat hier nix verloren!
 extern Lighting* m_lighting; // TODO das hat hier nix verloren
 
 ModelLoader::ModelLoader()
@@ -249,10 +250,12 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
 					
 					model = new Model(pointlist, normallist, texturelist, 
 							indexlist, geometry_name, effect, mat_model);
+					model->Init();
 					sceneObject->add( (SceneObject*)model );
 				}else{
-					SceneObject *submodel = new Model(pointlist, normallist, texturelist, 
+					Model *submodel = new Model(pointlist, normallist, texturelist, 
 											indexlist, geometry_name, effect, mat_model);
+					submodel->Init();
 					model->add(submodel);
 				}
 #ifdef DEBUG
@@ -386,8 +389,13 @@ void ModelLoader::travers(domNode *node, SceneObject* sceneObject)
  						domMaterial * MaterialElement = (domMaterial*)(domElement*)element; 
  						string name = MaterialElement->getID();
  						fillEffect(effect,name);
- 						if(effect->hasBumpMap())
+ 						if(effect->hasBumpMap()){
+							effect->setShader(defaultBumpShader);
+							model->Init();
  							model->initBumpMap();
+						}else{
+							model->Init();
+						}
  						//if(name.compare("fx-floor") == 0){ //hier einlesen aus name.eff datei
  							
  							//model->assignTextureId(m1.getTexId());

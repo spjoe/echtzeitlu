@@ -151,5 +151,11 @@
     <None Include="..\shader\SmokeShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\shader\BumpShader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\BumpShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

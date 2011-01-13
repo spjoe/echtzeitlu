@@ -85,7 +85,9 @@ Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normal
 	this->name = name;
 	this->effect = effect;
 	printf("%s\n", name.c_str());
-	
+}
+
+void Model::Init(){
 	get_errors("Model::Model() A");
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 	my_glGenVertexArrays(1, &vao_id);
