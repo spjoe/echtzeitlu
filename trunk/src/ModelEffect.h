@@ -43,5 +43,6 @@ public:
 	void setColorList(std::vector<glm::vec4> *cl){colorList = cl; bcolorList = true;}
 
 	Shader * getShader(void){return shader;}
+	void setShader(Shader* shader){this->shader = shader;}
 };
 }

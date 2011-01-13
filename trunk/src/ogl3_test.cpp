@@ -40,6 +40,7 @@ Lighting *m_lighting;
 SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
+Shader *defaultBumpShader;
 Shader *simpleShader;
 
 int width=800;
@@ -177,6 +178,7 @@ int main (int argc, char** argv)
 		Shader SimpleShader("../shader/simple_shader");
 		Shader TextureShader("../shader/TextureShader");
 		Shader ColorShader("../shader/ColorShader");
+		Shader BumpShader("../shader/TextureShader"); //auf BumpShader änderen wenn alle BumpMaps fertig sind und shader funktioniert!!
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
@@ -194,6 +196,10 @@ int main (int argc, char** argv)
 			cerr << "Could not compile simple_shader program." << endl;
 			return 1;
 		}
+		if (!BumpShader){
+			cerr << "Could not compile BumpShader program." << endl;
+			return 1;
+		}
 
 		TextureShader.bind_frag_data_location("fragColor");
 		ColorShader.bind_frag_data_location("fragColor");
@@ -201,6 +207,7 @@ int main (int argc, char** argv)
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
 		simpleShader = &SimpleShader;
+		defaultBumpShader = &BumpShader;
 		
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
@@ -246,6 +253,7 @@ int main (int argc, char** argv)
 		std::vector<Shader*> shaders;
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
+		shaders.push_back(defaultBumpShader);
 // 		running  = false;
 		while (running) 
 		{

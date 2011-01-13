@@ -65,6 +65,7 @@ public:
 	virtual void update(float fTime);
 
 	void initBumpMap();
+	void Init();
 
 	//void assignTextureId(GLuint);
 	//void assignBumpMapId(GLuint);
