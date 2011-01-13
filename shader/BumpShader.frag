@@ -96,10 +96,10 @@ void main()
 	vec3 vVec = normalize(eyeVec);
 	vec4 base = texture2D(colorMap, TexCoord0);
 	vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
-	//float distSqr = dot(lightVec[1], lightVec[1]);
-	//vec3 lVec = lightVec[1] * inversesqrt(distSqr);
-	//fragColor = light_color1 * max( dot(lVec, bump), 0.0 );
-	//return;
+	float distSqr = dot(lightVec[1], lightVec[1]);
+	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
+	fragColor = light_color1 * max( dot(lVec, bump), 0.0 );
+	return;
     
     if(num_lights > 0){
 		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
