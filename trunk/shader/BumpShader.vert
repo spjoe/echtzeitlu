@@ -63,6 +63,7 @@ out mat3 rotmat;
 
 out vec3 lightVec[4];
 out vec3 eyeVec;
+out vec3 halfVec[4];
 
 
 void main()
@@ -89,19 +90,7 @@ void main()
     gl_Position = perspective * view * model * vertex;
 
 	//BumpMap
-	vec3 pos = world_position.xyz / world_position.w;
-	vec3 light_dir0 = normalize(light_position0 - pos);
-	vec3 light_dir1 = normalize(light_position1 - pos);
-	vec3 light_dir2 = normalize(light_position2 - pos);
-	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	 rotmat = mat3(InvTangent,InvBinormal,InvNormal) * -transpose(mat3(model));
-    //Rotate the light into tangent space
-	//For 4 lights max
-    LightDirTangentSpace0 = rotmat * normalize(light_dir0);
-	LightDirTangentSpace1 = rotmat * normalize(light_dir1);
-	LightDirTangentSpace2 = rotmat * normalize(light_dir2);
-	LightDirTangentSpace3 = rotmat * normalize(light_dir3);
 
 	vec3 tangent; 
 	vec3 binormal; 
@@ -124,36 +113,26 @@ void main()
 	binormal = normalize(binormal);
 
 
-	vec3 n = normalize(normal);
-	vec3 t = tangent;
-	vec3 b = binormal;
-	
-	vec3 vVertex = vec3(model * vertex);
-	
-	vec3 tmpVec = light_position0 - vVertex;
-	lightVec[0].x = dot(tmpVec, t);
-	lightVec[0].y = dot(tmpVec, b);
-	lightVec[0].z = dot(tmpVec, n);
+	vec3 pos = world_position.xyz / world_position.w;
+	vec3 light_dir0 = normalize(light_position0 - pos); //light direction in the world space
+	vec3 light_dir1 = normalize(light_position1 - pos);
+	vec3 light_dir2 = normalize(light_position2 - pos);
+	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	tmpVec = light_position1 - vVertex;
-	lightVec[1].x = dot(tmpVec, t);
-	lightVec[1].y = dot(tmpVec, b);
-	lightVec[1].z = dot(tmpVec, n);
+	 rotmat = transpose(mat3(tangent,binormal,normal));
+    //Rotate the light into tangent space
+	//For 4 lights max
+    lightVec[0] = rotmat * light_dir0; //light direction in the Tangent Space
+	lightVec[1] = rotmat * light_dir1;
+	lightVec[2] = rotmat * light_dir2;
+	lightVec[3] = rotmat * light_dir3;
 
-	tmpVec = light_position2 - vVertex;
-	lightVec[2].x = dot(tmpVec, t);
-	lightVec[2].y = dot(tmpVec, b);
-	lightVec[2].z = dot(tmpVec, n);
+	vec3 eyeVec = -(world_position.xyz / world_position.w);
+	eyeVec = rotmat * normalize(eyeVec); //eye Vektor in tangent Space
 
-	tmpVec = light_position3 - vVertex;
-	lightVec[3].x = dot(tmpVec, t);
-	lightVec[3].y = dot(tmpVec, b);
-	lightVec[3].z = dot(tmpVec, n);
-
-	tmpVec = -vVertex;
-	eyeVec.x = dot(tmpVec, t);
-	eyeVec.y = dot(tmpVec, b);
-	eyeVec.z = dot(tmpVec, n);
+	for( int i = 0;  i < 4; i++){
+		halfVec[0] = (eyeVec + lightVec[0]) / length(eyeVec + lightVec[0]);
+	}
 
 
 }
