@@ -113,7 +113,7 @@ void main()
 	//}
 	for(int i = 0; i < num_lights; i++){
 		if(shadowLight[i])
-			diffuseFinal +=  diffuse[i] * 0.5;
+			diffuseFinal +=  diffuse[i] * 0.2;
 		else
 			diffuseFinal +=  diffuse[i];
 	}
