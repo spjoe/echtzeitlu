@@ -315,6 +315,7 @@ void Model::update(float fTime)
 			rot = glm::rotate(2.0f*(float)sin(angle*PI/180.0f),1.0f,0.0f,0.0f);
 			rot = rot * glm::rotate(2.0f*(float)cos(angle*PI/180.0f),0.0f,1.0f,0.0f);
 			model = model_orig * rot;
+			glm::vec4 pos = model * glm::vec4(.0f,.0f,-1.0f,1.0f);
 		}
 		
 		updateChildren(fTime);
