@@ -57,6 +57,9 @@ private:
 	glm::vec4 pointlist[4];
 	unsigned indexlist[6];
 	float totaltime;
+	float angle;
+	bool animation;
+	bool start;
 
 public:
 	SparkParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);

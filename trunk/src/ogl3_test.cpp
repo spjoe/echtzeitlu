@@ -216,7 +216,7 @@ int main (int argc, char** argv)
 		init_matrixs();
 		get_errors();
 		pm.AddSystem(new SteamParticleSystem("Smokie uno",2000,glm::vec4(0,-2,-1,1)));
-		pm.AddSystem(new SparkParticleSystem("Sparkie uno",50,glm::vec4(2.0,-0.7,-1.5,1)));
+		pm.AddSystem(new SparkParticleSystem("Sparkie uno",100,glm::vec4(2.0,-0.7,-1.5,1)));
 		// init lighting
 		m_lighting = new Lighting;
 
