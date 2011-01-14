@@ -1,3 +1,11 @@
+/**
+* @file ParticleSystem.h
+* @author Thomas Moerwald, Camillo Dell'mour
+* @date Januar 2010
+* @version unstable
+* @brief The Base Particle System ad all other particle Systems (SteamParticleSystem, SparkParticleSystem
+* @namespace echtzeitlu
+*/
 #pragma once
 
 #include <vector>
@@ -7,16 +15,13 @@ namespace echtzeitlu{
 class ParticleSystem
 {
 protected:
-	//Texture *texture
-	//BlendMode blendMode
-	int systemType;
-	std::vector<Particle*> particles;
-	//std::vector<tShape> shapes;
-	int nrAlive;
-	unsigned totalparticles;
-	//BoundingBox3 boundingBox
-	Shader *shader;
-	glm::mat4 model; 
+	int systemType; //not used
+	std::vector<Particle*> particles; // All Particles belong to the ParticleSystem
+	int nrAlive; //How many of the Particls are alive
+	unsigned totalparticles; //The total amout of (particles.size())
+
+	Shader *shader; //With this Shader the particles are drawn
+	glm::mat4 model; //model Matrix of the ParticleSystem
 	glm::vec4 center; //position of the hole system
 	GLuint vao_id;
 	

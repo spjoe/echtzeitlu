@@ -1,3 +1,11 @@
+/**
+* @file ParticleManager.h
+* @author Thomas Moerwald, Camillo Dell'mour
+* @date Januar 2010
+* @version unstable
+* @brief A particle manager that keeps track of all Particle Systems in the scene
+* @namespace echtzeitlu
+*/
 #pragma once
 
 #include "ParticleSystem.h"
