@@ -96,7 +96,7 @@ void main()
 
 	light_dir[1] = normalize(light_position1 - position);
 	fragColor = light_color1 *  max(0.0, dot(normal, light_dir[1]));
-	return;
+	//return;
 
 
 	vec3 vVec = normalize(eyeVec);
@@ -123,8 +123,8 @@ void main()
 
 	float distSqr = dot(lightVec[1], lightVec[1]);
 	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
-	fragColor = light_color1 * max( dot(lVec, bump), 0.0 );
-	fragColor = texture2D( colorMap, TexCoord0);
+	fragColor = light_color1 * max( dot(light_dir[1], bump), 0.0 );
+	//fragColor = texture2D( colorMap, TexCoord0);
 	return;
     
     if(num_lights > 0){
