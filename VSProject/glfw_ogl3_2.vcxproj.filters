@@ -157,5 +157,11 @@
     <None Include="..\shader\BumpShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\shader\SparkShader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\SparkShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>

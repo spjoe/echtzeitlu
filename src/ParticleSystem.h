@@ -48,4 +48,24 @@ private:
 	void generateRandomParticles();
 	Particle generateOneRandomParticle();
 };
+
+class SparkParticleSystem : public ParticleSystem
+{
+private:
+	std::vector<glm::vec4> colorlist;
+	GLuint vbo_id[2];
+	glm::vec4 pointlist[4];
+	unsigned indexlist[6];
+	float totaltime;
+
+public:
+	SparkParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
+	virtual void Render(void);
+	void SetupShape(unsigned nr);
+	virtual bool Update(float dtime);
+
+private:
+	void generateRandomParticles();
+	Particle generateOneRandomParticle();
+};
 }

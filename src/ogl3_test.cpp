@@ -179,7 +179,7 @@ int main (int argc, char** argv)
 		Shader SimpleShader("../shader/simple_shader");
 		Shader TextureShader("../shader/TextureShader");
 		Shader ColorShader("../shader/ColorShader");
-		Shader BumpShader("../shader/BumpShader"); //auf BumpShader änderen wenn alle BumpMaps fertig sind und shader funktioniert!!
+		Shader BumpShader("../shader/BumpShader");
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
@@ -216,7 +216,7 @@ int main (int argc, char** argv)
 		init_matrixs();
 		get_errors();
 		pm.AddSystem(new SteamParticleSystem("Smokie uno",2000,glm::vec4(0,-2,-1,1)));
-		
+		pm.AddSystem(new SparkParticleSystem("Sparkie uno",50,glm::vec4(2.0,-0.7,-1.5,1)));
 		// init lighting
 		m_lighting = new Lighting;
 
@@ -246,7 +246,7 @@ int main (int argc, char** argv)
 		// Create shadow map (static, because this is outside of running loop)
 // 		m_lighting = new Lighting;
 		m_lighting->addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
-		m_lighting->addLight(glm::vec3(10.0f, 5.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
+		m_lighting->addLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 // 		get_errors();
 		
 		double time = glfwGetTime( );

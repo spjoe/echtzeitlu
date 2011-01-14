@@ -88,21 +88,15 @@ void main()
 	vec3 tangent; 
 	vec3 binormal; 
 	
-	vec3 c1 = cross(world_normal, vec3(0.0, 0.0, 1.0)); 
-	vec3 c2 = cross(world_normal, vec3(0.0, 1.0, 0.0)); 
+	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0)); 
+	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
+	vec3 c3 = cross(normal, vec3(1.0, 0.0, 0.0)); 
 	
-	if(length(c1)>length(c2))
-	{
-		tangent = c1;	
-	}
-	else
-	{
-		tangent = c2;	
-	}
-	
+	tangent = c1;
+
 	tangent = normalize(tangent);
 	
-	binormal = cross(world_normal, tangent); 
+	binormal = cross(normal, tangent); 
 	binormal = normalize(binormal);
 
 
@@ -112,7 +106,7 @@ void main()
 	vec3 light_dir2 = normalize(light_position2 - pos);
 	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
+	mat3 rotmat = -mat3(-tangent,-binormal,-normal);
     //Rotate the light into tangent space
 	//For 4 lights max
     lightVec[0] = rotmat * light_dir0; //light direction in the Tangent Space
