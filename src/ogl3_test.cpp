@@ -231,14 +231,14 @@ int main (int argc, char** argv)
 // 		my_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)glfwGetProcAddress("glDeleteVertexArrays");
 		
 		//GEHT!! habs aber auskommentiert da ich wav nicht auf svn spielen will, weil wir erst richtig musik finden müssen"
-		/*ALuint musicBuffer, musicSource;
+		ALuint musicBuffer, musicSource;
 		musicBuffer = alutCreateBufferFromFile (wavAudioPath.data());
 
 		if(AL_NONE == musicBuffer)
 			reportAlutError();
 		alGenSources (1, &musicSource);
 		alSourcei (musicSource, AL_BUFFER, musicBuffer);
-		alSourcePlay (musicSource);*/
+		
 
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
@@ -256,6 +256,7 @@ int main (int argc, char** argv)
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
 		bool stop = true;
+		if(stop == false) alSourcePlay (musicSource);
 // 		running  = false;
 		while (running) 
 		{
@@ -272,7 +273,7 @@ int main (int argc, char** argv)
 				double tmptime = glfwGetTime();
 				rootScene->update(tmptime-time);
 				pm.Update(tmptime-time);
-//  			cm.update(tmptime-time); //Move Camera
+	  			cm.update(tmptime-time); //Move Camera
 				time = tmptime;
 			}
 			
@@ -298,6 +299,12 @@ int main (int argc, char** argv)
 				m_camera_1.translateF(-0.1f);
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
+				if(stop == true){
+					alSourcePause(musicSource);
+				}else{
+					alSourcePlay(musicSource);
+				}
+
 				time = glfwGetTime( ); //zeitrechnung neu beginnen
 			}
 			
