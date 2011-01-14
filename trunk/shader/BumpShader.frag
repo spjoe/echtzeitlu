@@ -101,10 +101,30 @@ void main()
 
 	vec3 vVec = normalize(eyeVec);
 	vec4 base = texture2D(colorMap, TexCoord0);
-	vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
+	vec3 bump;
+	//normal Map
+	//vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
+
+	//
+	// Possible height Map
+	//
+	//retrieve height
+	float heightmapsizewidth = 1024;
+	float heightmapsizeheight = 1024;
+
+	float diffu =  texture(bumpMap, TexCoord0 + vec2(1.0/heightmapsizewidth,0.0)).a - 
+			texture(bumpMap, TexCoord0 - vec2(1.0/heightmapsizewidth,0.0)).a; //TODO in die richtige Richtung gehen u, v wird im allg. verdreht sein
+
+	float diffv =  texture(bumpMap, TexCoord0 + vec2(0.0,1.0/heightmapsizeheight)).a - 
+			texture(bumpMap, TexCoord0 - vec2(0.0,1.0/heightmapsizeheight)).a;
+	
+	bump.xy = world_normal.xy + vec2(diffu,diffv);
+	bump.z = 1.0;
+
 	float distSqr = dot(lightVec[1], lightVec[1]);
 	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
 	fragColor = light_color1 * max( dot(lVec, bump), 0.0 );
+	fragColor = texture2D( colorMap, TexCoord0);
 	return;
     
     if(num_lights > 0){
