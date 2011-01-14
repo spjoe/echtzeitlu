@@ -93,6 +93,12 @@ void main()
 	shadowLight[2] = false; 
 	shadowLight[3] = false; 
 
+
+	light_dir[1] = normalize(light_position1 - position);
+	fragColor = light_color1 *  max(0.0, dot(normal, light_dir[1]));
+	return;
+
+
 	vec3 vVec = normalize(eyeVec);
 	vec4 base = texture2D(colorMap, TexCoord0);
 	vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
