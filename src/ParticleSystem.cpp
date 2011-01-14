@@ -28,9 +28,10 @@ void ParticleSystem::generateRandomParticles()
 	}
 }
 
-SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter)
+SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter, float radius)
 {
 	this->name = name;
+	this->radius = radius;
 	shader = new Shader("../shader/SmokeShader");
 	shader->bind_frag_data_location("fragColor");
 	totalparticles = totalnr;
@@ -85,6 +86,8 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 						-pScenter.x, -pScenter.y, -pScenter.z, 1.0);
 
 	center = pScenter;
+	start = false;
+	angle = 0.0f;
 
 
 }
@@ -94,15 +97,48 @@ void SteamParticleSystem::SetupShape(unsigned nr)
 }
 bool SteamParticleSystem::Update(float dtime)
 {
+	if(animation){
+		float scale = 200.0f;
+		angle = (angle + dtime * scale);
+		if(angle > 360.0f)
+			angle = angle - 360.0f;
+		if(!(angle > 90 && angle < 270)){
+			if(!start){
+				for(unsigned i = 0; i < totalparticles; i++){
+					generateOneRandomParticle(particles[i]);
+				}
+				start = true;
+			}
+			for(int i = 0;i < angle - 270; i++)
+			{
+				particles[i]->alive = true;
+			}
+			
+		}else if(angle > 200 && angle < 240 && start)
+			start = false;
+
+		for(unsigned i = 0; i < totalparticles; i++){
+			if(particles[i]->alive){
+				particles[i]->oldPos = particles[i]->position;
+				particles[i]->position = particles[i]->position + (particles[i]->velocity * dtime);
+				particles[i]->velocity = particles[i]->velocity + (particles[i]->g * dtime);
+				particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 40) * dtime);
+				particles[i]->color.a = float(particles[i]->energy)/ 200.0f;
+			}
+		}
+	}
+	return true;
+	/*
 	for(unsigned i = 0; i < totalparticles; i++){
 		particles[i]->position = particles[i]->position + (particles[i]->velocity * dtime);
 		particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 40) * dtime);
+		particles[i]->velocity = particles[i]->velocity + (particles[i]->g * dtime);
 		particles[i]->color.a = float(particles[i]->energy)/ 200.0f;
 		if(particles[i]->color.a < 0.01){
 			generateOneRandomParticle(particles[i]);
 		}
 	}
-	return true;
+	return true;*/
 }
 
 void SteamParticleSystem::Render(void)
@@ -166,16 +202,17 @@ void SteamParticleSystem::Render(void)
 }
 void SteamParticleSystem::generateOneRandomParticle(Particle *par)
 {
-	int x = rand() % 500;
-	int y = rand() % 500;
-	int z = 0;
-	float fx = ((float)x - 250.0f) / 100.0f;
-	float fy = ((float)y - 250.0f) / 200.0f;
-	float fz = ((float)z - 250.0f) / 200.0f;
+	int alpha = rand() % 3600;
+	float falpha = float(alpha)/10.0f;
+	int diffradius = rand() % 100 - 50;
+	float radius = this->radius + ((float)diffradius /1000.0f);
+	float fx = 0.0f;
+	float fy =  radius * std::cos(glm::radians(falpha));
+	float fz = radius * std::sin(glm::radians(falpha));
 	int size = rand() % 100 + 100;
 	float sf = (float) size / 3000.0f;
 	float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
-	float speed2 = (float)(rand() % 100 - 50)  / 100.0f;
+	float speed2 = (float)(rand() % 100)  / 40.0f;
 	float speed3 = (float)(rand() % 100 - 50) / 100.0f;
 	float bright = (float)(rand() % 30 + 40) / 100.0f; 
 
@@ -183,8 +220,9 @@ void SteamParticleSystem::generateOneRandomParticle(Particle *par)
 	par->oldPos = glm::vec4(fx,fy,fz,1);
 	par->size = sf;
 	par->energy = (float) (rand() % 100);
-	par->velocity = glm::vec4(speed2,speed3,speed,0);
+	par->velocity = glm::vec4(0.0+speed2,0.0f,0.0f,0.0f);
 	par->color = glm::vec4(bright,bright,bright+0.05,0.5);
+	par->g = glm::vec4(0.0,0.0,std::pow(speed2,2),0.0);
 }
 
 
