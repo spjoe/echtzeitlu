@@ -10,7 +10,7 @@ protected:
 	//Texture *texture
 	//BlendMode blendMode
 	int systemType;
-	std::vector<Particle> particles;
+	std::vector<Particle*> particles;
 	//std::vector<tShape> shapes;
 	int nrAlive;
 	unsigned totalparticles;
@@ -26,7 +26,8 @@ public:
 	virtual void Render(void) = 0;
 	//virtual void SetupShape(unsigned nr) = 0;
 	virtual bool Update(float dtime) = 0;
-
+	void generateRandomParticles();
+	virtual void generateOneRandomParticle(Particle * p) = 0;
 	std::string name;
 };
 
@@ -45,8 +46,8 @@ public:
 	virtual bool Update(float dtime);
 
 private:
-	void generateRandomParticles();
-	Particle generateOneRandomParticle();
+	
+	void generateOneRandomParticle(Particle * p);
 };
 
 class SparkParticleSystem : public ParticleSystem
@@ -56,7 +57,6 @@ private:
 	GLuint vbo_id[2];
 	glm::vec4 pointlist[4];
 	unsigned indexlist[6];
-	float totaltime;
 	float angle;
 	bool animation;
 	bool start;
@@ -68,7 +68,6 @@ public:
 	virtual bool Update(float dtime);
 
 private:
-	void generateRandomParticles();
-	Particle generateOneRandomParticle();
+	void generateOneRandomParticle(Particle * p);
 };
 }

@@ -18,6 +18,15 @@ ParticleSystem::ParticleSystem(void)
 ParticleSystem::~ParticleSystem(void)
 {
 }
+void ParticleSystem::generateRandomParticles()
+{
+	for(unsigned i = 0; i < totalparticles; i++)
+	{
+		Particle * par = new Particle();
+		generateOneRandomParticle(par);
+		particles.push_back(par);
+	}
+}
 
 SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm::vec4 pScenter)
 {
@@ -86,11 +95,11 @@ void SteamParticleSystem::SetupShape(unsigned nr)
 bool SteamParticleSystem::Update(float dtime)
 {
 	for(unsigned i = 0; i < totalparticles; i++){
-		particles[i].position = particles[i].position + (particles[i].velocity * dtime);
-		particles[i].energy = std::max(0.0, particles[i].energy - (double)(rand() % 40) * dtime);
-		particles[i].color.a = float(particles[i].energy)/ 200.0f;
-		if(particles[i].color.a < 0.01){
-			particles[i] = generateOneRandomParticle();
+		particles[i]->position = particles[i]->position + (particles[i]->velocity * dtime);
+		particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 40) * dtime);
+		particles[i]->color.a = float(particles[i]->energy)/ 200.0f;
+		if(particles[i]->color.a < 0.01){
+			generateOneRandomParticle(particles[i]);
 		}
 	}
 	return true;
@@ -139,7 +148,7 @@ void SteamParticleSystem::Render(void)
 
 	for(size_t i = 0; i < totalparticles; i++)
 	{
-		Particle particle = particles[i];
+		Particle particle = *(particles[i]);
 		
 		glUniform1f(size_uniform, (GLfloat)particle.size);
 		glUniform4fv(particle_position_uniform,1, glm::value_ptr(particle.position));
@@ -155,17 +164,8 @@ void SteamParticleSystem::Render(void)
 	shader->unbind();
 	glDisable(GL_BLEND);
 }
-
-void SteamParticleSystem::generateRandomParticles()
+void SteamParticleSystem::generateOneRandomParticle(Particle *par)
 {
-	for(unsigned i = 0; i < totalparticles; i++)
-	{
-		particles.push_back(generateOneRandomParticle());
-	}
-}
-Particle SteamParticleSystem::generateOneRandomParticle()
-{
-	Particle par;
 	int x = rand() % 500;
 	int y = rand() % 500;
 	int z = 0;
@@ -179,14 +179,12 @@ Particle SteamParticleSystem::generateOneRandomParticle()
 	float speed3 = (float)(rand() % 100 - 50) / 100.0f;
 	float bright = (float)(rand() % 30 + 40) / 100.0f; 
 
-	par.position = glm::vec4(fx,fy,fz,1);
-	par.oldPos = glm::vec4(fx,fy,fz,1);
-	par.size = sf;
-	par.energy = (float) (rand() % 100);
-	par.velocity = glm::vec4(speed2,speed3,speed,0);
-	par.color = glm::vec4(bright,bright,bright+0.05,0.5);
-
-	return par;
+	par->position = glm::vec4(fx,fy,fz,1);
+	par->oldPos = glm::vec4(fx,fy,fz,1);
+	par->size = sf;
+	par->energy = (float) (rand() % 100);
+	par->velocity = glm::vec4(speed2,speed3,speed,0);
+	par->color = glm::vec4(bright,bright,bright+0.05,0.5);
 }
 
 
@@ -266,24 +264,19 @@ bool SparkParticleSystem::Update(float dtime)
 			angle = angle - 360.0f;
 		if(angle > 150.0f && !start){
 			for(unsigned i = 0; i < totalparticles; i++){
-				particles[i] = generateOneRandomParticle();
-				particles[i].alive = true;
-				
+				generateOneRandomParticle(particles[i]);
+				particles[i]->alive = true;
 			}
 			start = true;
 		}else if(angle > 100 && angle < 150 && start)
 			start = false;
 
 		for(unsigned i = 0; i < totalparticles; i++){
-			particles[i].oldPos = particles[i].position;
-			particles[i].position = particles[i].position + (particles[i].velocity * dtime);
-			particles[i].velocity = particles[i].velocity + (particles[i].g * dtime);
-			particles[i].energy = std::max(0.0, particles[i].energy - (double)(rand() % 40) * dtime);
-			particles[i].color.a = float(particles[i].energy)/ 200.0f;
-			if(particles[i].color.a < 0.01){
-				particles[i] = generateOneRandomParticle();
-			
-			}
+			particles[i]->oldPos = particles[i]->position;
+			particles[i]->position = particles[i]->position + (particles[i]->velocity * dtime);
+			particles[i]->velocity = particles[i]->velocity + (particles[i]->g * dtime);
+			particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 40) * dtime);
+			particles[i]->color.a = float(particles[i]->energy)/ 200.0f;
 		}
 	}
 	return true;
@@ -333,7 +326,7 @@ void SparkParticleSystem::Render(void)
 
 	for(size_t i = 0; i < totalparticles; i++)
 	{
-		Particle particle = particles[i];
+		Particle particle = *particles[i];
 		if(particle.alive){
 			glUniform1f(size_uniform, (GLfloat)particle.size);
 			glUniform4fv(particle_position_uniform,1, glm::value_ptr(particle.position));
@@ -352,16 +345,9 @@ void SparkParticleSystem::Render(void)
 	glDisable(GL_BLEND);
 }
 
-void SparkParticleSystem::generateRandomParticles()
+
+void SparkParticleSystem::generateOneRandomParticle(Particle * par)
 {
-	for(unsigned i = 0; i < totalparticles; i++)
-	{
-		particles.push_back(generateOneRandomParticle());
-	}
-}
-Particle SparkParticleSystem::generateOneRandomParticle()
-{
-	Particle par;
 	int x = rand() % 500;
 	int y = rand() % 500;
 	int z = 0;
@@ -375,13 +361,12 @@ Particle SparkParticleSystem::generateOneRandomParticle()
 	float speed3 = (float)(rand() % 100 - 50) / 100.0f;
 	float bright = (float)(rand() % 30 + 40) / 100.0f; 
 
-	par.position = glm::vec4(fx,fy,fz,1);
-	par.oldPos = glm::vec4(fx,fy,fz,1);
-	par.size = sf*0.7;
-	par.energy = (float) (rand() % 100);
-	par.velocity = glm::vec4(fx*2,fy*2,speed*3,0);
-	par.color = glm::vec4((float)std::min(1.0f,bright+0.7f),bright+0.2,bright,1);
-	par.g = glm::vec4(0.0f,0.0f,-9.81f,0.0f);
-	par.alive = false;
-	return par;
+	par->position = glm::vec4(fx,fy,fz,1);
+	par->oldPos = glm::vec4(fx,fy,fz,1);
+	par->size = sf*0.7;
+	par->energy = (float) (rand() % 100);
+	par->velocity = glm::vec4(fx*2,fy*2,speed*3,0);
+	par->color = glm::vec4((float)std::min(1.0f,bright+0.7f),bright+0.2,bright,1);
+	par->g = glm::vec4(0.0f,0.0f,-9.81f,0.0f);
+	par->alive = false;
 }
