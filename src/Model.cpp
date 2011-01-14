@@ -309,6 +309,14 @@ void Model::update(float fTime)
 			model = model_orig * rot;
 		}
 		
+		if( name.compare("bulb1") == 0 ||
+			name.compare("wire1") == 0){
+			glm::mat4 rot;
+			rot = glm::rotate(2.0f*(float)sin(angle*PI/180.0f),1.0f,0.0f,0.0f);
+			rot = rot * glm::rotate(2.0f*(float)cos(angle*PI/180.0f),0.0f,1.0f,0.0f);
+			model = model_orig * rot;
+		}
+		
 		updateChildren(fTime);
 	}
 }
