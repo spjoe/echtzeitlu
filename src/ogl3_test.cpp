@@ -309,7 +309,7 @@ int main (int argc, char** argv)
 			}
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
-			//glfwSleep(0.001);
+			glfwSleep(0.001);
 
 		}
 
