@@ -215,7 +215,7 @@ int main (int argc, char** argv)
 		get_errors();
 		init_matrixs();
 		get_errors();
-		pm.AddSystem(new SteamParticleSystem("Smokie uno",2000,glm::vec4(0,-2,-1,1)));
+		pm.AddSystem(new SteamParticleSystem("Smokie uno",2000,glm::vec4(2.86,3.12,-2,1)));
 		pm.AddSystem(new SparkParticleSystem("Sparkie uno",100,glm::vec4(2.0,-0.7,-1.5,1)));
 		// init lighting
 		m_lighting = new Lighting;
@@ -273,7 +273,7 @@ int main (int argc, char** argv)
 				double tmptime = glfwGetTime();
 				rootScene->update(tmptime-time);
 				pm.Update(tmptime-time);
-	  			cm.update(tmptime-time); //Move Camera
+	  			//cm.update(tmptime-time); //Move Camera
 				time = tmptime;
 			}
 			
@@ -309,7 +309,7 @@ int main (int argc, char** argv)
 			}
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
-			glfwSleep(0.001);
+			//glfwSleep(0.001);
 
 		}
 

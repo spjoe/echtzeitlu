@@ -169,9 +169,9 @@ void SteamParticleSystem::generateOneRandomParticle(Particle *par)
 	int x = rand() % 500;
 	int y = rand() % 500;
 	int z = 0;
-	float fx = (float)x / 200.0f;
-	float fy = (float)y / 200.0f;
-	float fz = (float)z / 200.0f;
+	float fx = ((float)x - 250.0f) / 100.0f;
+	float fy = ((float)y - 250.0f) / 200.0f;
+	float fz = ((float)z - 250.0f) / 200.0f;
 	int size = rand() % 100 + 100;
 	float sf = (float) size / 3000.0f;
 	float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
@@ -209,12 +209,6 @@ SparkParticleSystem::SparkParticleSystem(std::string name, unsigned totalnr, glm
 	vbo_id[0] = tmp_vbo_id[0];
 	vbo_id[1] = tmp_vbo_id[1];
 	delete tmp_vbo_id;
-
-	//bindVBO(vbo_id[1], &colorlist[0], 4 * 4 * sizeof(GLfloat));
-	//GLint color_location = shader->get_attrib_location("color");
-	//glEnableVertexAttribArray(color_location);
-	//glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
-	//						GL_FALSE, 0, NULL);
 
 	
 	pointlist[0] = glm::vec4(-1, 2, 0, 1); 
