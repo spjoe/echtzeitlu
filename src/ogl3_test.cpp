@@ -255,6 +255,7 @@ int main (int argc, char** argv)
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
+		bool stop = true;
 // 		running  = false;
 		while (running) 
 		{
@@ -267,11 +268,13 @@ int main (int argc, char** argv)
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
 			pm.Render();
-			double tmptime = glfwGetTime();
-			rootScene->update(tmptime-time);
-			pm.Update(tmptime-time);
+			if(!stop){
+				double tmptime = glfwGetTime();
+				rootScene->update(tmptime-time);
+				pm.Update(tmptime-time);
 //  			cm.update(tmptime-time); //Move Camera
-			time = tmptime;
+				time = tmptime;
+			}
 			
 			glfwSwapBuffers();
 
@@ -293,6 +296,10 @@ int main (int argc, char** argv)
 				m_camera_1.translateF(0.1f);
 			if(glfwGetKey( 'S' ))
 				m_camera_1.translateF(-0.1f);
+			if(glfwGetKey( 'C' )){
+				stop = !stop;
+				time = glfwGetTime( ); //zeitrechnung neu beginnen
+			}
 			
 			// sleep for 1 ms (otherwise the GPU makes nasty sounds) [tm]
 			glfwSleep(0.001);
