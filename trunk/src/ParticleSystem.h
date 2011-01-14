@@ -43,9 +43,13 @@ private:
 	GLuint vbo_id[2];
 	glm::vec4 pointlist[4];
 	unsigned indexlist[6];
+	float radius;
+	float angle;
+	bool animation;
+	bool start;
 
 public:
-	SteamParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter);
+	SteamParticleSystem(std::string name,unsigned totalnr, glm::vec4 pScenter, float radius);
 	virtual void Render(void);
 	void SetupShape(unsigned nr);
 	virtual bool Update(float dtime);
