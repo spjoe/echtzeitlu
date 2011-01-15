@@ -99,7 +99,7 @@ ModelImage::ModelImage(string file){
 		//	return;
 		//image.Format;
 
-#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCEinvalid
+#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
 #ifdef DEBUG
 		printf("using gluBuild2DMipmaps()\n");
 #endif
