@@ -192,30 +192,19 @@ void Lighting::update(float dTime){
 	}
 
 	//flicker of light 0
-	if(totaltime < 3.0f){
-		
-	}else if(totaltime < 3.1f){
-		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
-	}else if(totaltime < 3.2f){
-		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
-	}else if(totaltime < 3.3f){
-		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
-	}else if(totaltime < 3.4f){
-		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
-	}else if(totaltime < 3.5f){
-		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
-	}else if(totaltime < 3.6f){
-		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
-	}else if(totaltime < 3.7f){
-		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
-	}else if(totaltime < 3.8f){
-		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
-	}else if(totaltime < 3.9f){
-		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
-	}else if(totaltime < 4.0f){
-		lightlist[0].color = glm::vec4(1,1,1,1);
-	}
+	if(totaltime < 3.0)
+		return;
 
+	for(float j = 3.1 ; j < 4.5; j+=0.2){
+		if(totaltime < j){
+			lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+			break;
+		}else if(totaltime < (j + 0.1)){
+			lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+			break;
+		}
+	}
+	
 
 	if(totaltime > 5.0f)//Nach fünf sekunden von vorne
 		totaltime = totaltime -5.0f;
