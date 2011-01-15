@@ -92,10 +92,10 @@ void main()
 	vec3 light_dir2 = normalize(light_position2 - pos);
 	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	light_dir0 = normalize(light_dir0 * mat3(invTransModel));// light direction im model space
-	light_dir1 = normalize(light_dir1 * mat3(invTransModel));
-	light_dir2 = normalize(light_dir2 * mat3(invTransModel));
-	light_dir3 = normalize(light_dir0 * mat3(invTransModel));
+	light_dir0 = normalize(light_dir0 * -mat3(invTransModel));// light direction im model space
+	light_dir1 = normalize(light_dir1 * -mat3(invTransModel));
+	light_dir2 = normalize(light_dir2 * -mat3(invTransModel));
+	light_dir3 = normalize(light_dir0 * -mat3(invTransModel));
 
 	mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
     //Rotate the light into tangent space
@@ -106,7 +106,7 @@ void main()
 	lightVec[3] = rotmat * light_dir3;
 
 	// For later use (phong lightning model...
-	vec3 eyeVec = -pos;
+	vec3 eyeVec = normalize(-pos *  mat3(invTransModel)); 
 	eyeVec = rotmat * normalize(eyeVec); //eye Vektor in tangent Space
 
 	for( int i = 0;  i < 4; i++){

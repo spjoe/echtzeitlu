@@ -134,9 +134,9 @@ void main()
 	
 	bump = normalize(cross(diffu,diffv));
 
-	//float distSqr = dot(lightVec[1], lightVec[1]);
-	//vec3 lVec = lightVec[1] * inversesqrt(distSqr);
-	//fragColor =  base * light_color1 * max( dot(lVec, bump), 0.0 );
+	float distSqr = dot(lightVec[0], lightVec[0]);
+	vec3 lVec = lightVec[0] * inversesqrt(distSqr);
+	fragColor =  base * light_color1 * max( dot(lVec, bump), 0.0 );
 	//fragColor = vec4(bump,1);
 	//fragColor = texture2D( colorMap, TexCoord0);
 	//return;
@@ -145,14 +145,13 @@ void main()
 		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
 		float distSqr = dot(lightVec[0], lightVec[0]);
 		vec3 lVec = lightVec[0] * inversesqrt(distSqr);
-		diffuse[0]= base * light_color0 * max( dot(lVec, bump), 0.0 );
+		diffuse[0]= base * light_color0 * max( dot(lightVec[0], bump), 0.0 );
     }
 	if(num_lights > 1){
 		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
 		float distSqr = dot(lightVec[1], lightVec[1]);
 		vec3 lVec = lightVec[1] * inversesqrt(distSqr);
-		light_dir[1] = normalize(light_position1 - position);
-		diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
+		diffuse[1]= base * light_color1 * max( dot(lightVec[1], bump), 0.0 );
 	}
 	//if(num_lights > 2){
 	//	shadowLight[2] = isShadow(proj_shadow2, shadowMap2, position, normal);
