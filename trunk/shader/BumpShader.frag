@@ -134,12 +134,12 @@ void main()
 	
 	bump = normalize(cross(diffu,diffv));
 
-	float distSqr = dot(lightVec[0], lightVec[0]);
-	vec3 lVec = lightVec[0] * inversesqrt(distSqr);
-	fragColor =  light_color1 * max( dot(lVec, bump), 0.0 );
+	//float distSqr = dot(lightVec[1], lightVec[1]);
+	//vec3 lVec = lightVec[1] * inversesqrt(distSqr);
+	//fragColor =  base * light_color1 * max( dot(lVec, bump), 0.0 );
 	//fragColor = vec4(bump,1);
 	//fragColor = texture2D( colorMap, TexCoord0);
-	return;
+	//return;
     
     if(num_lights > 0){
 		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
