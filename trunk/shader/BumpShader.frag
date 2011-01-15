@@ -106,12 +106,9 @@ void main()
 	//vec3 bump = normalize( texture2D(bumpMap, TexCoord0).xyz * 2.0 - 1.0);
 
 	//
-	// Possible height Map
+	// Height Map
 	//
-	//retrieve height
-	//float heightmapsizewidth = 1024;
-	//float heightmapsizeheight = 1024;
-	// Nachtbarschaft vom Texel p;
+	// Neighbourhood;
 	//  lo o  ro
 	//  l  p  r
 	//  lu u  ru
@@ -121,7 +118,7 @@ void main()
 	float o = textureOffset(bumpMap, TexCoord0, ivec2(0, 1)).r;
 	float u = textureOffset(bumpMap, TexCoord0, ivec2(0, -1)).r;
 
-	float p = texture(bumpMap, TexCoord0).r;
+	//float p = texture(bumpMap, TexCoord0).r;
 
 	float lo = textureOffset(bumpMap, TexCoord0, ivec2(-1, 1)).r;
 	float ro = textureOffset(bumpMap, TexCoord0, ivec2(1, 1)).r;
@@ -137,10 +134,10 @@ void main()
 	
 	bump = normalize(cross(diffu,diffv));
 
-	float distSqr = dot(lightVec[1], lightVec[1]);
-	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
-	fragColor = light_color1 * max( dot(light_dir[1], bump), 0.0 );
-	fragColor = vec4(bump,1);
+	float distSqr = dot(lightVec[0], lightVec[0]);
+	vec3 lVec = lightVec[0] * inversesqrt(distSqr);
+	fragColor =  light_color1 * max( dot(lVec, bump), 0.0 );
+	//fragColor = vec4(bump,1);
 	//fragColor = texture2D( colorMap, TexCoord0);
 	return;
     
