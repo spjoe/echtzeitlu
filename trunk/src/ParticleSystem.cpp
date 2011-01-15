@@ -109,7 +109,7 @@ bool SteamParticleSystem::Update(float dtime)
 				}
 				start = true;
 			}
-			for(int i = 0;i < angle - 270; i++)
+			for(int i = 0;i < (angle - 270) * 20 && i < totalparticles; i++)
 			{
 				particles[i]->alive = true;
 			}
@@ -122,7 +122,7 @@ bool SteamParticleSystem::Update(float dtime)
 				particles[i]->oldPos = particles[i]->position;
 				particles[i]->position = particles[i]->position + (particles[i]->velocity * dtime);
 				particles[i]->velocity = particles[i]->velocity + (particles[i]->g * dtime);
-				particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 40) * dtime);
+				particles[i]->energy = std::max(0.0, particles[i]->energy - (double)(rand() % 100) * dtime);
 				particles[i]->color.a = float(particles[i]->energy)/ 200.0f;
 			}
 		}
@@ -185,12 +185,13 @@ void SteamParticleSystem::Render(void)
 	for(size_t i = 0; i < totalparticles; i++)
 	{
 		Particle particle = *(particles[i]);
-		
-		glUniform1f(size_uniform, (GLfloat)particle.size);
-		glUniform4fv(particle_position_uniform,1, glm::value_ptr(particle.position));
-		glUniform4fv(color_uniform,1, glm::value_ptr(particle.color));
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indexlist);
-		get_errors();
+		if(particle.alive){
+			glUniform1f(size_uniform, (GLfloat)particle.size);
+			glUniform4fv(particle_position_uniform,1, glm::value_ptr(particle.position));
+			glUniform4fv(color_uniform,1, glm::value_ptr(particle.color));
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indexlist);
+			get_errors();
+		}
 	}
 	get_errors();
 	my_glBindVertexArray(0);
@@ -211,18 +212,21 @@ void SteamParticleSystem::generateOneRandomParticle(Particle *par)
 	float fz = radius * std::sin(glm::radians(falpha));
 	int size = rand() % 100 + 100;
 	float sf = (float) size / 3000.0f;
-	float speed = 1.0f + ((float)(rand() % 100)) / 100.0f;
+	
 	float speed2 = (float)(rand() % 100)  / 40.0f;
-	float speed3 = (float)(rand() % 100 - 50) / 100.0f;
+	float speed3 = (float)(rand() % 100 - 50) / 300.0f;
+	float speed1 = (float)(rand() % 100 - 50) / 300.0f;
 	float bright = (float)(rand() % 30 + 40) / 100.0f; 
+	float accjit = (float)(rand() % 100 - 50) / 1000.0f;
 
 	par->position = glm::vec4(fx,fy,fz,1);
 	par->oldPos = glm::vec4(fx,fy,fz,1);
 	par->size = sf;
 	par->energy = (float) (rand() % 100);
-	par->velocity = glm::vec4(0.0+speed2,0.0f,0.0f,0.0f);
+	par->velocity = glm::vec4(2.0+speed2,speed3,speed1,0.0f);
 	par->color = glm::vec4(bright,bright,bright+0.05,0.5);
-	par->g = glm::vec4(0.0,0.0,std::pow(speed2,2),0.0);
+	par->g = glm::vec4(0.0,0.0,std::pow(speed2+0.5,2)+accjit,0.0);
+	par->alive = false;
 }
 
 
