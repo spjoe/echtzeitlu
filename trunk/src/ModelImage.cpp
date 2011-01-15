@@ -1,5 +1,5 @@
 #include "ModelImage.h"
-#include <gl/GLU.h>
+#include <GL/glu.h>
 
 
 using namespace echtzeitlu;
