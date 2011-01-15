@@ -205,6 +205,7 @@ int main (int argc, char** argv)
 		TextureShader.bind_frag_data_location("fragColor");
 		ColorShader.bind_frag_data_location("fragColor");
 		SimpleShader.bind_frag_data_location("fragColor");
+		BumpShader.bind_frag_data_location("fragColor");
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
 		simpleShader = &SimpleShader;
@@ -255,7 +256,7 @@ int main (int argc, char** argv)
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
-		bool stop = true;
+		bool stop = false;
 		if(stop == false) alSourcePlay (musicSource);
 // 		running  = false;
 		while (running) 
@@ -274,6 +275,7 @@ int main (int argc, char** argv)
 				rootScene->update(tmptime-time);
 				pm.Update(tmptime-time);
 	  			//cm.update(tmptime-time); //Move Camera
+				m_lighting->update(tmptime-time);
 				time = tmptime;
 			}
 			

@@ -23,6 +23,7 @@ Lighting::Lighting()
 {
 	isinit = false;
 	max_lights = 4;
+	totaltime = 0.0f;
 	init();
 }
 
@@ -170,4 +171,52 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 		shader->unbind();
 	}
 	m_camera_1 = cam_tmp;
+}
+
+void Lighting::update(float dTime){
+	totaltime += dTime;
+	if(lightlist.size() < 2)
+		return;
+
+	//smooth fade out of light 1
+	if(totaltime < 1.0f){
+		//lightlist[0].color = glm::vec4(1,1,1,1) * (1.0f - totaltime);
+	}else if(totaltime < 2.0f){
+		//lightlist[1].color = glm::vec4(1,1,1,1) * (2.0f - totaltime);
+	}else if(totaltime < 3.0f){
+		//lightlist[0].color = glm::vec4(1,1,1,1) * (1.0f - (3.0f - totaltime));
+	}else if(totaltime < 4.0f){
+		//lightlist[1].color = glm::vec4(1,1,1,1) * (1.0f - (4.0f - totaltime));
+	}else if(totaltime < 5.0f){
+		;
+	}
+
+	//flicker of light 0
+	if(totaltime < 3.0f){
+		
+	}else if(totaltime < 3.1f){
+		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+	}else if(totaltime < 3.2f){
+		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+	}else if(totaltime < 3.3f){
+		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+	}else if(totaltime < 3.4f){
+		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+	}else if(totaltime < 3.5f){
+		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+	}else if(totaltime < 3.6f){
+		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+	}else if(totaltime < 3.7f){
+		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+	}else if(totaltime < 3.8f){
+		lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+	}else if(totaltime < 3.9f){
+		lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+	}else if(totaltime < 4.0f){
+		lightlist[0].color = glm::vec4(1,1,1,1);
+	}
+
+
+	if(totaltime > 5.0f)//Nach fünf sekunden von vorne
+		totaltime = totaltime -5.0f;
 }
