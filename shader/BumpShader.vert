@@ -86,21 +86,6 @@ void main()
     gl_Position = perspective * view * model * vertex;
 
 	//BumpMap
-	vec3 tangent; 
-	vec3 binormal; 
-	
-	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0)); 
-	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
-	vec3 c3 = cross(normal, vec3(1.0, 0.0, 0.0)); 
-	
-	tangent = c1;
-
-	tangent = normalize(tangent);
-	
-	binormal = cross(normal, tangent); 
-	binormal = normalize(binormal);
-
-
 	vec3 pos = world_position.xyz / world_position.w;
 	vec3 light_dir0 = normalize(light_position0 - pos); //light direction in the world space
 	vec3 light_dir1 = normalize(light_position1 - pos);
@@ -112,7 +97,7 @@ void main()
 	light_dir2 = normalize(light_dir2 * mat3(invTransModel));
 	light_dir3 = normalize(light_dir0 * mat3(invTransModel));
 
-	mat3 rotmat = -mat3(InvTangent,InvBinormal,InvNormal);
+	mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
     //Rotate the light into tangent space
 	//For 4 lights max
     lightVec[0] = rotmat * light_dir0; //light direction in the Tangent Space
@@ -120,6 +105,7 @@ void main()
 	lightVec[2] = rotmat * light_dir2;
 	lightVec[3] = rotmat * light_dir3;
 
+	// For later use (phong lightning model...
 	vec3 eyeVec = -pos;
 	eyeVec = rotmat * normalize(eyeVec); //eye Vektor in tangent Space
 
