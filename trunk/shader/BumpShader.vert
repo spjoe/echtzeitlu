@@ -24,6 +24,7 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat4 invTransModel;
 
 // light & shadows
 uniform mat4 shadowProjView0;
@@ -106,7 +107,12 @@ void main()
 	vec3 light_dir2 = normalize(light_position2 - pos);
 	vec3 light_dir3 = normalize(light_position3 - pos);
 
-	mat3 rotmat = -mat3(-tangent,-binormal,-normal);
+	light_dir0 = normalize(light_dir0 * mat3(invTransModel));// light direction im model space
+	light_dir1 = normalize(light_dir1 * mat3(invTransModel));
+	light_dir2 = normalize(light_dir2 * mat3(invTransModel));
+	light_dir3 = normalize(light_dir0 * mat3(invTransModel));
+
+	mat3 rotmat = -mat3(InvTangent,InvBinormal,InvNormal);
     //Rotate the light into tangent space
 	//For 4 lights max
     lightVec[0] = rotmat * light_dir0; //light direction in the Tangent Space

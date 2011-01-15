@@ -160,7 +160,7 @@ void Model::draw()
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
 	my_glBindVertexArray(vao_id);
 	get_errors("Model::draw() C");
-	if(effect->hasTexture()){ //sehr komischees verhalten
+	if(effect->hasTexture()){ 
 // 		printf("effect->hasTexture() %s\n", name.c_str());
 		GLint texture_uniform = shader->get_uniform_location("colorMap");
 		get_errors("Model::draw()::hasTexture A");
@@ -180,6 +180,8 @@ void Model::draw()
 		get_errors("Model::draw()::hasBumpMap C");
 		glBindTexture(GL_TEXTURE_2D, effect->getBumpMap()->getTexId());
 		get_errors("Model::draw()::hasBumpMap D");
+		GLint inv_trans_model_uniform = shader->get_uniform_location( "invTransModel");
+		glUniformMatrix4fv(inv_trans_model_uniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(model))));
 	}
 	get_errors("Model::draw() D");
 
@@ -187,6 +189,7 @@ void Model::draw()
     GLint perspective_uniform = shader->get_uniform_location( "perspective");
     GLint view_uniform        = shader->get_uniform_location( "view");
     GLint model_uniform       = shader->get_uniform_location( "model");
+	
 	get_errors("Model::draw() E");
 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
@@ -508,7 +511,7 @@ void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 
         Instead you should check if fDenominator is within an epsilon value of 0.0f. */
 //#define ROUNDOFF(value) value < 0.001 && value > -0.001 ? value = 0.0f : value = value
  
-    if ( fDenominator < 0.001 && fDenominator > -0.001) 
+    if ( fDenominator < 0.00001 && fDenominator > -0.00001) 
     {
             /* We won't risk a divide by zero, so set the tangent matrix to the
                 identity matrix */
