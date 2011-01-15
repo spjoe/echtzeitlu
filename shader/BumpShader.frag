@@ -116,31 +116,24 @@ void main()
 	//  l  p  r
 	//  lu u  ru
 
-	float r = textureOffset(bumpMap, TexCoord0, ivec2(1, 0)).x;
-	float l = textureOffset(bumpMap, TexCoord0, ivec2(-1, 0)).y;
-	float o = textureOffset(bumpMap, TexCoord0, ivec2(0, 1)).z;
-	float u = textureOffset(bumpMap, TexCoord0, ivec2(0, -1)).w;
+	float r = textureOffset(bumpMap, TexCoord0, ivec2(1, 0)).r;
+	float l = textureOffset(bumpMap, TexCoord0, ivec2(-1, 0)).r;
+	float o = textureOffset(bumpMap, TexCoord0, ivec2(0, 1)).r;
+	float u = textureOffset(bumpMap, TexCoord0, ivec2(0, -1)).r;
 
-	float test = texture(bumpMap, TexCoord0).a;
+	float p = texture(bumpMap, TexCoord0).r;
 
-	float lo = textureOffset(bumpMap, TexCoord0, ivec2(-1, 1)).a;
-	float ro = textureOffset(bumpMap, TexCoord0, ivec2(1, 1)).a;
-	float lu = textureOffset(bumpMap, TexCoord0, ivec2(-1, -1)).a;
-	float ru = textureOffset(bumpMap, TexCoord0, ivec2(1, -1)).a;
-	
-
-	if(test == 0.0){
-		fragColor = vec4(0,1,0,1);
-		return;	}
-	if(r == 0.0 && l == 0.0 && o == 0.0 && u == 0.0 ){ //alle werte sind 0.0, ....
-		fragColor = vec4(1,0,0,1);
-		return;
-	}
+	float lo = textureOffset(bumpMap, TexCoord0, ivec2(-1, 1)).r;
+	float ro = textureOffset(bumpMap, TexCoord0, ivec2(1, 1)).r;
+	float lu = textureOffset(bumpMap, TexCoord0, ivec2(-1, -1)).r;
+	float ru = textureOffset(bumpMap, TexCoord0, ivec2(1, -1)).r;
 
 
-	// TODO Sobel Filter
-	vec3 diffu =  vec3(1,0,r-l);
-	vec3 diffv =  vec3(0,1,o-u);
+	// Sobel Filter
+	float uz = 1*lo + 2*l + 1*lu -1*ro -2*r -1*ru;
+	float vz = 1*lo + 2*o + 1*ro -1*lu -2*u -1*ru;
+	vec3 diffu =  vec3(1,0,uz);
+	vec3 diffv =  vec3(0,1,vz);
 	
 	bump = normalize(cross(diffu,diffv));
 
