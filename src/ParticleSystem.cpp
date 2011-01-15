@@ -252,11 +252,11 @@ SparkParticleSystem::SparkParticleSystem(std::string name, unsigned totalnr, glm
 	vbo_id[1] = tmp_vbo_id[1];
 	delete tmp_vbo_id;
 
-	
-	pointlist[0] = glm::vec4(-1, 2, 0, 1); 
-	pointlist[1] = glm::vec4( 1, 2, 0, 1);
-	pointlist[2] = glm::vec4( 1,-2, -1.0f, 1);
-	pointlist[3] = glm::vec4(-1,-2, -1.0f, 1);
+	float s = 0.6f;
+	pointlist[0] = glm::vec4(-1*s, 2*s, 0, 1); 
+	pointlist[1] = glm::vec4( 1*s, 2*s, 0, 1);
+	pointlist[2] = glm::vec4( 1*s,-2*s, -1.0f*s, 1);
+	pointlist[3] = glm::vec4(-1*s,-2*s, -1.0f*s, 1);
 
 	
 	//ccw
@@ -402,7 +402,7 @@ void SparkParticleSystem::generateOneRandomParticle(Particle * par)
 	par->size = sf*0.7;
 	par->energy = (float) (rand() % 100);
 	par->velocity = glm::vec4(fx*2,fy*2,speed*3,0);
-	par->color = glm::vec4((float)std::min(1.0f,bright+0.7f),bright+0.2,bright,1);
+	par->color = glm::vec4((float)std::min(1.0f,bright+0.7f),bright,0,1);
 	par->g = glm::vec4(0.0f,0.0f,-9.81f,0.0f);
 	par->alive = false;
 }

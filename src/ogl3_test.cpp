@@ -86,7 +86,7 @@ void init_matrixs()
 	m_camera_1.perspective(60.0f, aspect, 0.1f, 100.0f);
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
-	m_camera_1.lookat(glm::vec3(0,20,20), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	m_camera_1.lookat(glm::vec3(0,10,5), glm::vec3(0,0,0), glm::vec3(0,0,1));
 
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
@@ -267,6 +267,7 @@ int main (int argc, char** argv)
 			
 // 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
+
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
 			pm.Render();
