@@ -73,6 +73,14 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 	lightlist.push_back(light);
 }
 
+void Lighting::changePosition(unsigned id, glm::vec3 position){
+	
+	if(id < lightlist.size()){
+		lightlist[id].position = position;
+		lightlist[id].view = glm::lookAt(lightlist[id].position, glm::vec3(0,0,0), glm::vec3(0,0,1));
+	}
+}
+
 void Lighting::init()
 {
 	my_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)glfwGetProcAddress("glGenFramebuffers");
@@ -122,7 +130,7 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 		glViewport(0,0,fbo_res,fbo_res);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(0.8f, 0.8f);
+		glPolygonOffset(0.5f, 0.5f);
 
 			scene->drawSimple();
 
