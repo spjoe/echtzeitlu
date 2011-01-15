@@ -98,21 +98,34 @@ ModelImage::ModelImage(string file){
 		//if(glfwLoadMemoryTexture2D(image.Data, image.BytesPerPixel * image.Height * image.Width, GLFW_BUILD_MIPMAPS_BIT) == GL_FALSE);
 		//	return;
 		//image.Format;
-		
-#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCE
+
+#ifdef GL_GENERATE_MIPMAP_SEG_AVOIDANCEinvalid
 #ifdef DEBUG
 		printf("using gluBuild2DMipmaps()\n");
 #endif
-		if(image.BytesPerPixel == 1){// todo gl enum
-			gluBuild2DMipmaps(GL_TEXTURE_2D, 1, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
-			get_errors("ModelImage: Grauwert Bild einlesen!");
-		}else
-			gluBuild2DMipmaps(GL_TEXTURE_2D, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+		if(image.BytesPerPixel == 1){// todo gl enum (GL_LUMINACE, GL_LUMINANCE8, GL_ALPHA, GL_ALPHA8 gehen nicht)
+			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_SRGB, image.Width, image.Height, GL_RED, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+			get_errors("ModelImage:gluBuild2DMipmaps Grauwert Bild einlesen!");
+		}else{
+			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_SRGB, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+			get_errors("ModelImage:gluBuild2DMipmaps Farb Bild einlesen!");
+		}
 #else
-		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,
-						0, image.Format, GL_UNSIGNED_BYTE,
-						reinterpret_cast<void*>(image.Data));
-		glGenerateMipmap(GL_TEXTURE_2D);
+		if(image.BytesPerPixel == 1){
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, image.Width, image.Height,
+							0, GL_RED, GL_UNSIGNED_BYTE,
+							reinterpret_cast<void*>(image.Data));
+			get_errors("ModelImage:glTexImage2D Grauwert Bild einlesen! A");
+			glGenerateMipmap(GL_TEXTURE_2D);
+			get_errors("ModelImage:glGenerateMipmap Grauwert Bild einlesen! B");
+
+		}else{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, image.Width, image.Height,
+							0, image.Format, GL_UNSIGNED_BYTE,
+							reinterpret_cast<void*>(image.Data));
+			glGenerateMipmap(GL_TEXTURE_2D);
+			get_errors("ModelImage:glTexImage2D Farb Bild einlesen! ");
+		}
 #endif
 		get_errors();
 		glfwFreeImage(&image);
