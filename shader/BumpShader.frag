@@ -109,21 +109,45 @@ void main()
 	// Possible height Map
 	//
 	//retrieve height
-	float heightmapsizewidth = 1024;
-	float heightmapsizeheight = 1024;
+	//float heightmapsizewidth = 1024;
+	//float heightmapsizeheight = 1024;
+	// Nachtbarschaft vom Texel p;
+	//  lo o  ro
+	//  l  p  r
+	//  lu u  ru
 
-	float diffu =  texture(bumpMap, TexCoord0 + vec2(1.0/heightmapsizewidth,0.0)).a - 
-			texture(bumpMap, TexCoord0 - vec2(1.0/heightmapsizewidth,0.0)).a; //TODO in die richtige Richtung gehen u, v wird im allg. verdreht sein
+	float r = textureOffset(bumpMap, TexCoord0, ivec2(1, 0)).x;
+	float l = textureOffset(bumpMap, TexCoord0, ivec2(-1, 0)).y;
+	float o = textureOffset(bumpMap, TexCoord0, ivec2(0, 1)).z;
+	float u = textureOffset(bumpMap, TexCoord0, ivec2(0, -1)).w;
 
-	float diffv =  texture(bumpMap, TexCoord0 + vec2(0.0,1.0/heightmapsizeheight)).a - 
-			texture(bumpMap, TexCoord0 - vec2(0.0,1.0/heightmapsizeheight)).a;
+	float test = texture(bumpMap, TexCoord0).a;
+
+	float lo = textureOffset(bumpMap, TexCoord0, ivec2(-1, 1)).a;
+	float ro = textureOffset(bumpMap, TexCoord0, ivec2(1, 1)).a;
+	float lu = textureOffset(bumpMap, TexCoord0, ivec2(-1, -1)).a;
+	float ru = textureOffset(bumpMap, TexCoord0, ivec2(1, -1)).a;
 	
-	bump.xy = world_normal.xy + vec2(diffu,diffv);
-	bump.z = 1.0;
+
+	if(test == 0.0){
+		fragColor = vec4(0,1,0,1);
+		return;	}
+	if(r == 0.0 && l == 0.0 && o == 0.0 && u == 0.0 ){ //alle werte sind 0.0, ....
+		fragColor = vec4(1,0,0,1);
+		return;
+	}
+
+
+	// TODO Sobel Filter
+	vec3 diffu =  vec3(1,0,r-l);
+	vec3 diffv =  vec3(0,1,o-u);
+	
+	bump = normalize(cross(diffu,diffv));
 
 	float distSqr = dot(lightVec[1], lightVec[1]);
 	vec3 lVec = lightVec[1] * inversesqrt(distSqr);
 	fragColor = light_color1 * max( dot(light_dir[1], bump), 0.0 );
+	fragColor = vec4(bump,1);
 	//fragColor = texture2D( colorMap, TexCoord0);
 	return;
     

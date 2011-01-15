@@ -1,4 +1,6 @@
 #include "ModelImage.h"
+#include <gl/GLU.h>
+
 
 using namespace echtzeitlu;
 
@@ -101,7 +103,11 @@ ModelImage::ModelImage(string file){
 #ifdef DEBUG
 		printf("using gluBuild2DMipmaps()\n");
 #endif
-		gluBuild2DMipmaps(GL_TEXTURE_2D, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+		if(image.BytesPerPixel == 1){// todo gl enum
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 1, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+			get_errors("ModelImage: Grauwert Bild einlesen!");
+		}else
+			gluBuild2DMipmaps(GL_TEXTURE_2D, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
 #else
 		glTexImage2D(GL_TEXTURE_2D, 0, 0x8C40 /*SRGB_EXT*/, image.Width, image.Height,
 						0, image.Format, GL_UNSIGNED_BYTE,
