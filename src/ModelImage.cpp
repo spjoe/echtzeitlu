@@ -104,7 +104,7 @@ ModelImage::ModelImage(string file){
 		printf("using gluBuild2DMipmaps()\n");
 #endif
 		if(image.BytesPerPixel == 1){
-			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_SRGB, image.Width, image.Height, GL_RED, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
+			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, image.Width, image.Height, GL_RED, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
 			get_errors("ModelImage:gluBuild2DMipmaps Grauwert Bild einlesen!");
 		}else{
 			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_SRGB, image.Width, image.Height,image.Format, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
@@ -112,7 +112,7 @@ ModelImage::ModelImage(string file){
 		}
 #else
 		if(image.BytesPerPixel == 1){
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, image.Width, image.Height,
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.Width, image.Height,
 							0, GL_RED, GL_UNSIGNED_BYTE,
 							reinterpret_cast<void*>(image.Data));
 			get_errors("ModelImage:glTexImage2D Grauwert Bild einlesen! A");
