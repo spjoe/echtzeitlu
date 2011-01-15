@@ -30,6 +30,8 @@ private:
 	unsigned max_lights;
 	
 	void init();
+
+	float totaltime;
 	
 public:
 	Lighting();
@@ -43,6 +45,8 @@ public:
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
 	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
+
+	void update(float dTime);
 	
 };
 
