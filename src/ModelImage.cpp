@@ -103,7 +103,7 @@ ModelImage::ModelImage(string file){
 #ifdef DEBUG
 		printf("using gluBuild2DMipmaps()\n");
 #endif
-		if(image.BytesPerPixel == 1){// todo gl enum (GL_LUMINACE, GL_LUMINANCE8, GL_ALPHA, GL_ALPHA8 gehen nicht)
+		if(image.BytesPerPixel == 1){
 			gluBuild2DMipmaps(GL_TEXTURE_2D, GL_SRGB, image.Width, image.Height, GL_RED, GL_UNSIGNED_BYTE, reinterpret_cast<void*>(image.Data));
 			get_errors("ModelImage:gluBuild2DMipmaps Grauwert Bild einlesen!");
 		}else{
