@@ -503,13 +503,6 @@ void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 
  
     //Look at the references for more explanation for this one.
     float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
-    /*ROUNDOFF here is a macro that sets a value to 0.0f if the value is a very small
-        value, such as > -0.001f and < 0.001. */
- 
-    /* EDIT by c programmer: you should NEVER perform an equality test against a floating point value, even if
-        your macro has set fDenominator to 0.0f.  The comparison can still fail.  The code needs fixed.
-        Instead you should check if fDenominator is within an epsilon value of 0.0f. */
-//#define ROUNDOFF(value) value < 0.001 && value > -0.001 ? value = 0.0f : value = value
  
     if ( fDenominator < 0.00001 && fDenominator > -0.00001) 
     {
