@@ -44,6 +44,8 @@ public:
 	
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
+	void changePosition(unsigned id, glm::vec3 position);
+	
 	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
 
 	void update(float dTime);

@@ -246,8 +246,8 @@ int main (int argc, char** argv)
 		
 		// Create shadow map (static, because this is outside of running loop)
 // 		m_lighting = new Lighting;
-		m_lighting->addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
-		m_lighting->addLight(glm::vec3(10.0f, 5.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
+// 		m_lighting->addLight(glm::vec3(0.0f,-10.0f,7.0f),glm::vec4(1.0f,1.0f,1.0f,1.0f));
+// 		m_lighting->addLight(glm::vec3(10.0f, 5.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 // 		get_errors();
 		
 		double time = glfwGetTime( );
