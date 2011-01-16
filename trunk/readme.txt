@@ -1,8 +1,15 @@
 Camillo Dell'mour 0628020 066 932
 Thomas Moerwald 0255334
 
-Im Prototypen kann man sich mit der üblichen awsd Steuerung fortbewegen und mit der Maus sich umsehen.
+Getestet mit:
+Dieses Demo wurde unter Windows7 64Bit mit einer Amd Ati radeon HD 5870 und 
+einer Ati Mobility Radeon HD 3650 und unter Linux Ubuntu 10.04 64Bit mit einer 
+Nvidia gtx260 getestet.
 
-Der Prototyp läuft auf Linux und Windows. Benutzt keine Hersteller spezifischen Erweiterung unnd sollte mit einer Opengl 3.2 fähigen Karte laufen.
+Demo Steuerung:
+Das Programm im Ordner /bin starten. Die Kamarfahrt ansehen, wenn Kamarafahrt 
+beendet ist schliesst sich das Programm. Demo pausiert durch drücken von 'C'.
+Dann ist die Navigation durch awsd möglich. Mit ESC ist eine sofortige
+Beendigung des Demos möglich.
 
-Im Prototypen sind die normalen das Models noch nicht richtig!
+Implementierte Features sind in der Doku im /doc Ordner zu finden.
