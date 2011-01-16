@@ -21,50 +21,6 @@ extern Lighting *m_lighting;
 extern Shader* simpleShader;
 bool animation = true;
 
-/*Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist, 
-			std::vector<GLuint> &indexlist, Shader* shader, std::string name, glm::mat4 model)
-{
-	if(pointlist.size() != normallist.size()){
-		printf("[Model::Model] Warning: pointlist.size() != normallist.size()\n");
-		return;
-	}
-	
-	this->pointlist = pointlist;
-	this->normallist = normallist;
-	this->indexlist = indexlist;
-	this->model = model;
-	this->model_orig = model;
-	this->colorlist.assign(pointlist.size(), glm::vec4(0.5, 0.5, 0.5, 1));
-	this->texidlist.push_back(40000);
-	this->name = name;
-	printf("%s\n", name.c_str());
-	
-	get_errors();
-	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
-	my_glGenVertexArrays(1, &vao_id);
-	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
-	my_glBindVertexArray(vao_id);
-	get_errors();
-	GLuint* tmp_vbo_id = GenerateVBO(3);
-	vbo_id[0] = tmp_vbo_id[0];
-	vbo_id[1] = tmp_vbo_id[1];
-	vbo_id[2] = tmp_vbo_id[2];
-	
-	this->shader = shader;
-	get_errors();
-	
-	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
-	bindColor(&colorlist[0], colorlist.size() * 4 * sizeof(GLfloat));
-	bindNormals(&normallist[0], normallist.size() * 3 * sizeof(GLfloat));
-	get_errors();
-	
-	my_glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	get_errors();
-	
-	angle = 0.0f;
-}*/
-
 char errmsg[128];
 
 Model::Model( 	std::vector<glm::vec4> &pointlist, std::vector<glm::vec3> &normallist,  std::vector<glm::vec2> &texturelist,
@@ -122,7 +78,7 @@ void Model::Init(){
 	angle = 0.0f;
 	
 	if( name.compare("bulb1") == 0){
-		glm::vec4 pos = model * glm::vec4(.0f,.0f,-3.0f,1.0f);
+		glm::vec4 pos = model * glm::vec4(.0f,.0f,.0f,1.0f);
 		m_lighting->addLight(glm::vec3(pos[0], pos[1], pos[2]), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 	}
 	if( name.compare("bulb2") == 0){
@@ -191,6 +147,10 @@ void Model::draw()
 		get_errors("Model::draw()::hasBumpMap D");
 		GLint inv_trans_model_uniform = shader->get_uniform_location( "invTransModel");
 		glUniformMatrix4fv(inv_trans_model_uniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(model))));
+		//GLint specular_uniform = shader->get_uniform_location( "specular");
+		//glUniform1f(specular_uniform,effect->specular);
+		//GLint powspecular_uniform = shader->get_uniform_location( "powspecular");
+		//glUniform1i(powspecular_uniform,effect->powspecular);
 	}
 	get_errors("Model::draw() D");
 

@@ -3,7 +3,7 @@
 * @author Thomas Mörwald, Camillo Dell'mour
 * @date November 2010
 * @version unstable
-* @brief An effect in the scene
+* @brief An effect in the scene (Not used, Effect is now ModelEffect a Object in the Model Class)
 * @namespace echtzeitlu
 */
 
