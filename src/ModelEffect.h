@@ -26,6 +26,9 @@ class ModelEffect : public ModelObject{
 	std::vector<glm::vec4>* colorList;
 	Shader* shader;
 public:
+	float specular;
+	unsigned powspecular;
+public:
 	//void addImage(ModelImage* img){images.push_back(img);}
 	//std::vector<ModelImage*> getImages(){return images;}
 	ModelEffect(Shader* shader);

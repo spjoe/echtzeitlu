@@ -6,4 +6,6 @@ ModelEffect::ModelEffect(Shader * shader)
 {
 	this->bbumpMap = this->bcolorList = this->btexture = false;
 	this->shader = shader;
+	this->specular = 0.5;
+	this->powspecular = 40;
 }
