@@ -14,9 +14,14 @@ ParticleSystem::ParticleSystem(void)
 {
 }
 
-
 ParticleSystem::~ParticleSystem(void)
 {
+	for(std::vector<Particle*>::iterator iter = particles.begin();
+		iter != particles.end(); iter++)
+	{
+		Particle * par = *iter;
+		delete par;
+	}
 }
 void ParticleSystem::generateRandomParticles()
 {

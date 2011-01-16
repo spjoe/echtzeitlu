@@ -350,6 +350,7 @@ int main (int argc, char** argv)
 		//	release_vbo_vao(vbo_id, &vao_id);
 		delete rootScene;
 		delete m_lighting;
+		pm.Shutdown();
 	}
 
 	glfwTerminate();

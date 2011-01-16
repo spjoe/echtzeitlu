@@ -51,5 +51,11 @@ bool ParticleManager::DoesExist()
 }
 void ParticleManager::Shutdown()
 {
+	for(std::set<ParticleSystem*,ltps>::iterator iter = particleSystems.begin();
+		iter != particleSystems.end(); iter++)
+	{
+		ParticleSystem* tmp = *iter;
+		delete tmp;
+	}
 }
 
