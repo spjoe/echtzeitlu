@@ -276,27 +276,27 @@ int main (int argc, char** argv)
 			pm.Render();
 			if(!stop){
 				double tmptime = glfwGetTime();
-				//totaltime += tmptime-time; //versuch einer kamara fahrt
-				//if(totaltime > 10 && totaltime < 15){
-				//	float factor = pow((totaltime-9),2);
+				totaltime += tmptime-time; //versuch einer kamara fahrt
+				//if(totaltime > 9 && totaltime < 13.4){
+				//	float factor = pow((totaltime-8),2);
 				//	rootScene->update((tmptime-time)/factor);
 				//	pm.Update((tmptime-time)/factor);
 	  	//			cm.update(tmptime-time); //Move Camera
 				//	m_lighting->update((tmptime-time)/factor);
 				//	time = tmptime;
-				//}else if(totaltime > 15 && zoom == 0){
+				//}else if(totaltime > 13.4 && zoom == 0){
 				//	zoom++;
 				//	cm.moveto(glm::vec3(0,-2,3),2);
 				//	time = tmptime;
-				//}else if (totaltime > 15 && totaltime < 25){
+				//}else if (totaltime > 12 && totaltime < 20){
 				//	cm.update(tmptime-time);
 				//	time = tmptime;
-				//}else if (totaltime >25 && zoom == 1){
+				//}else if (totaltime >20 && zoom == 1){
 				//	zoom++;
 				//	cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, true);
 				//	time = tmptime;
-				//}else if (totaltime > 25 && totaltime < 35){
-				//	float factor = pow((37-totaltime)/2,2);
+				//}else if (totaltime > 20 && totaltime < 25){
+				//	float factor = pow((26-totaltime),2);
 				//	rootScene->update((tmptime-time)/factor);
 				//	pm.Update((tmptime-time)/factor);
 	  	//			cm.update(tmptime-time); //Move Camera
