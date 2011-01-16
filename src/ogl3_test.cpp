@@ -306,7 +306,7 @@ int main (int argc, char** argv)
 					rootScene->update(tmptime-time);
 					pm.Update(tmptime-time);
 	  				//cm.update(tmptime-time); //Move Camera
-					m_lighting->update(tmptime-time);
+// 					m_lighting->update(tmptime-time);
 					time = tmptime;
 				//}
 			}
