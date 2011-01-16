@@ -57,6 +57,12 @@ in vec3 lightVec[4];
 in vec3 eyeVec;
 in vec3 halfVec[4];
 
+//phong beleuchtung
+uniform float specular;
+uniform int powspecular;
+const float pi = 2.0 * asin(1.0);
+
+
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
@@ -87,6 +93,7 @@ void main()
 	bool shadowLight[4];
 	vec3 light_dir[4];
 	vec4 diffuse[4];
+	float specularv[4];
 
 	shadowLight[0] = false;
 	shadowLight[1] = false; 
@@ -98,6 +105,11 @@ void main()
 	fragColor = light_color1 *  max(0.0, dot(normal, light_dir[1]));
 	//return;
 
+	vec4 light_col[4];
+	light_col[0] = light_color0;
+	light_col[1] = light_color1;
+	light_col[2] = light_color2;
+	light_col[3] = light_color3;
 
 	vec3 vVec = normalize(eyeVec);
 	vec4 base = texture2D(colorMap, TexCoord0);
@@ -146,6 +158,9 @@ void main()
 		float distSqr = dot(lightVec[0], lightVec[0]);
 		vec3 lVec = lightVec[0] * inversesqrt(distSqr);
 		diffuse[0]= base * light_color0 * max( dot(lightVec[0], bump), 0.0 );
+		//specularv[0] = specular * (powspecular + 2) / (2*pi) * pow(dot(lVec,eyeVec),powspecular);
+		fragColor = vec4(lightVec[0],1);
+		return;
     }
 	if(num_lights > 1){
 		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
