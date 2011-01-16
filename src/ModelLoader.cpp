@@ -434,7 +434,7 @@ SceneObject* ModelLoader::ReadScene(domVisual_scene *scene)
 
 SceneObject* ModelLoader::loadScene(const std::string path)
 {
-	DAE *dae = new DAE;	// TODO delete
+	DAE *dae = new DAE;
 	domCOLLADA* domRoot = dae->open(path);
 	domCOLLADA::domSceneRef domScene = domRoot->getScene();
 	daeElement* defaultScene = NULL;
@@ -462,7 +462,7 @@ SceneObject* ModelLoader::loadScene(const std::string path)
 			
 	if(defaultScene)
 		return ReadScene( (domVisual_scene *)defaultScene );
-
+	delete dae;
 	return NULL;
 }
 

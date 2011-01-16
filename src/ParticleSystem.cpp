@@ -22,6 +22,7 @@ ParticleSystem::~ParticleSystem(void)
 		Particle * par = *iter;
 		delete par;
 	}
+	delete shader;
 }
 void ParticleSystem::generateRandomParticles()
 {
