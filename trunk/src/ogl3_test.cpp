@@ -250,7 +250,7 @@ int main (int argc, char** argv)
 // 		m_lighting->addLight(glm::vec3(10.0f, 5.0f, 7.0f), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 // 		get_errors();
 		
-		double time = glfwGetTime( );
+		
 		cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, false);
 		std::vector<Shader*> shaders;
 		shaders.push_back(defaultShader);
@@ -259,6 +259,9 @@ int main (int argc, char** argv)
 		bool stop = false;
 		if(stop == false) alSourcePlay (musicSource);
 // 		running  = false;
+		double totaltime = 0.0;
+		int zoom = 0;
+		double time = glfwGetTime( );
 		while (running) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -273,11 +276,39 @@ int main (int argc, char** argv)
 			pm.Render();
 			if(!stop){
 				double tmptime = glfwGetTime();
-				rootScene->update(tmptime-time);
-				pm.Update(tmptime-time);
-	  			//cm.update(tmptime-time); //Move Camera
-				m_lighting->update(tmptime-time);
-				time = tmptime;
+				//totaltime += tmptime-time; //versuch einer kamara fahrt
+				//if(totaltime > 10 && totaltime < 15){
+				//	float factor = pow((totaltime-9),2);
+				//	rootScene->update((tmptime-time)/factor);
+				//	pm.Update((tmptime-time)/factor);
+	  	//			cm.update(tmptime-time); //Move Camera
+				//	m_lighting->update((tmptime-time)/factor);
+				//	time = tmptime;
+				//}else if(totaltime > 15 && zoom == 0){
+				//	zoom++;
+				//	cm.moveto(glm::vec3(0,-2,3),2);
+				//	time = tmptime;
+				//}else if (totaltime > 15 && totaltime < 25){
+				//	cm.update(tmptime-time);
+				//	time = tmptime;
+				//}else if (totaltime >25 && zoom == 1){
+				//	zoom++;
+				//	cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, true);
+				//	time = tmptime;
+				//}else if (totaltime > 25 && totaltime < 35){
+				//	float factor = pow((37-totaltime)/2,2);
+				//	rootScene->update((tmptime-time)/factor);
+				//	pm.Update((tmptime-time)/factor);
+	  	//			cm.update(tmptime-time); //Move Camera
+				//	m_lighting->update((tmptime-time)/factor);
+				//	time = tmptime;
+				//}else{
+					rootScene->update(tmptime-time);
+					pm.Update(tmptime-time);
+	  				//cm.update(tmptime-time); //Move Camera
+					m_lighting->update(tmptime-time);
+					time = tmptime;
+				//}
 			}
 			
 			glfwSwapBuffers();
