@@ -91,13 +91,21 @@ void main()
 
     
     if(num_lights > 0){
-		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
+    	vec3 light_dir0 = (position - light_position0);
+    	if(dot(light_dir0,normal)>0.0)
+    		shadowLight[0] = true;
+    	else
+			shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
 		light_dir[0] = normalize(light_position0 - position);
 		diffuse[0]= texture(colorMap, TexCoord0) * light_color0 * max(0.0, dot(normal, light_dir[0]));
 		
     }
 	if(num_lights > 1){
-		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
+		vec3 light_dir1 = (position - light_position1);
+    	if(dot(light_dir1,normal)>0.0)
+    		shadowLight[1] = true;
+    	else
+    		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
 		light_dir[1] = normalize(light_position1 - position);
 		diffuse[1] = texture(colorMap, TexCoord0) * light_color1 * max(0.0, dot(normal, light_dir[1]));
 	}
