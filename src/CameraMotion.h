@@ -18,6 +18,7 @@
 namespace echtzeitlu{
 class CameraMotion{
 	Camera* camera;
+	Camera save_camera;
 	enum FlyState{
 		around,
 		movetoState,
@@ -37,6 +38,8 @@ public:
 	void flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw);//speed rad per second
 	void moveto(glm::vec3 Point, float speed);//speed unit per second
 	void update(float dTime);
+	void save();
+	void restore();
 private:
 	void moveto(float dTime);
 	void flyaround(float dTime);
