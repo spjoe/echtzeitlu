@@ -157,6 +157,9 @@ void main()
 		vec3 lVec = normalize(lightVec[0]);
 		diffuse[0]= base * light_color0 * max( dot(lVec, bump), 0.0 );
 		
+		//fragColor = light_color0 * max( dot(lVec, vec3(0,0,1)), 0.0 );
+		//return;
+		
     }
 	if(num_lights > 1){
 		vec3 light_dir1 = (position - light_position1);
