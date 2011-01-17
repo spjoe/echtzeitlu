@@ -60,7 +60,7 @@ in vec3 lightVec[4];
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 
-bool isShadow(vec4 proj_shadow, sampler2DShadow shadowMap, vec3 position, vec3 normal)
+bool isShadow(vec4 proj_shadow, sampler2DShadow shadowMap)
 {
 	vec3 coordPos  = proj_shadow.xyz / proj_shadow.w;
 	if(coordPos.x >= 0.0 && coordPos.y >= 0.0 && coordPos.x <= 1.0 && coordPos.y <= 1.0 ){
@@ -142,15 +142,30 @@ void main()
 	//return;
     
     if(num_lights > 0){
-		shadowLight[0] = isShadow(proj_shadow0, shadowMap0, position, normal);
-		float distSqr = dot(lightVec[0], lightVec[0]);
-		vec3 lVec = lightVec[0] * inversesqrt(distSqr);
+    	
+    	vec3 light_dir0 = (position - light_position0);
+    	if(dot(light_dir0,normal)>0.0)
+    		shadowLight[0] = true;
+    	else
+			shadowLight[0] = isShadow(proj_shadow0, shadowMap0);
+			
+		if(shadowLight[0]){
+			fragColor = vec4(1,0,0,0);
+			//return;
+		}
+			
+		vec3 lVec = normalize(lightVec[0]);
 		diffuse[0]= base * light_color0 * max( dot(lVec, bump), 0.0 );
+		
     }
 	if(num_lights > 1){
-		shadowLight[1] = isShadow(proj_shadow1, shadowMap1, position, normal);
-		float distSqr = dot(lightVec[1], lightVec[1]);
-		vec3 lVec = lightVec[1] * inversesqrt(distSqr);
+		vec3 light_dir1 = (position - light_position1);
+    	if(dot(light_dir1,normal)>0.0)
+    		shadowLight[1] = true;
+    	else
+    		shadowLight[1] = isShadow(proj_shadow1, shadowMap1);
+    		
+		vec3 lVec = normalize(lightVec[1]);
 		diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
 	}
 	//if(num_lights > 2){

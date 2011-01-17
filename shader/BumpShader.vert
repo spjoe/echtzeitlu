@@ -87,15 +87,20 @@ void main()
 
 	//BumpMap
 	vec3 pos = world_position.xyz / world_position.w;
-	vec3 light_dir0 = normalize(light_position0 - pos); //light direction in the world space
-	vec3 light_dir1 = normalize(light_position1 - pos);
-	vec3 light_dir2 = normalize(light_position2 - pos);
-	vec3 light_dir3 = normalize(light_position3 - pos);
+	vec3 light_dir0 = normalize(pos - light_position0); //light direction in the world space
+	vec3 light_dir1 = normalize(pos - light_position1);
+	vec3 light_dir2 = normalize(pos - light_position2);
+	vec3 light_dir3 = normalize(pos - light_position3);
 
-	light_dir0 = normalize(light_dir0 * -mat3(invTransModel));// light direction im model space
-	light_dir1 = normalize(light_dir1 * -mat3(invTransModel));
-	light_dir2 = normalize(light_dir2 * -mat3(invTransModel));
-	light_dir3 = normalize(light_dir0 * -mat3(invTransModel));
+//	light_dir0 = normalize(light_dir0 * -mat3(invTransModel));// light direction im model space
+//	light_dir1 = normalize(light_dir1 * -mat3(invTransModel));
+//	light_dir2 = normalize(light_dir2 * -mat3(invTransModel));
+//	light_dir3 = normalize(light_dir3 * -mat3(invTransModel));
+	
+	light_dir0 = normalize(mat3(invTransModel) * light_dir0);// light direction im model space
+	light_dir1 = normalize(mat3(invTransModel) * light_dir1);
+	light_dir2 = normalize(mat3(invTransModel) * light_dir2);
+	light_dir3 = normalize(mat3(invTransModel) * light_dir3);
 
 	mat3 rotmat = mat3(InvTangent,InvBinormal,InvNormal);
     //Rotate the light into tangent space
