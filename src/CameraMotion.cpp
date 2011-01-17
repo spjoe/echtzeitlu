@@ -12,7 +12,7 @@ void CameraMotion::update(float dTime)
 	switch(flyState){
 	case movetoIaround:
 		{
-		glm::vec3 epsi(0.1,0.1,0.1);
+		glm::vec3 epsi(0.05,0.05,0.05);
 		glm::detail::tvec3<bool> a = glm::gtx::epsilon::equalEpsilon(camera->p,movetoPoint,epsi);
 		if(a.x && a.y && a.z)
 			flyState = around;
