@@ -4,7 +4,7 @@ Thomas Moerwald 0255334 786 710
 Getestet mit:
 Dieses Demo wurde unter Windows7 64Bit mit einer Amd Ati radeon HD 5870 und 
 einer Ati Mobility Radeon HD 3650 und unter Linux Ubuntu 10.04 64Bit mit einer 
-Nvidia gtx260 getestet.
+Nvidia GTX 285 getestet.
 
 Demo Steuerung:
 Das Programm im Ordner /bin starten. Die Kamarfahrt ansehen, wenn Kamarafahrt 
