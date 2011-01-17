@@ -130,7 +130,7 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 		glViewport(0,0,fbo_res,fbo_res);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(0.8f, 0.8f);
+		glPolygonOffset(1.0f, 0.01f);
 
 			scene->drawSimple();
 
