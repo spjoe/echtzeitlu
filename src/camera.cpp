@@ -4,7 +4,9 @@
 #include <glm/gtx/transform2.hpp>
 #include <glm/gtc/matrix_projection.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtc/type_ptr.hpp> 
 #include <stdio.h>
+#include "shader.hpp"
 
 using namespace echtzeitlu;
 
@@ -119,4 +121,16 @@ void Camera::fsu2extrinsic()
 					-p.x,	-p.y, -p.z, 1.0);
 
 	extrinsic = R * t;
+}
+
+void Camera::apply(Shader* shader){
+	GLint perspective_uniform;
+	GLint view_uniform;
+	GLint model_uniform;
+	shader->bind();
+		perspective_uniform = shader->get_uniform_location( "perspective");
+		view_uniform        = shader->get_uniform_location( "view");
+		glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(intrinsic));
+		glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(extrinsic));
+	shader->unbind();
 }

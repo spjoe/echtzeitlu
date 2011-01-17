@@ -160,8 +160,8 @@ void Model::draw()
     GLint model_uniform       = shader->get_uniform_location( "model");
 	
 	get_errors("Model::draw() E");
-	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
-	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
+// 	glUniformMatrix4fv(perspective_uniform, 1, GL_FALSE, glm::value_ptr(m_camera_1.intrinsic));
+// 	glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(m_camera_1.extrinsic));
 	glUniformMatrix4fv(model_uniform,       1, GL_FALSE, glm::value_ptr(model));
 	get_errors("Model::draw() F");
 	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
