@@ -32,8 +32,8 @@ Lighting::~Lighting()
 	PFNGLISFRAMEBUFFERPROC my_glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)glfwGetProcAddress("glIsFramebuffer");
 	PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffer = (PFNGLDELETEFRAMEBUFFERSPROC)glfwGetProcAddress("glDeleteFramebuffer");
 	
-	if(my_glIsFramebuffer(fbo))
-		my_glDeleteFramebuffers(1, &fbo);
+	if(my_glIsFramebuffer(shadow_fbo))
+		my_glDeleteFramebuffers(1, &shadow_fbo);
 	
 	for(unsigned i=0; i<lightlist.size(); i++){
 		if(glIsTexture(lightlist[i].texShadowMap))
@@ -58,7 +58,7 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 							0.0, 0.5, 0.0, 0.0,
 							0.0, 0.0, 0.5, 0.0,
 							0.5, 0.5, 0.5, 1.0 );
-	light.proj = glm::perspective(90.0f, aspect, 0.1f, 100.0f);
+	light.proj = glm::perspective(120.0f, aspect, 0.1f, 100.0f);
 	light.view = glm::lookAt(light.position, glm::vec3(0,0,0), glm::vec3(0,0,1));
 	
 	glGenTextures(1, &light.texShadowMap);
@@ -90,16 +90,27 @@ void Lighting::init()
 
 	glGenTextures(1, &fbo_tex_color);
 	glBindTexture(GL_TEXTURE_2D, fbo_tex_color);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fbo_res, fbo_res, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	get_errors("Lighting::init() A");
 	
-	my_glGenFramebuffers(1,&fbo);
-	my_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	my_glGenFramebuffers(1,&shadow_fbo);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, shadow_fbo);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo_tex_color, 0);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	get_errors("Lighting::init() B");
+	
+	glGenTextures(1, &light_map);
+	glBindTexture(GL_TEXTURE_2D, light_map);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	get_errors("Lighting::init() C");
+	
+	my_glGenFramebuffers(1,&light_fbo);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, light_map, 0);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	get_errors("Lighting::init() B");
 	
@@ -125,7 +136,7 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 		m_camera_1.intrinsic = light.proj;
 		m_camera_1.extrinsic = light.view;
 		
-		my_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		my_glBindFramebuffer(GL_FRAMEBUFFER, shadow_fbo);
 		my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light.texShadowMap, 0);
 		glViewport(0,0,fbo_res,fbo_res);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -179,6 +190,22 @@ void Lighting::createShadow(SceneObject* scene, std::vector<Shader*> shaders)
 		shader->unbind();
 	}
 	m_camera_1 = cam_tmp;
+}
+
+void Lighting::createLight(std::vector<Shader*> shaders)
+{
+	if(lightlist.empty())
+		return;
+	
+	Camera cam_tmp = m_camera_1;
+	
+	for(unsigned i=0; i<lightlist.size() && i<max_lights; i++){
+		
+		Light light = lightlist[i];
+		
+		
+		
+	}
 }
 
 void Lighting::update(float dTime){
