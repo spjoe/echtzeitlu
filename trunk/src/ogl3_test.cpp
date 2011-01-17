@@ -62,8 +62,8 @@ reportAlutError (void)
 
 void mouseMovementCb (int x, int y)
 {
-	//if(!stop)
-		//return;
+	if(!stop)
+		return;
 	int dx = oldx - x;
 	int dy = oldy - y;
 
@@ -287,41 +287,41 @@ int main (int argc, char** argv)
 			pm.Render();
 			if(!stop){
 				double tmptime = glfwGetTime();
-				//totaltime += tmptime-time; //versuch einer kamara fahrt
-				//if(totaltime > 10 && totaltime < 14){
-				//	float factor = pow((totaltime-9),2);
-				//	rootScene->update((tmptime-time)/factor);
-				//	pm.Update((tmptime-time)/factor);
-	  	//			cm.update(tmptime-time); //Move Camera
-				//	//m_lighting->update((tmptime-time)/factor);
-				//	time = tmptime;
-				//}else if(totaltime > 14 && zoom == 0){
-				//	zoom++;
-				//	cm.moveto(glm::vec3(0,-2,3),2);
-				//	time = tmptime;
-				//}else if (totaltime > 12 && totaltime < 20){
-				//	cm.update(tmptime-time);
-				//	time = tmptime;
-				//}else if (totaltime >20 && zoom == 1){
-				//	zoom++;
-				//	cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true);
-				//	time = tmptime;
-				//}else if (totaltime > 20 && totaltime < 25){
-				//	float factor = pow((26-totaltime),2);
-				//	rootScene->update((tmptime-time)/factor);
-				//	pm.Update((tmptime-time)/factor);
-	  	//			cm.update(tmptime-time); //Move Camera
-				//	//m_lighting->update((tmptime-time)/factor);
-				//	time = tmptime;
-				//}else if(totaltime > 150 ){
-				//	running = false;
-				//}else{
+				totaltime += tmptime-time; //versuch einer kamara fahrt
+				if(totaltime > 10 && totaltime < 14){
+					float factor = pow((totaltime-9),2);
+					rootScene->update((tmptime-time)/factor);
+					pm.Update((tmptime-time)/factor);
+	  				cm.update(tmptime-time); //Move Camera
+					m_lighting->update((tmptime-time)/factor);
+					time = tmptime;
+				}else if(totaltime > 14 && zoom == 0){
+					zoom++;
+					cm.moveto(glm::vec3(0,-2,3),2);
+					time = tmptime;
+				}else if (totaltime > 12 && totaltime < 20){
+					cm.update(tmptime-time);
+					time = tmptime;
+				}else if (totaltime >20 && zoom == 1){
+					zoom++;
+					cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true);
+					time = tmptime;
+				}else if (totaltime > 20 && totaltime < 25){
+					float factor = pow((26-totaltime),2);
+					rootScene->update((tmptime-time)/factor);
+					pm.Update((tmptime-time)/factor);
+	  				cm.update(tmptime-time); //Move Camera
+					m_lighting->update((tmptime-time)/factor);
+					time = tmptime;
+				}else if(totaltime > 150 ){
+					running = false;
+				}else{
 					rootScene->update(tmptime-time);
 					pm.Update(tmptime-time);
-	  				//cm.update(tmptime-time); //Move Camera
-// 					m_lighting->update(tmptime-time);
+	  				cm.update(tmptime-time); //Move Camera
+ 					m_lighting->update(tmptime-time);
 					time = tmptime;
-				//}
+				}
 			}
 			
 			glfwSwapBuffers();
@@ -336,7 +336,7 @@ int main (int argc, char** argv)
 			running = running && !glfwGetKey( 'Q' );
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
-			//if(stop){
+			if(stop){
 				float kb_speed = 0.03f;
 				if(glfwGetKey( 'A' ))
 					m_camera_1.translateS(-kb_speed);
@@ -346,7 +346,7 @@ int main (int argc, char** argv)
 					m_camera_1.translateF(kb_speed);
 				if(glfwGetKey( 'S' ))
 					m_camera_1.translateF(-kb_speed);
-			//}
+			}
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
 				if(stop == true){
