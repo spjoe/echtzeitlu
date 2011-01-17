@@ -60,6 +60,7 @@ void Model::Init(){
 	
 	
 	bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
+	//bindVertex(&pointlist[0], pointlist.size() * 4 * sizeof(GLfloat),simpleShader);
 	if(effect->hasColorList()){
 		bindColor(&(*(effect->getColorList()))[0], effect->getColorList()->size() * 4 * sizeof(GLfloat));
 	}else{
@@ -85,6 +86,21 @@ void Model::Init(){
 		glm::vec4 pos = model * glm::vec4(0.0f,0.0f,0.0f,1.0f);
 		m_lighting->addLight(glm::vec3(pos[0], pos[1], pos[2]), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 	}
+
+	my_glGenVertexArrays(1, &simple_vao_id);
+	my_glBindVertexArray(simple_vao_id);
+	tmp_vbo_id = GenerateVBO(1);
+	simple_vbo_id = *tmp_vbo_id;
+	bindVBO(simple_vbo_id, &pointlist[0], pointlist.size() * 4 * sizeof(GLfloat));
+	GLint vertex_location = simpleShader->get_attrib_location("vertex");
+	glEnableVertexAttribArray(vertex_location);
+	sprintf(errmsg, "Model::bindSimpleVertex() A %d", vertex_location);
+	get_errors(errmsg);
+	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
+							GL_FALSE, 0, NULL);
+	my_glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	get_errors("Model::Model() G");
 }
 
 Model::Model()
@@ -190,10 +206,11 @@ void Model::drawSimple(){ // for deph map / shadow map
 		return;
 	
 	get_errors();
-	simpleShader->bind();
-	get_errors();
+	
 	PFNGLBINDVERTEXARRAYPROC my_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)glfwGetProcAddress("glBindVertexArray");
-	my_glBindVertexArray(vao_id);
+	my_glBindVertexArray(simple_vao_id);
+	get_errors();
+	simpleShader->bind();
 	get_errors();
 
     // set matrix-uniforms
@@ -207,11 +224,12 @@ void Model::drawSimple(){ // for deph map / shadow map
 	get_errors();
 	glDrawElements(GL_TRIANGLES, indexlist.size(), GL_UNSIGNED_INT, &indexlist[0]);
 	get_errors();
+	simpleShader->unbind();
 	my_glBindVertexArray(0);
 	get_errors();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
-	simpleShader->unbind();
+	
 	
 	drawSimpleChildren();
 }

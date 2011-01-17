@@ -21,35 +21,35 @@
 precision mediump float;  // delete this line if using GLSL 1.2
 
 // uniform shader-parameters
-uniform vec3 light_position;
-uniform vec4 light_color;
-uniform vec4 ambient_color;
+//uniform vec3 light_position;
+//uniform vec4 light_color;
+//uniform vec4 ambient_color;
 //uniform sampler2D texture;
 
 
 // fragment-shader input variables
-in vec4 frag_color;
-in vec3 world_normal;
-in vec4 world_position;
+//in vec4 frag_color;
+//in vec3 world_normal;
+//in vec4 world_position;
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
-out vec4 fragColor;
+//out vec4 fragColor;
 
 void main()
 {
 	// renormalize and homogenize input variables
-	vec3 normal = normalize(world_normal);
-    vec3 position = world_position.xyz / world_position.w;
+	//vec3 normal = normalize(world_normal);
+    //vec3 position = world_position.xyz / world_position.w;
     
     // calculate the light-direction
-    vec3 light_dir = normalize(light_position - position);
+    //vec3 light_dir = normalize(light_position - position);
 
 	// calculate lighting
-    vec4 ambient = ambient_color * frag_color;
-    vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
+    //vec4 ambient = ambient_color * frag_color;
+   // vec4 diffuse = frag_color * light_color * max(0.0, dot(normal, light_dir));
     
     // write color to output
-    fragColor = ambient + diffuse;
+    //fragColor = vec4(1,1,1,1);//ambient + diffuse;
 
 	//fragColor = texture2D( texture, gl_TexCoord[0].st);
 

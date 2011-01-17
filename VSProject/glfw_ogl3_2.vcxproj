@@ -142,6 +142,8 @@
     <None Include="..\shader\ColorShader.vert" />
     <None Include="..\shader\minimal.frag" />
     <None Include="..\shader\minimal.vert" />
+    <None Include="..\shader\simple_shader.frag" />
+    <None Include="..\shader\simple_shader.vert" />
     <None Include="..\shader\SmokeShader.frag" />
     <None Include="..\shader\SmokeShader.vert" />
     <None Include="..\shader\SparkShader.frag" />

@@ -26,6 +26,8 @@ protected:
 	GLuint vbo_id[3];	// Vertex Buffer Object (array not save!)
 	GLuint vbo_bump_id[3];
 	GLuint vao_id;		// Vertex Array Object
+	GLuint simple_vao_id;		// Vertex Array Object
+	GLuint simple_vbo_id;
 	//Shader *shader;
 	float angle;
 	
