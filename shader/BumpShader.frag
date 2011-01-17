@@ -77,7 +77,7 @@ bool isShadow(vec4 proj_shadow, sampler2DShadow shadowMap)
 void main()
 {
 	// renormalize and homogenize input variables
-	vec3 normal = normalize(world_normal);
+	vec3 frag_world_normal = normalize(world_normal);
     vec3 position = world_position.xyz / world_position.w;
     
     vec4 ambient = ambient_color * texture(colorMap, TexCoord0);
@@ -142,9 +142,8 @@ void main()
 	//return;
     
     if(num_lights > 0){
-    	
     	vec3 light_dir0 = (position - light_position0);
-    	if(dot(light_dir0,normal)>0.0)
+    	if(dot(light_dir0,world_normal)>0.0)
     		shadowLight[0] = true;
     	else
 			shadowLight[0] = isShadow(proj_shadow0, shadowMap0);
@@ -163,11 +162,16 @@ void main()
     }
 	if(num_lights > 1){
 		vec3 light_dir1 = (position - light_position1);
-    	if(dot(light_dir1,normal)>0.0)
+    	if(dot(light_dir1,world_normal)>0.0)
     		shadowLight[1] = true;
     	else
     		shadowLight[1] = isShadow(proj_shadow1, shadowMap1);
-    		
+    	
+    	if(shadowLight[1]){
+			fragColor = vec4(1,0,0,0);
+			//return;
+		}
+		
 		vec3 lVec = normalize(lightVec[1]);
 		diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
 	}
