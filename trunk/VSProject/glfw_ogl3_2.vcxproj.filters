@@ -163,5 +163,11 @@
     <None Include="..\shader\SparkShader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\shader\simple_shader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\simple_shader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>
