@@ -1,0 +1,48 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\usepackage{geometry}
+\geometry{a4paper,left=25mm,right=25mm, top=2cm, bottom=2cm} 
+
+\title{"The Boiler Makers"}
+\author{Camillo Dell'mour 0628020 e0628020@student.tuwien.ac.at\\ Thomas Moerwald 0255334 moerwald@acin.tuwien.ac.at}
+\begin{document}
+\maketitle
+%\tableofcontents
+
+\section{Content}
+In a small factory of the 18th century, there's a lot going on. Fire is burning to heat the water in a boiler. Steam is exhausted through several valves and leaks of the piston chamber. Particles of hot glowing metal are hurtling through the environment which is sparsely illuminated by several light bulbs.
+
+\section{Effekts und details}
+\subsection*{Implemented}
+\begin{itemize}
+	\item Kinematic animation: \href{http://en.wikipedia.org/wiki/File:Steam_engine_in_action.gif}{Steam engine in action}
+	\item Bump mapping especially on rusty metal and wooden surfaces \cite{moeller1999realtime, dietrich2000hardware}
+	\item Shading (Phong) \cite{phong1975illumination}
+	\item Shading - Ambient occlusion (offline) \cite{hoberock2000high}
+	\item Shadowing and self-shadowing \cite{nagy2000realtime, king2000ground}
+	\item Steam exhausted by the engine \cite{van2000building}
+	\item Particle system simulating the effect of sparks produced by the hammer falling on the ambos \cite{van2000building}
+\end{itemize}
+\subsection*{Future work}
+\begin{itemize}
+	\item Refraction mapping of water in the compensation tank for the boiler \cite{vlachos2000refraction}
+	\item Motion blur of fast moving devices such as the falling hammer, the spinning fly wheel and regulator \cite{rosado2007motion}
+	\item Fire beneath the boiler and smoke produces by it: \href{http://graphics.ethz.ch/teaching/former/imagesynthesis_06/miniprojects/p3/index.html}{Rendering smoke and fire in real-time}
+	\item Dynamic illumination caused by flickering light bulb
+	\item Detail maps simulating dirt and dust, especially on upper surfaces
+\end{itemize}
+
+%\clearpage 
+%\addcontentsline{toc}{chapter}{\bibname}
+%\bibliographystyle{babplain} 
+\bibliography{literatur}     %BibTeX-Datei literatur.bib
+\bibliographystyle{plain} 
+\end{document}
