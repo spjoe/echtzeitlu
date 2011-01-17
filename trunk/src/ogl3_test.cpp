@@ -337,14 +337,15 @@ int main (int argc, char** argv)
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
 			//if(stop){
+				float kb_speed = 0.03f;
 				if(glfwGetKey( 'A' ))
-					m_camera_1.translateS(-0.1f);
+					m_camera_1.translateS(-kb_speed);
 				if(glfwGetKey( 'D' ))
-					m_camera_1.translateS(0.1f);
+					m_camera_1.translateS(kb_speed);
 				if(glfwGetKey( 'W' ))
-					m_camera_1.translateF(0.1f);
+					m_camera_1.translateF(kb_speed);
 				if(glfwGetKey( 'S' ))
-					m_camera_1.translateF(-0.1f);
+					m_camera_1.translateF(-kb_speed);
 			//}
 			if(glfwGetKey( 'C' )){
 				stop = !stop;

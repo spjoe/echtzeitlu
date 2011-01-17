@@ -80,8 +80,10 @@ private:
 	void bindInvTangent(void*, size_t size);
 
 	//adaptiert von http://gpwiki.org/index.php/OpenGL:Tutorials:GLSL_Bump_Mapping
-	void FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
-                  glm::vec3 & InvBinormal, glm::vec3 & InvTangent);
+	void FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 Normals[3], 
+					glm::vec3 InvNormals[3], glm::vec3 InvBinormals[3], glm::vec3 InvTangents[3]);
+	void InvTrans(	glm::vec3 T, glm::vec3 B, glm::vec3 N,
+					glm::vec3 &InvNormal, glm::vec3 &InvBinormal, glm::vec3 &InvTangent);
 };
   
 }; // namespace echtzeitlu

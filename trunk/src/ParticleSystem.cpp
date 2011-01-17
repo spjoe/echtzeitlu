@@ -62,11 +62,11 @@ SteamParticleSystem::SteamParticleSystem(std::string name, unsigned totalnr, glm
 	//glVertexAttribPointer(	color_location, 4, GL_FLOAT, 
 	//						GL_FALSE, 0, NULL);
 
-	
-	pointlist[0] = glm::vec4(-1, 1, 0, 1); 
-	pointlist[1] = glm::vec4( 1, 1, 0, 1);
-	pointlist[2] = glm::vec4( 1,-1, 0, 1);
-	pointlist[3] = glm::vec4(-1,-1, 0, 1);
+	float s = 0.6f;
+	pointlist[0] = glm::vec4(-s, s, 0, 1); 
+	pointlist[1] = glm::vec4( s, s, 0, 1);
+	pointlist[2] = glm::vec4( s,-s, 0, 1);
+	pointlist[3] = glm::vec4(-s,-s, 0, 1);
 
 	
 	//ccw

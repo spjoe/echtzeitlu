@@ -146,7 +146,7 @@ void Model::draw()
 		glBindTexture(GL_TEXTURE_2D, effect->getBumpMap()->getTexId());
 		get_errors("Model::draw()::hasBumpMap D");
 		GLint inv_trans_model_uniform = shader->get_uniform_location( "invTransModel");
-		glUniformMatrix4fv(inv_trans_model_uniform, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(model))));
+		glUniformMatrix4fv(inv_trans_model_uniform, 1, GL_FALSE, glm::value_ptr(glm::inverse(model)));
 		//GLint specular_uniform = shader->get_uniform_location( "specular");
 		//glUniform1f(specular_uniform,effect->specular);
 		//GLint powspecular_uniform = shader->get_uniform_location( "powspecular");
@@ -416,6 +416,10 @@ void Model::initBumpMap()
 	for(unsigned i = 0; (i*3 + 2) < indexlist.size(); i++){
 		glm::vec3 Vertices[3];
 		glm::vec2 TexCoords[3];
+		glm::vec3 Normals[3];
+		glm::vec3 InvNormals_tmp[3];
+		glm::vec3 InvBinormals_tmp[3];
+		glm::vec3 InvTangents_tmp[3];
 
 		Vertices[0] = (glm::vec3)pointlist[indexlist[i*3+0]];
 		Vertices[1] = (glm::vec3)pointlist[indexlist[i*3+1]];
@@ -424,16 +428,20 @@ void Model::initBumpMap()
 		TexCoords[0] = texlist[indexlist[i*3+0]];
 		TexCoords[1] = texlist[indexlist[i*3+1]];
 		TexCoords[2] = texlist[indexlist[i*3+2]];
+		
+		Normals[0] = normallist[indexlist[i*3+0]];
+		Normals[1] = normallist[indexlist[i*3+1]];
+		Normals[2] = normallist[indexlist[i*3+2]];
 
 		glm::vec3 InvNormal;
 		glm::vec3 InvBinormal;
 		glm::vec3 InvTangent;
-		FindInvTBN(Vertices,TexCoords,InvNormal,InvBinormal,InvTangent);
+		FindInvTBN(Vertices,TexCoords,Normals, InvNormals_tmp,InvBinormals_tmp,InvTangents_tmp);
 
 		for(int j = 0; j < 3; j++){
-			InvNormals[indexlist[i*3+j]] = InvNormal;
-			InvBinormals[indexlist[i*3+j]] = InvBinormal;
-			InvTangents[indexlist[i*3+j]] = InvTangent;
+			InvNormals[indexlist[i*3+j]] = InvNormals_tmp[j];
+			InvBinormals[indexlist[i*3+j]] = InvBinormals_tmp[j];
+			InvTangents[indexlist[i*3+j]] = InvTangents_tmp[j];
 		}
 	}
 	for(unsigned i = 0; i < pointlist.size(); i++){
@@ -466,12 +474,12 @@ void Model::initBumpMap()
 
 }
 
-void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 & InvNormal,
-                  glm::vec3 & InvBinormal, glm::vec3 & InvTangent)
+void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 Normals[3], 
+					   glm::vec3 InvNormals[3], glm::vec3 InvBinormals[3], glm::vec3 InvTangents[3])
 {
 	/* Calculate the vectors from the current vertex
         to the two other vertices in the triangle */
- 
+	
     glm::vec3 v2v1 = Vertices[1] - Vertices[0];
     glm::vec3 v3v1 = Vertices[2] - Vertices[0];
  
@@ -492,9 +500,15 @@ void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 
     {
             /* We won't risk a divide by zero, so set the tangent matrix to the
                 identity matrix */
-            InvTangent = glm::vec3(1.0f, 0.0f, 0.0f);
-            InvBinormal = glm::vec3(0.0f, 1.0f, 0.0f);
-            InvNormal = glm::vec3(0.0f, 0.0f, 1.0f);
+			InvTangents[0] = glm::vec3(1.0f, 0.0f, 0.0f);
+			InvBinormals[0] = glm::vec3(0.0f, 1.0f, 0.0f);
+			InvNormals[0] = glm::vec3(0.0f, 0.0f, 1.0f);
+			InvTangents[1] = glm::vec3(1.0f, 0.0f, 0.0f);
+			InvBinormals[1] = glm::vec3(0.0f, 1.0f, 0.0f);
+			InvNormals[1] = glm::vec3(0.0f, 0.0f, 1.0f);
+			InvTangents[2] = glm::vec3(1.0f, 0.0f, 0.0f);
+			InvBinormals[2] = glm::vec3(0.0f, 1.0f, 0.0f);
+			InvNormals[2] = glm::vec3(0.0f, 0.0f, 1.0f);
     }
     else
     {            
@@ -507,45 +521,89 @@ void Model::FindInvTBN(glm::vec3 Vertices[3], glm::vec2 TexCoords[3], glm::vec3 
             T = glm::vec3((c3c1_B * v2v1.x - c2c1_B * v3v1.x) * fScale1,
                             (c3c1_B * v2v1.y - c2c1_B * v3v1.y) * fScale1,
                             (c3c1_B * v2v1.z - c2c1_B * v3v1.z) * fScale1);
+
  
-            B = glm::vec3((-c3c1_T * v2v1.x + c2c1_T * v3v1.x) * fScale1,
-                            (-c3c1_T * v2v1.y + c2c1_T * v3v1.y) * fScale1,
-                            (-c3c1_T * v2v1.z + c2c1_T * v3v1.z) * fScale1);
+//             B = glm::vec3((-c3c1_T * v2v1.x + c2c1_T * v3v1.x) * fScale1,
+//                             (-c3c1_T * v2v1.y + c2c1_T * v3v1.y) * fScale1,
+//                             (-c3c1_T * v2v1.z + c2c1_T * v3v1.z) * fScale1);
  
             //N = T%B; //Cross product!
-			N = glm::cross(T,B);
+// 			N = glm::cross(T,B);
 /*This is where programmers should break up the function to smooth the tangent, binormal and
 normal values. */
- 
-//Look at “Derivation of the Tangent Space Matrix” for more information.
- 
-            float fScale2 = 1.0f / ((T.x * B.y * N.z - T.z * B.y * N.x) + 
-                                    (B.x * N.y * T.z - B.z * N.y * T.x) + 
-                                    (N.x * T.y * B.z - N.z * T.y * B.x));
 
-            /*InvTangent.set((B%N).x() * fScale2,
-                            ((-1.0f * N)%T).x() * fScale2,
-                            (T%B).x() * fScale2);*/
+			T = glm::normalize(T);
+			N = -glm::normalize(Normals[0]);
+			B = glm::cross(N,T);
+			T = glm::cross(B,N);
+			InvTrans(T,B,N,InvTangents[0],InvBinormals[0],InvNormals[0]);
 
-			InvTangent.x = glm::cross(B,N).x *  fScale2;
-			InvTangent.y = glm::cross((-1.0f * N),T).x * fScale2;
-			InvTangent.z = glm::cross(T,B).x * fScale2;
-			InvTangent = glm::normalize(InvTangent);
- 
-            /*InvBinormal.set(((-1.0f *B)%N).y() * fScale2,
-                            (N%T).y() * fScale2,
-                            ((-1.0f * T)%B).y() * fScale2);*/
-			InvBinormal.x = glm::cross((-1.0f *B),N).y * fScale2;
-			InvBinormal.y = glm::cross(N,T).y * fScale2;
-			InvBinormal.z = glm::cross((-1.0f * T),B).y * fScale2;
-			InvBinormal = glm::normalize(InvBinormal);
- 
-			InvNormal.x = glm::cross(B,N).z * fScale2;
-			InvNormal.y = glm::cross((-1.0f * N),T).z * fScale2;
-			InvNormal.z = glm::cross(T,B).z * fScale2;
-            /*InvNormal.set((B%N).z() * fScale2,
-                            ((-1.0f * N)%T).z() * fScale2,
-                            (T%B).z() * fScale2);*/	
-			InvNormal = glm::normalize(InvNormal);
+			N = -glm::normalize(Normals[1]);
+			B = glm::cross(N,T);
+			T = glm::cross(B,N);
+			InvTrans(T,B,N,InvTangents[1],InvBinormals[1],InvNormals[1]);
+
+			N = -glm::normalize(Normals[2]);
+			B = glm::cross(N,T);
+			T = glm::cross(B,N);
+			InvTrans(T,B,N,InvTangents[2],InvBinormals[2],InvNormals[2]);
 	}
+}
+
+void Model::InvTrans(glm::vec3 T, glm::vec3 B, glm::vec3 N,
+					 glm::vec3 &InvTangent, glm::vec3 &InvBinormal, glm::vec3 &InvNormal)
+{
+
+	glm::mat3 tbn = glm::mat3(T,B,N);
+	tbn = glm::inverse(tbn);
+	InvTangent.x = tbn[0][0];
+	InvTangent.y = tbn[0][1];
+	InvTangent.z = tbn[0][2];
+	InvBinormal.x = tbn[1][0];
+	InvBinormal.y = tbn[1][1];
+	InvBinormal.z = tbn[1][2];
+	InvNormal.x = tbn[2][0];
+	InvNormal.y = tbn[2][1];
+	InvNormal.z = tbn[2][2];
+// 	InvTangent.x = tbn[0][0];
+// 	InvTangent.y = tbn[1][0];
+// 	InvTangent.z = tbn[2][0];
+// 	InvBinormal.x = tbn[0][1];
+// 	InvBinormal.y = tbn[1][1];
+// 	InvBinormal.z = tbn[2][1];
+// 	InvNormal.x = tbn[0][2];
+// 	InvNormal.y = tbn[1][2];
+// 	InvNormal.z = tbn[2][2];
+	return;
+
+	//Look at “Derivation of the Tangent Space Matrix” for more information.
+
+	float fScale2 = 1.0f / ((T.x * B.y * N.z - T.z * B.y * N.x) + 
+							(B.x * N.y * T.z - B.z * N.y * T.x) + 
+							(N.x * T.y * B.z - N.z * T.y * B.x));
+
+	/*InvTangent.set((B%N).x() * fScale2,
+				((-1.0f * N)%T).x() * fScale2,
+				(T%B).x() * fScale2);*/
+
+	InvTangent.x = glm::cross(B,N).x *  fScale2;
+	InvTangent.y = glm::cross((-1.0f * N),T).x * fScale2;
+	InvTangent.z = glm::cross(T,B).x * fScale2;
+	InvTangent = glm::normalize(InvTangent);
+
+	/*InvBinormal.set(((-1.0f *B)%N).y() * fScale2,
+				(N%T).y() * fScale2,
+				((-1.0f * T)%B).y() * fScale2);*/
+	InvBinormal.x = glm::cross((-1.0f *B),N).y * fScale2;
+	InvBinormal.y = glm::cross(N,T).y * fScale2;
+	InvBinormal.z = glm::cross((-1.0f * T),B).y * fScale2;
+	InvBinormal = glm::normalize(InvBinormal);
+
+	InvNormal.x = glm::cross(B,N).z * fScale2;
+	InvNormal.y = glm::cross((-1.0f * N),T).z * fScale2;
+	InvNormal.z = glm::cross(T,B).z * fScale2;
+	/*InvNormal.set((B%N).z() * fScale2,
+				((-1.0f * N)%T).z() * fScale2,
+				(T%B).z() * fScale2);*/	
+	InvNormal = glm::normalize(InvNormal);
 }

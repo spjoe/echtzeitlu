@@ -8,8 +8,8 @@
 			<copyright></copyright>
 			<source_data>file:///home/tm/svn-repositories/echtzeitlu/trunk/resources/tmSteamEngine.blend</source_data>
 		</contributor>
-		<created>2011-01-17T11:33:20.620319</created>
-		<modified>2011-01-17T11:33:20.620337</modified>
+		<created>2011-01-17T15:50:21.551850</created>
+		<modified>2011-01-17T15:50:21.551875</modified>
 		<unit meter="0.01" name="centimeter"/>
 		<up_axis>Z_UP</up_axis>
 	</asset>
@@ -27,7 +27,7 @@
 		</camera>
 	</library_cameras>
 	<library_effects>
-		<effect id="fx-wire2-fx" name="fx-wire2-fx">
+		<effect id="fx-walls-fx" name="fx-walls-fx">
 			<profile_COMMON>
 				<technique sid="blender">
 					<phong>
@@ -98,6 +98,41 @@
 			</profile_COMMON>
 		</effect>
 		<effect id="fx-bulb-fx" name="fx-bulb-fx">
+			<profile_COMMON>
+				<technique sid="blender">
+					<phong>
+						<emission>
+							<color>0.00000 0.00000 0.00000 1</color>
+						</emission>
+						<ambient>
+							<color>0.40000 0.40000 0.40000 1</color>
+						</ambient>
+						<diffuse>
+							<color>0.80000 0.80000 0.80000 1</color>
+						</diffuse>
+						<specular>
+							<color>0.50000 0.50000 0.50000 1</color>
+						</specular>
+						<shininess>
+							<float>12.5</float>
+						</shininess>
+						<reflective>
+							<color>1.00000 1.00000 1.00000 1</color>
+						</reflective>
+						<reflectivity>
+							<float>0.0</float>
+						</reflectivity>
+						<transparent>
+							<color>1 1 1 1</color>
+						</transparent>
+						<transparency>
+							<float>0.0</float>
+						</transparency>
+					</phong>
+				</technique>
+			</profile_COMMON>
+		</effect>
+		<effect id="fx-wire2-fx" name="fx-wire2-fx">
 			<profile_COMMON>
 				<technique sid="blender">
 					<phong>
@@ -238,41 +273,6 @@
 			</profile_COMMON>
 		</effect>
 		<effect id="fx-floor-fx" name="fx-floor-fx">
-			<profile_COMMON>
-				<technique sid="blender">
-					<phong>
-						<emission>
-							<color>0.00000 0.00000 0.00000 1</color>
-						</emission>
-						<ambient>
-							<color>0.40000 0.40000 0.40000 1</color>
-						</ambient>
-						<diffuse>
-							<color>0.80000 0.80000 0.80000 1</color>
-						</diffuse>
-						<specular>
-							<color>0.50000 0.50000 0.50000 1</color>
-						</specular>
-						<shininess>
-							<float>12.5</float>
-						</shininess>
-						<reflective>
-							<color>1.00000 1.00000 1.00000 1</color>
-						</reflective>
-						<reflectivity>
-							<float>0.0</float>
-						</reflectivity>
-						<transparent>
-							<color>1 1 1 1</color>
-						</transparent>
-						<transparency>
-							<float>0.0</float>
-						</transparency>
-					</phong>
-				</technique>
-			</profile_COMMON>
-		</effect>
-		<effect id="fx-walls-fx" name="fx-walls-fx">
 			<profile_COMMON>
 				<technique sid="blender">
 					<phong>
@@ -916,14 +916,17 @@
 		</light>
 	</library_lights>
 	<library_materials>
-		<material id="fx-wire2" name="fx-wire2">
-			<instance_effect url="#fx-wire2-fx"/>
+		<material id="fx-walls" name="fx-walls">
+			<instance_effect url="#fx-walls-fx"/>
 		</material>
 		<material id="fx-wire1" name="fx-wire1">
 			<instance_effect url="#fx-wire1-fx"/>
 		</material>
 		<material id="fx-bulb" name="fx-bulb">
 			<instance_effect url="#fx-bulb-fx"/>
+		</material>
+		<material id="fx-wire2" name="fx-wire2">
+			<instance_effect url="#fx-wire2-fx"/>
 		</material>
 		<material id="fx-bear1-top" name="fx-bear1-top">
 			<instance_effect url="#fx-bear1-top-fx"/>
@@ -936,9 +939,6 @@
 		</material>
 		<material id="fx-floor" name="fx-floor">
 			<instance_effect url="#fx-floor-fx"/>
-		</material>
-		<material id="fx-walls" name="fx-walls">
-			<instance_effect url="#fx-walls-fx"/>
 		</material>
 		<material id="fx-bolt3" name="fx-bolt3">
 			<instance_effect url="#fx-bolt3-fx"/>
@@ -993,45 +993,45 @@
 		</material>
 	</library_materials>
 	<library_geometries>
-		<geometry id="wire1_001" name="wire1_001">
+		<geometry id="Cube_002" name="Cube_002">
 			<mesh>
-				<source id="wire1_001-Position">
-					<float_array count="24" id="wire1_001-Position-array">0.02009 0.02009 -2.98170 0.02009 -0.02009 -2.98170 -0.02009 -0.02009 -2.98170 -0.02009 0.02009 -2.98170 0.02009 0.02009 0.04017 0.02009 -0.02009 0.04017 -0.02009 -0.02009 0.04017 -0.02009 0.02009 0.04017</float_array>
+				<source id="Cube_002-Position">
+					<float_array count="72" id="Cube_002-Position-array">1.00000 1.00000 -1.00000 1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 -1.00000 1.00000</float_array>
 					<technique_common>
-						<accessor count="8" source="#wire1_001-Position-array" stride="3">
+						<accessor count="24" source="#Cube_002-Position-array" stride="3">
 							<param type="float" name="X"></param>
 							<param type="float" name="Y"></param>
 							<param type="float" name="Z"></param>
 						</accessor>
 					</technique_common>
 				</source>
-				<source id="wire1_001-Normals">
-					<float_array count="108" id="wire1_001-Normals-array">0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735</float_array>
+				<source id="Cube_002-Normals">
+					<float_array count="108" id="Cube_002-Normals-array">0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000</float_array>
 					<technique_common>
-						<accessor count="36" source="#wire1_001-Normals-array" stride="3">
+						<accessor count="36" source="#Cube_002-Normals-array" stride="3">
 							<param type="float" name="X"></param>
 							<param type="float" name="Y"></param>
 							<param type="float" name="Z"></param>
 						</accessor>
 					</technique_common>
 				</source>
-				<source id="wire1_001-UV">
-					<float_array count="72" id="wire1_001-UV-array">1.00000 0.01329 0.83126 0.01333 0.83074 0.00004 0.83074 0.00004 0.99948 0.00000 1.00000 0.01329 0.83126 0.01333 1.00000 0.01337 0.99948 0.02667 0.99948 0.02667 0.83074 0.02663 0.83126 0.01333 0.79180 0.00000 0.83074 0.99996 0.66200 1.00000 0.66200 1.00000 0.62305 0.00004 0.79180 0.00000 0.00000 0.99996 0.03894 0.00000 0.20769 0.00004 0.20769 0.00004 0.16874 1.00000 0.00000 0.99996 0.20769 0.99996 0.24663 0.00000 0.41537 0.00004 0.41537 0.00004 0.37643 1.00000 0.20769 0.99996 0.45431 1.00000 0.41537 0.00004 0.58411 0.00000 0.58411 0.00000 0.62305 0.99996 0.45431 1.00000</float_array>
+				<source id="Cube_002-UV">
+					<float_array count="72" id="Cube_002-UV-array">0.67414 0.66734 0.98485 0.66734 0.98485 0.97804 0.98485 0.97804 0.67414 0.97804 0.67414 0.66734 0.63916 0.64208 0.32845 0.64208 0.32845 0.33138 0.32845 0.33138 0.63916 0.33138 0.63916 0.64208 0.63916 0.95279 0.32845 0.95279 0.32845 0.64208 0.32845 0.64208 0.63916 0.64208 0.63916 0.95279 0.01774 0.64208 0.01774 0.33138 0.32845 0.33138 0.32845 0.33138 0.32845 0.64208 0.01774 0.64208 0.32845 0.02067 0.63916 0.02067 0.63916 0.33138 0.63916 0.33138 0.32845 0.33138 0.32845 0.02067 0.94986 0.33138 0.94986 0.64208 0.63916 0.64208 0.63916 0.64208 0.63916 0.33138 0.94986 0.33138</float_array>
 					<technique_common>
-						<accessor count="36" source="#wire1_001-UV-array" stride="2">
+						<accessor count="36" source="#Cube_002-UV-array" stride="2">
 							<param type="float" name="S"></param>
 							<param type="float" name="T"></param>
 						</accessor>
 					</technique_common>
 				</source>
-				<vertices id="wire1_001-Vertex">
-					<input semantic="POSITION" source="#wire1_001-Position"/>
+				<vertices id="Cube_002-Vertex">
+					<input semantic="POSITION" source="#Cube_002-Position"/>
 				</vertices>
-				<triangles count="12" material="fx-wire2">
-					<input offset="0" semantic="VERTEX" source="#wire1_001-Vertex"/>
-					<input offset="1" semantic="NORMAL" source="#wire1_001-Normals"/>
-					<input offset="2" semantic="TEXCOORD" source="#wire1_001-UV"/>
-					<p>0 0 0 1 1 1 2 2 2 2 3 3 3 4 4 0 5 5 4 6 6 7 7 7 6 8 8 6 9 9 5 10 10 4 11 11 0 12 12 4 13 13 5 14 14 5 15 15 1 16 16 0 17 17 1 18 18 5 19 19 6 20 20 6 21 21 2 22 22 1 23 23 2 24 24 6 25 25 7 26 26 7 27 27 3 28 28 2 29 29 4 30 30 0 31 31 3 32 32 3 33 33 7 34 34 4 35 35</p>
+				<triangles count="12" material="fx-walls">
+					<input offset="0" semantic="VERTEX" source="#Cube_002-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#Cube_002-Normals"/>
+					<input offset="2" semantic="TEXCOORD" source="#Cube_002-UV"/>
+					<p>0 0 0 3 1 1 2 2 2 2 3 3 1 4 4 0 5 5 4 6 6 5 7 7 6 8 8 6 9 9 7 10 10 4 11 11 11 12 12 9 13 13 23 14 14 23 15 15 22 16 16 11 17 17 8 18 18 15 19 19 17 20 20 17 21 21 18 22 22 8 23 23 14 24 24 13 25 25 19 26 26 19 27 27 16 28 28 14 29 29 12 30 30 10 31 31 21 32 32 21 33 33 20 34 34 12 35 35</p>
 				</triangles>
 			</mesh>
 		</geometry>
@@ -1116,6 +1116,48 @@
 					<input offset="1" semantic="NORMAL" source="#bulb2_001-Normals"/>
 					<input offset="2" semantic="TEXCOORD" source="#bulb2_001-UV"/>
 					<p>36 0 0 8 1 1 7 2 2 7 3 3 8 4 4 9 5 5 9 6 6 6 7 7 7 8 8 6 9 9 9 10 10 10 11 11 10 12 12 5 13 13 6 14 14 5 15 15 10 16 16 11 17 17 11 18 18 4 19 19 5 20 20 4 21 21 11 22 22 12 23 23 12 24 24 3 25 25 4 26 26 3 27 27 12 28 28 13 29 29 13 30 30 2 31 31 3 32 32 2 33 33 13 34 34 14 35 35 14 36 36 1 37 37 2 38 38 14 39 39 0 40 40 1 41 41 15 42 42 0 43 43 14 44 44 13 45 45 16 46 46 15 47 47 15 48 48 14 49 49 13 50 50 12 51 51 17 52 52 16 53 53 16 54 54 13 55 55 12 56 56 11 57 57 18 58 58 17 59 59 17 60 60 12 61 61 11 62 62 10 63 63 19 64 64 18 65 65 18 66 66 11 67 67 10 68 68 9 69 69 20 70 70 19 71 71 19 72 72 10 73 73 9 74 74 8 75 75 21 76 76 20 77 77 20 78 78 9 79 79 8 80 80 36 81 81 21 82 82 8 83 83 36 84 84 22 85 85 21 86 86 21 87 87 22 88 88 23 89 89 23 90 90 20 91 91 21 92 92 20 93 93 23 94 94 24 95 95 24 96 96 19 97 97 20 98 98 19 99 99 24 100 100 25 101 101 25 102 102 18 103 103 19 104 104 18 105 105 25 106 106 26 107 107 26 108 108 17 109 109 18 110 110 17 111 111 26 112 112 27 113 113 27 114 114 16 115 115 17 116 116 16 117 117 27 118 118 28 119 119 28 120 120 15 121 121 16 122 122 28 123 123 0 124 124 15 125 125 29 126 126 0 127 127 28 128 128 27 129 129 30 130 130 29 131 131 29 132 132 28 133 133 27 134 134 26 135 135 31 136 136 30 137 137 30 138 138 27 139 139 26 140 140 25 141 141 32 142 142 31 143 143 31 144 144 26 145 145 25 146 146 24 147 147 33 148 148 32 149 149 32 150 150 25 151 151 24 152 152 23 153 153 34 154 154 33 155 155 33 156 156 24 157 157 23 158 158 22 159 159 35 160 160 34 161 161 34 162 162 23 163 163 22 164 164 36 165 165 35 166 166 22 167 167 36 168 168 37 169 169 35 170 170 35 171 171 37 172 172 38 173 173 38 174 174 34 175 175 35 176 176 34 177 177 38 178 178 39 179 179 39 180 180 33 181 181 34 182 182 33 183 183 39 184 184 40 185 185 40 186 186 32 187 187 33 188 188 32 189 189 40 190 190 41 191 191 41 192 192 31 193 193 32 194 194 31 195 195 41 196 196 42 197 197 42 198 198 30 199 199 31 200 200 30 201 201 42 202 202 43 203 203 43 204 204 29 205 205 30 206 206 43 207 207 0 208 208 29 209 209 44 210 210 0 211 211 43 212 212 42 213 213 45 214 214 44 215 215 44 216 216 43 217 217 42 218 218 41 219 219 46 220 220 45 221 221 45 222 222 42 223 223 41 224 224 40 225 225 47 226 226 46 227 227 46 228 228 41 229 229 40 230 230 39 231 231 48 232 232 47 233 233 47 234 234 40 235 235 39 236 236 38 237 237 49 238 238 48 239 239 48 240 240 39 241 241 38 242 242 37 243 243 50 244 244 49 245 245 49 246 246 38 247 247 37 248 248 36 249 249 50 250 250 37 251 251 36 252 252 51 253 253 50 254 254 50 255 255 51 256 256 52 257 257 52 258 258 49 259 259 50 260 260 49 261 261 52 262 262 53 263 263 53 264 264 48 265 265 49 266 266 48 267 267 53 268 268 54 269 269 54 270 270 47 271 271 48 272 272 47 273 273 54 274 274 55 275 275 55 276 276 46 277 277 47 278 278 46 279 279 55 280 280 56 281 281 56 282 282 45 283 283 46 284 284 45 285 285 56 286 286 57 287 287 57 288 288 44 289 289 45 290 290 57 291 291 0 292 292 44 293 293 1 294 294 0 295 295 57 296 296 56 297 297 2 298 298 1 299 299 1 300 300 57 301 301 56 302 302 55 303 303 3 304 304 2 305 305 2 306 306 56 307 307 55 308 308 54 309 309 4 310 310 3 311 311 3 312 312 55 313 313 54 314 314 53 315 315 5 316 316 4 317 317 4 318 318 54 319 319 53 320 320 52 321 321 6 322 322 5 323 323 5 324 324 53 325 325 52 326 326 51 327 327 7 328 328 6 329 329 6 330 330 52 331 331 51 332 332 36 333 333 7 334 334 51 335 335</p>
+				</triangles>
+			</mesh>
+		</geometry>
+		<geometry id="wire1_001" name="wire1_001">
+			<mesh>
+				<source id="wire1_001-Position">
+					<float_array count="24" id="wire1_001-Position-array">0.02009 0.02009 -2.98170 0.02009 -0.02009 -2.98170 -0.02009 -0.02009 -2.98170 -0.02009 0.02009 -2.98170 0.02009 0.02009 0.04017 0.02009 -0.02009 0.04017 -0.02009 -0.02009 0.04017 -0.02009 0.02009 0.04017</float_array>
+					<technique_common>
+						<accessor count="8" source="#wire1_001-Position-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="wire1_001-Normals">
+					<float_array count="108" id="wire1_001-Normals-array">0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 0.57735 -0.57735 0.57735 -0.57735 -0.57735 -0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 -0.57735 -0.57735 0.57735 0.57735 0.57735 0.57735 0.57735</float_array>
+					<technique_common>
+						<accessor count="36" source="#wire1_001-Normals-array" stride="3">
+							<param type="float" name="X"></param>
+							<param type="float" name="Y"></param>
+							<param type="float" name="Z"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<source id="wire1_001-UV">
+					<float_array count="72" id="wire1_001-UV-array">1.00000 0.01329 0.83126 0.01333 0.83074 0.00004 0.83074 0.00004 0.99948 0.00000 1.00000 0.01329 0.83126 0.01333 1.00000 0.01337 0.99948 0.02667 0.99948 0.02667 0.83074 0.02663 0.83126 0.01333 0.79180 0.00000 0.83074 0.99996 0.66200 1.00000 0.66200 1.00000 0.62305 0.00004 0.79180 0.00000 0.00000 0.99996 0.03894 0.00000 0.20769 0.00004 0.20769 0.00004 0.16874 1.00000 0.00000 0.99996 0.20769 0.99996 0.24663 0.00000 0.41537 0.00004 0.41537 0.00004 0.37643 1.00000 0.20769 0.99996 0.45431 1.00000 0.41537 0.00004 0.58411 0.00000 0.58411 0.00000 0.62305 0.99996 0.45431 1.00000</float_array>
+					<technique_common>
+						<accessor count="36" source="#wire1_001-UV-array" stride="2">
+							<param type="float" name="S"></param>
+							<param type="float" name="T"></param>
+						</accessor>
+					</technique_common>
+				</source>
+				<vertices id="wire1_001-Vertex">
+					<input semantic="POSITION" source="#wire1_001-Position"/>
+				</vertices>
+				<triangles count="12" material="fx-wire2">
+					<input offset="0" semantic="VERTEX" source="#wire1_001-Vertex"/>
+					<input offset="1" semantic="NORMAL" source="#wire1_001-Normals"/>
+					<input offset="2" semantic="TEXCOORD" source="#wire1_001-UV"/>
+					<p>0 0 0 1 1 1 2 2 2 2 3 3 3 4 4 0 5 5 4 6 6 7 7 7 6 8 8 6 9 9 5 10 10 4 11 11 0 12 12 4 13 13 5 14 14 5 15 15 1 16 16 0 17 17 1 18 18 5 19 19 6 20 20 6 21 21 2 22 22 1 23 23 2 24 24 6 25 25 7 26 26 7 27 27 3 28 28 2 29 29 4 30 30 0 31 31 3 32 32 3 33 33 7 34 34 4 35 35</p>
 				</triangles>
 			</mesh>
 		</geometry>
@@ -1410,48 +1452,6 @@
 					<input offset="1" semantic="NORMAL" source="#floor_001-Normals"/>
 					<input offset="2" semantic="TEXCOORD" source="#floor_001-UV"/>
 					<p>0 0 0 1 1 1 25 2 2 29 3 3 1 4 4 4 5 5 5 6 6 6 7 7 7 8 8 7 9 9 8 10 10 5 11 11 29 12 12 9 13 13 25 14 14 25 15 15 1 16 16 29 17 17 19 18 18 3 19 19 27 20 20 27 21 21 17 22 22 19 23 23 16 24 24 10 25 25 2 26 26 2 27 27 23 28 28 16 29 29 22 30 30 24 31 31 31 32 32 31 33 33 21 34 34 22 35 35 28 36 36 18 37 37 20 38 38 20 39 39 30 40 40 28 41 41 11 42 42 12 42 43 13 42 44 13 42 45 14 42 46 11 42 47 15 43 48 0 44 49 25 45 50 25 46 51 26 47 52 15 48 53 29 49 54 4 50 55 15 51 56 15 52 57 26 53 58 29 54 59 45 55 60 46 55 61 33 55 62 33 55 63 35 55 64 45 55 65 37 56 66 47 56 67 44 56 68 44 56 69 34 56 70 37 56 71 41 57 72 42 57 73 36 57 74 36 57 75 39 57 76 41 57 77 43 58 78 40 58 79 38 58 80 38 58 81 32 58 82 43 58 83</p>
-				</triangles>
-			</mesh>
-		</geometry>
-		<geometry id="Cube_001" name="Cube_001">
-			<mesh>
-				<source id="Cube_001-Position">
-					<float_array count="72" id="Cube_001-Position-array">1.00000 1.00000 -1.00000 1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 -1.00000 1.00000 -1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 -1.00000 1.00000 1.00000 -1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 1.00000 -1.00000 1.00000</float_array>
-					<technique_common>
-						<accessor count="24" source="#Cube_001-Position-array" stride="3">
-							<param type="float" name="X"></param>
-							<param type="float" name="Y"></param>
-							<param type="float" name="Z"></param>
-						</accessor>
-					</technique_common>
-				</source>
-				<source id="Cube_001-Normals">
-					<float_array count="108" id="Cube_001-Normals-array">0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000 0.00000 -1.00000 0.00000</float_array>
-					<technique_common>
-						<accessor count="36" source="#Cube_001-Normals-array" stride="3">
-							<param type="float" name="X"></param>
-							<param type="float" name="Y"></param>
-							<param type="float" name="Z"></param>
-						</accessor>
-					</technique_common>
-				</source>
-				<source id="Cube_001-UV">
-					<float_array count="72" id="Cube_001-UV-array">0.67414 0.66734 0.98485 0.66734 0.98485 0.97804 0.98485 0.97804 0.67414 0.97804 0.67414 0.66734 0.63916 0.64208 0.32845 0.64208 0.32845 0.33138 0.32845 0.33138 0.63916 0.33138 0.63916 0.64208 0.63916 0.95279 0.32845 0.95279 0.32845 0.64208 0.32845 0.64208 0.63916 0.64208 0.63916 0.95279 0.01774 0.64208 0.01774 0.33138 0.32845 0.33138 0.32845 0.33138 0.32845 0.64208 0.01774 0.64208 0.32845 0.02067 0.63916 0.02067 0.63916 0.33138 0.63916 0.33138 0.32845 0.33138 0.32845 0.02067 0.94986 0.33138 0.94986 0.64208 0.63916 0.64208 0.63916 0.64208 0.63916 0.33138 0.94986 0.33138</float_array>
-					<technique_common>
-						<accessor count="36" source="#Cube_001-UV-array" stride="2">
-							<param type="float" name="S"></param>
-							<param type="float" name="T"></param>
-						</accessor>
-					</technique_common>
-				</source>
-				<vertices id="Cube_001-Vertex">
-					<input semantic="POSITION" source="#Cube_001-Position"/>
-				</vertices>
-				<triangles count="12" material="fx-walls">
-					<input offset="0" semantic="VERTEX" source="#Cube_001-Vertex"/>
-					<input offset="1" semantic="NORMAL" source="#Cube_001-Normals"/>
-					<input offset="2" semantic="TEXCOORD" source="#Cube_001-UV"/>
-					<p>0 0 0 3 1 1 2 2 2 2 3 3 1 4 4 0 5 5 4 6 6 5 7 7 6 8 8 6 9 9 7 10 10 4 11 11 11 12 12 9 13 13 23 14 14 23 15 15 22 16 16 11 17 17 8 18 18 15 19 19 17 20 20 17 21 21 18 22 22 8 23 23 14 24 24 13 25 25 19 26 26 19 27 27 16 28 28 14 29 29 12 30 30 10 31 31 21 32 32 21 33 33 20 34 34 12 35 35</p>
 				</triangles>
 			</mesh>
 		</geometry>
@@ -2256,17 +2256,17 @@
 	</library_geometries>
 	<library_visual_scenes>
 		<visual_scene id="Scene" name="Scene">
-			<node layer="L1" id="wire1" name="wire1">
+			<node layer="L1" id="Cube" name="Cube">
 				<matrix>
-					1.0 0.0 0.0 -4.4084 
-					0.0 1.0 0.0 0.03088 
-					0.0 0.0 1.0 9.86516 
+					6.80697 0.0 0.0 0.27475 
+					0.0 7.95289 0.0 2.80416 
+					0.0 0.0 5.60509 4.26194 
 					0.0 0.0 0.0 1.0 
 				</matrix>
-				<instance_geometry url="#wire1_001">
+				<instance_geometry url="#Cube_002">
 					<bind_material>
 						<technique_common>
-							<instance_material symbol="fx-wire2" target="#fx-wire2">
+							<instance_material symbol="fx-walls" target="#fx-walls">
 								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
 							</instance_material>
 						</technique_common>
@@ -2301,6 +2301,23 @@
 					<bind_material>
 						<technique_common>
 							<instance_material symbol="fx-bulb" target="#fx-bulb">
+								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
+							</instance_material>
+						</technique_common>
+					</bind_material>
+				</instance_geometry>
+			</node>
+			<node layer="L1" id="wire1" name="wire1">
+				<matrix>
+					1.0 0.0 0.0 -4.4084 
+					0.0 1.0 0.0 0.03088 
+					0.0 0.0 1.0 9.86516 
+					0.0 0.0 0.0 1.0 
+				</matrix>
+				<instance_geometry url="#wire1_001">
+					<bind_material>
+						<technique_common>
+							<instance_material symbol="fx-wire2" target="#fx-wire2">
 								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
 							</instance_material>
 						</technique_common>
@@ -2420,23 +2437,6 @@
 					<bind_material>
 						<technique_common>
 							<instance_material symbol="fx-floor" target="#fx-floor">
-								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
-							</instance_material>
-						</technique_common>
-					</bind_material>
-				</instance_geometry>
-			</node>
-			<node layer="L1" id="Cube" name="Cube">
-				<matrix>
-					6.80697 0.0 0.0 0.27475 
-					0.0 7.95289 0.0 2.80416 
-					0.0 0.0 5.60509 4.26194 
-					0.0 0.0 0.0 1.0 
-				</matrix>
-				<instance_geometry url="#Cube_001">
-					<bind_material>
-						<technique_common>
-							<instance_material symbol="fx-walls" target="#fx-walls">
 								<bind_vertex_input input_semantic="TEXCOORD" input_set="1" semantic="CHANNEL1"/>
 							</instance_material>
 						</technique_common>
