@@ -86,7 +86,7 @@ void init_matrixs()
 	m_camera_1.perspective(60.0f, aspect, 0.1f, 100.0f);
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
-	m_camera_1.lookat(glm::vec3(0,10,5), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	m_camera_1.lookat(glm::vec3(0,20,5), glm::vec3(0,0,0), glm::vec3(0,0,1));
 
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
@@ -251,12 +251,12 @@ int main (int argc, char** argv)
 // 		get_errors();
 		
 		
-		cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, false);
+		cm.flyaround(glm::vec3(0,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, false);
 		std::vector<Shader*> shaders;
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
-		bool stop = false;
+		bool stop = true;
 		if(stop == false) alSourcePlay (musicSource);
 // 		running  = false;
 		double totaltime = 0.0;
@@ -276,15 +276,15 @@ int main (int argc, char** argv)
 			pm.Render();
 			if(!stop){
 				double tmptime = glfwGetTime();
-				totaltime += tmptime-time; //versuch einer kamara fahrt
-				//if(totaltime > 9 && totaltime < 13.4){
-				//	float factor = pow((totaltime-8),2);
+				//totaltime += tmptime-time; //versuch einer kamara fahrt
+				//if(totaltime > 10 && totaltime < 14){
+				//	float factor = pow((totaltime-9),2);
 				//	rootScene->update((tmptime-time)/factor);
 				//	pm.Update((tmptime-time)/factor);
 	  	//			cm.update(tmptime-time); //Move Camera
-				//	m_lighting->update((tmptime-time)/factor);
+				//	//m_lighting->update((tmptime-time)/factor);
 				//	time = tmptime;
-				//}else if(totaltime > 13.4 && zoom == 0){
+				//}else if(totaltime > 14 && zoom == 0){
 				//	zoom++;
 				//	cm.moveto(glm::vec3(0,-2,3),2);
 				//	time = tmptime;
@@ -293,15 +293,17 @@ int main (int argc, char** argv)
 				//	time = tmptime;
 				//}else if (totaltime >20 && zoom == 1){
 				//	zoom++;
-				//	cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,10),glm::vec3(0,0,0),0.5, true);
+				//	cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true);
 				//	time = tmptime;
 				//}else if (totaltime > 20 && totaltime < 25){
 				//	float factor = pow((26-totaltime),2);
 				//	rootScene->update((tmptime-time)/factor);
 				//	pm.Update((tmptime-time)/factor);
 	  	//			cm.update(tmptime-time); //Move Camera
-				//	m_lighting->update((tmptime-time)/factor);
+				//	//m_lighting->update((tmptime-time)/factor);
 				//	time = tmptime;
+				//}else if(totaltime > 150 ){
+				//	running = false;
 				//}else{
 					rootScene->update(tmptime-time);
 					pm.Update(tmptime-time);
