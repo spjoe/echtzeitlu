@@ -175,18 +175,7 @@ void main()
 		vec3 lVec = normalize(lightVec[1]);
 		diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
 	}
-	//if(num_lights > 2){
-	//	shadowLight[2] = isShadow(proj_shadow2, shadowMap2, position, normal);
-	//	light_dir[2] = normalize(light_position1 - position);
-	//	diffuse[2] = texture(colorMap, TexCoord0) * light_color2 * max(0.0, dot(normal, light_dir[2]));
-	//  diffuse[2]= texture(colorMap, TexCoord0) * light_color2 * max(0.0, dot(BumpNorm, LightDirTangentSpace2));
-	//}
-	//if(num_lights > 3){
-	//	shadowLight[3] = isShadow(proj_shadow3, shadowMap3, position, normal);
-	//	light_dir[3] = normalize(light_position1 - position);
-	//	diffuse[3] = texture(colorMap, TexCoord0) * light_color3 * max(0.0, dot(normal, light_dir[3]));
-	//  diffuse[3]= texture(colorMap, TexCoord0) * light_color3 * max(0.0, dot(BumpNorm, LightDirTangentSpace3));
-	//}
+
 	for(int i = 0; i < num_lights; i++){
 		if(shadowLight[i])
 			diffuseFinal +=  diffuse[i] * 0.2;
