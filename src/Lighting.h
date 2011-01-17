@@ -29,6 +29,15 @@ private:
 	GLuint fbo_tex_color;
 	unsigned max_lights;
 	
+	GLuint shadow_fbo;
+	GLuint shadow_map;
+	
+	GLuint light_fbo;
+	GLuint light_map;
+	
+	std::vector<Light> lightlist;
+	
+	
 	void init();
 
 	float totaltime;
@@ -37,16 +46,14 @@ public:
 	Lighting();
 	~Lighting();
 	
-	std::vector<Light> lightlist;
-	
-	GLuint fbo;
-	GLuint shadow_map;
 	
 	void addLight(glm::vec3 position, glm::vec4 color);
 	
 	void changePosition(unsigned id, glm::vec3 position);
 	
 	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
+	
+	void createLight(std::vector<Shader*> shaders);
 
 	void update(float dTime);
 	
