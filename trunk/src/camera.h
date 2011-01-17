@@ -1,6 +1,8 @@
 
 #include <glm/glm.hpp>
 
+#include "shader.hpp"
+
 #pragma once;
 
 
@@ -33,6 +35,8 @@ class Camera{
 	void rotateZ(float a);
 	
 	void orbit(const glm::vec3 &origin, const glm::vec3 &normal, float a);
+	
+	void apply(Shader* shader);
 	
 	
   private:

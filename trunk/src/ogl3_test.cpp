@@ -277,7 +277,11 @@ int main (int argc, char** argv)
 			
 // 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
-
+			m_camera_1.apply(defaultShader);
+			m_camera_1.apply(defaultColorShader);
+			m_camera_1.apply(simpleShader);
+			m_camera_1.apply(defaultBumpShader);
+			
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
 			pm.Render();
