@@ -96,3 +96,15 @@ void CameraMotion::flyaround(float dTime)
 	camera->lookat(X,pivotPoint,glm::vec3(0,0,1));
 	//camera->orbit(c,glm::normalize(ag),glm::degrees(alpha));
 }
+void CameraMotion::save()
+{
+	save_camera = *camera;
+}
+void CameraMotion::restore()
+{
+	camera->p = save_camera.p;
+	camera->f = save_camera.f;
+	camera->s = save_camera.s;
+	camera->extrinsic = save_camera.extrinsic;
+	camera->intrinsic = save_camera.intrinsic;
+}

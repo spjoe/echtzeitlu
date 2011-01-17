@@ -34,6 +34,7 @@ glm::vec4 light_color(1.0f, 1.0f, 1.0f, 1.0f);
 glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
 GLfloat distance = -4.0f;
+bool stop = true;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
@@ -61,6 +62,8 @@ reportAlutError (void)
 
 void mouseMovementCb (int x, int y)
 {
+	//if(!stop)
+		//return;
 	int dx = oldx - x;
 	int dy = oldy - y;
 
@@ -256,8 +259,12 @@ int main (int argc, char** argv)
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
-		bool stop = true;
-		if(stop == false) alSourcePlay (musicSource);
+		
+		if(stop == false) {
+			alSourcePlay (musicSource);
+		}else{
+			cm.save();
+		}
 // 		running  = false;
 		double totaltime = 0.0;
 		int zoom = 0;
@@ -325,20 +332,25 @@ int main (int argc, char** argv)
 			running = running && !glfwGetKey( 'Q' );
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
-			if(glfwGetKey( 'A' ))
-				m_camera_1.translateS(-0.1f);
-			if(glfwGetKey( 'D' ))
-				m_camera_1.translateS(0.1f);
-			if(glfwGetKey( 'W' ))
-				m_camera_1.translateF(0.1f);
-			if(glfwGetKey( 'S' ))
-				m_camera_1.translateF(-0.1f);
+			//if(stop){
+				if(glfwGetKey( 'A' ))
+					m_camera_1.translateS(-0.1f);
+				if(glfwGetKey( 'D' ))
+					m_camera_1.translateS(0.1f);
+				if(glfwGetKey( 'W' ))
+					m_camera_1.translateF(0.1f);
+				if(glfwGetKey( 'S' ))
+					m_camera_1.translateF(-0.1f);
+			//}
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
 				if(stop == true){
 					alSourcePause(musicSource);
+					cm.save();
+
 				}else{
 					alSourcePlay(musicSource);
+					cm.restore();
 				}
 
 				time = glfwGetTime( ); //zeitrechnung neu beginnen
