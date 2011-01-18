@@ -23,7 +23,7 @@
 const std::string daeModelPath = "../resources/tmSteamEngine.dae";
 //const std::string daeModelPath = "../resources/sphere.dae";
 
-const std::string wavAudioPath = "../resources/music.wav";
+const std::string wavAudioPath = "../resources/music2.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
@@ -62,8 +62,8 @@ reportAlutError (void)
 
 void mouseMovementCb (int x, int y)
 {
-	if(!stop)
-		return;
+// 	if(!stop)
+// 		return;
 	int dx = oldx - x;
 	int dy = oldy - y;
 
@@ -288,40 +288,40 @@ int main (int argc, char** argv)
 			if(!stop){
 				double tmptime = glfwGetTime();
 				totaltime += tmptime-time; //versuch einer kamara fahrt
-				if(totaltime > 10 && totaltime < 14){
-					float factor = pow((totaltime-9),2);
-					rootScene->update((tmptime-time)/factor);
-					pm.Update((tmptime-time)/factor);
-	  				cm.update(tmptime-time); //Move Camera
-					m_lighting->update((tmptime-time)/factor);
-					time = tmptime;
-				}else if(totaltime > 14 && zoom == 0){
-					zoom++;
-					cm.moveto(glm::vec3(0,-2,3),2);
-					time = tmptime;
-				}else if (totaltime > 12 && totaltime < 20){
-					cm.update(tmptime-time);
-					time = tmptime;
-				}else if (totaltime >20 && zoom == 1){
-					zoom++;
-					cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true);
-					time = tmptime;
-				}else if (totaltime > 20 && totaltime < 25){
-					float factor = pow((26-totaltime),2);
-					rootScene->update((tmptime-time)/factor);
-					pm.Update((tmptime-time)/factor);
-	  				cm.update(tmptime-time); //Move Camera
-					m_lighting->update((tmptime-time)/factor);
-					time = tmptime;
-				}else if(totaltime > 150 ){
-					running = false;
-				}else{
+// 				if(totaltime > 10 && totaltime < 14){
+// 					float factor = pow((totaltime-9),2);
+// 					rootScene->update((tmptime-time)/factor);
+// 					pm.Update((tmptime-time)/factor);
+// 	  				cm.update(tmptime-time); //Move Camera
+// 					m_lighting->update((tmptime-time)/factor);
+// 					time = tmptime;
+// 				}else if(totaltime > 14 && zoom == 0){
+// 					zoom++;
+// 					cm.moveto(glm::vec3(0,-2,3),2);
+// 					time = tmptime;
+// 				}else if (totaltime > 12 && totaltime < 20){
+// 					cm.update(tmptime-time);
+// 					time = tmptime;
+// 				}else if (totaltime >20 && zoom == 1){
+// 					zoom++;
+// 					cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true);
+// 					time = tmptime;
+// 				}else if (totaltime > 20 && totaltime < 25){
+// 					float factor = pow((26-totaltime),2);
+// 					rootScene->update((tmptime-time)/factor);
+// 					pm.Update((tmptime-time)/factor);
+// 	  				cm.update(tmptime-time); //Move Camera
+// 					m_lighting->update((tmptime-time)/factor);
+// 					time = tmptime;
+// 				}else if(totaltime > 150 ){
+// 					running = false;
+// 				}else{
 					rootScene->update(tmptime-time);
 					pm.Update(tmptime-time);
-	  				cm.update(tmptime-time); //Move Camera
+// 	  				cm.update(tmptime-time); //Move Camera
  					m_lighting->update(tmptime-time);
 					time = tmptime;
-				}
+// 				}
 			}
 			
 			glfwSwapBuffers();
@@ -333,11 +333,12 @@ int main (int argc, char** argv)
 			// Check if the window has been closed
 
 			running = running && !glfwGetKey( GLFW_KEY_ESC );
-			running = running && !glfwGetKey( 'Q' );
+// 			running = running && !glfwGetKey( 'Q' );
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
-			if(stop){
-				float kb_speed = 0.03f;
+// 			if(stop){
+				float kb_speed = 0.01f;
+				float ms_speed = 0.03f;
 				if(glfwGetKey( 'A' ))
 					m_camera_1.translateS(-kb_speed);
 				if(glfwGetKey( 'D' ))
@@ -346,18 +347,31 @@ int main (int argc, char** argv)
 					m_camera_1.translateF(kb_speed);
 				if(glfwGetKey( 'S' ))
 					m_camera_1.translateF(-kb_speed);
+				if(glfwGetKey( 'F' ))
+					m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,0,1), -ms_speed);
+				if(glfwGetKey( 'H' ))
+					m_camera_1.orbit(glm::vec3(0,0,0),glm::vec3(0,0,1), ms_speed);
+				if(glfwGetKey( 'T' ))
+					m_camera_1.translateF(kb_speed);
+				if(glfwGetKey( 'G' ))
+					m_camera_1.translateF(-kb_speed);
+// 			}
+			if(glfwGetKey( 'M' )){
+				glfwSleep(0.1);
+				alSourcePlay(musicSource);
 			}
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
 				if(stop == true){
-					alSourcePause(musicSource);
-					cm.save();
+// 					alSourcePause(musicSource);
+// 					cm.save();
 
 				}else{
-					alSourcePlay(musicSource);
-					cm.restore();
+					glfwSleep(0.1);
+// 					alSourcePlay(musicSource);
+// 					cm.restore();
 				}
-
+				glfwSleep(0.1);
 				time = glfwGetTime( ); //zeitrechnung neu beginnen
 			}
 			

@@ -58,7 +58,7 @@ void Lighting::addLight(glm::vec3 position, glm::vec4 color)
 							0.0, 0.5, 0.0, 0.0,
 							0.0, 0.0, 0.5, 0.0,
 							0.5, 0.5, 0.5, 1.0 );
-	light.proj = glm::perspective(120.0f, aspect, 0.1f, 100.0f);
+	light.proj = glm::perspective(130.0f, aspect, 0.1f, 100.0f);
 	light.view = glm::lookAt(light.position, glm::vec3(0,0,0), glm::vec3(0,0,1));
 	
 	glGenTextures(1, &light.texShadowMap);
