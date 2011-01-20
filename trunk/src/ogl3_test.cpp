@@ -34,7 +34,7 @@ glm::vec4 light_color(1.0f, 1.0f, 1.0f, 1.0f);
 glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
 GLfloat distance = -4.0f;
-bool stop = true;
+bool stop = false;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
