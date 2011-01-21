@@ -1,27 +1,143 @@
-﻿Build started 08.10.2010 19:40:05.
-     1>Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" on node 2 (build target(s)).
+﻿Build started 21.01.2011 11:36:50.
+     1>Project "F:\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Release\echtzeitlu.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Release\echtzeitlu.unsuccessfulbuild".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glew\include /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glfw\include /ID:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\\external\glm\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D CONSOLE /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\ogl3_test.cpp ..\src\shader.cpp ..\src\utility.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IF:\echtzeitlu\\external\glew\include /IF:\echtzeitlu\\external\glfw\include /IF:\echtzeitlu\\external\glm\include /IF:\echtzeitlu\\external\freealut\include /IF:\echtzeitlu\\external\openal\include /IF:\echtzeitlu\\external\collada\include /IF:\echtzeitlu\\external\boost /IF:\echtzeitlu\\external\collada\include\1.4 /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D CONSOLE /D _LIB /D BOOST_ALL_NO_LIB /D GL_GENERATE_MIPMAP_SEG_AVOIDANCE /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ..\src\camera.cpp ..\src\CameraMotion.cpp ..\src\Effect.cpp ..\src\Lighting.cpp ..\src\Model.cpp ..\src\ModelEffect.cpp ..\src\ModelImage.cpp ..\src\ModelLoader.cpp ..\src\ModelMaterial.cpp ..\src\ModelObject.cpp ..\src\ogl3_test.cpp ..\src\Particle.cpp ..\src\ParticleManager.cpp ..\src\ParticleSystem.cpp ..\src\SceneObject.cpp ..\src\shader.cpp ..\src\Timer.cpp ..\src\utility.cpp
+         camera.cpp
+     1>..\src\camera.cpp(129): warning C4101: 'model_uniform' : unreferenced local variable
+         CameraMotion.cpp
+     1>f:\echtzeitlu\src\CameraMotion.h(12): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>f:\echtzeitlu\src\CameraMotion.h(16): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+         Effect.cpp
+         Lighting.cpp
+     1>..\src\Lighting.cpp(158): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Lighting.cpp(160): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Lighting.cpp(167): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Lighting.cpp(172): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Lighting.cpp(233): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>..\src\Lighting.cpp(233): warning C4305: '+=' : truncation from 'double' to 'float'
+         Model.cpp
+         Unknown compiler version - please run the configure tests and report the results
+     1>..\src\Model.cpp(72): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(97): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(347): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(357): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(367): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(376): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(386): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(395): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+     1>..\src\Model.cpp(404): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdio.h(371) : see declaration of 'sprintf'
+         ModelEffect.cpp
+         Unknown compiler version - please run the configure tests and report the results
+         ModelImage.cpp
+         Unknown compiler version - please run the configure tests and report the results
+         ModelLoader.cpp
+         Unknown compiler version - please run the configure tests and report the results
+     1>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include\windef.h(126): warning C4005: 'APIENTRY' : macro redefinition
+                 F:\echtzeitlu\external\glfw\include\GL/glfw.h(74) : see previous definition of 'APIENTRY'
+     1>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include\wingdi.h(30): warning C4005: 'WINGDIAPI' : macro redefinition
+                 F:\echtzeitlu\external\glfw\include\GL/glfw.h(91) : see previous definition of 'WINGDIAPI'
+     1>..\src\ModelLoader.cpp(92): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(142): warning C4244: '=' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(145): warning C4244: '=' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(148): warning C4244: '=' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(174): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(175): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(176): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(180): warning C4244: 'initializing' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(182): warning C4244: '=' : conversion from 'domUint' to 'int', possible loss of data
+     1>..\src\ModelLoader.cpp(188): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(189): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(190): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(192): warning C4244: 'initializing' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(194): warning C4244: '=' : conversion from 'domUint' to 'int', possible loss of data
+     1>..\src\ModelLoader.cpp(271): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(272): warning C4244: '=' : conversion from 'daeDouble' to 'float', possible loss of data
+     1>..\src\ModelLoader.cpp(274): warning C4244: 'initializing' : conversion from 'domUint' to 'unsigned int', possible loss of data
+     1>..\src\ModelLoader.cpp(276): warning C4244: '=' : conversion from 'domUint' to 'int', possible loss of data
+     1>..\src\ModelLoader.cpp(133): warning C4101: 'position_indices' : unreferenced local variable
+     1>..\src\ModelLoader.cpp(659): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+         ModelMaterial.cpp
+         Unknown compiler version - please run the configure tests and report the results
+         ModelObject.cpp
+         Unknown compiler version - please run the configure tests and report the results
          ogl3_test.cpp
+         Unknown compiler version - please run the configure tests and report the results
+     1>f:\echtzeitlu\src\CameraMotion.h(12): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>f:\echtzeitlu\src\CameraMotion.h(16): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>..\src\ogl3_test.cpp(100): warning C4101: 'profile' : unreferenced local variable
+     1>..\src\ogl3_test.cpp(296): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(297): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(298): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(299): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(300): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(305): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(310): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(311): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(312): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(313): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(314): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(318): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(319): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(320): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(321): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>..\src\ogl3_test.cpp(177): warning C4101: 'vao_id' : unreferenced local variable
+     1>..\src\ogl3_test.cpp(177): warning C4101: 'vbo_id' : unreferenced local variable
+         Particle.cpp
+         ParticleManager.cpp
+         ParticleSystem.cpp
+     1>..\src\ParticleSystem.cpp(118): warning C4018: '<' : signed/unsigned mismatch
+     1>..\src\ParticleSystem.cpp(131): warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+     1>..\src\ParticleSystem.cpp(320): warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+     1>..\src\ParticleSystem.cpp(408): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+         SceneObject.cpp
          shader.cpp
+         Timer.cpp
          utility.cpp
-     1>..\src\utility.cpp(8): warning C4800: 'void *' : forcing value to bool 'true' or 'false' (performance warning)
+     1>..\src\utility.cpp(9): warning C4800: 'void *' : forcing value to bool 'true' or 'false' (performance warning)
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe" /NOLOGO /LIBPATH:D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\external\glew\lib /LIBPATH:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\external\glfw\lib-msvc100" opengl32.lib glew32.lib GLFW.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\echtzeitlu_release.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.lib" /MACHINE:X86 Release\ogl3_test.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\echtzeitlu\bin\echtzeitlu_release.exe" /NOLOGO /LIBPATH:F:\echtzeitlu\external\glew\lib /LIBPATH:"F:\echtzeitlu\external\glfw\lib-msvc100" /LIBPATH:F:\echtzeitlu\\external\freealut\lib /LIBPATH:F:\echtzeitlu\\external\openal\libs\Win32 /LIBPATH:F:\echtzeitlu\\external\collada\lib /LIBPATH:F:\echtzeitlu\\external\boost\lib\vc10 opengl32.lib glew32.lib GLFW.lib libcollada14dom22.lib libboost_filesystem.lib libboost_system.lib alut.lib OpenAL32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\echtzeitlu_release.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"F:\echtzeitlu\bin\echtzeitlu_release.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\echtzeitlu\bin\echtzeitlu_release.lib" /MACHINE:X86 Release\camera.obj
+         Release\CameraMotion.obj
+         Release\Effect.obj
+         Release\Lighting.obj
+         Release\Model.obj
+         Release\ModelEffect.obj
+         Release\ModelImage.obj
+         Release\ModelLoader.obj
+         Release\ModelMaterial.obj
+         Release\ModelObject.obj
+         Release\ogl3_test.obj
+         Release\Particle.obj
+         Release\ParticleManager.obj
+         Release\ParticleSystem.obj
+         Release\SceneObject.obj
          Release\shader.obj
+         Release\Timer.obj
          Release\utility.obj /LTCG 
          Generating code
          Finished generating code
-         glfw_ogl3_2.vcxproj -> D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe
+         glfw_ogl3_2.vcxproj -> F:\echtzeitlu\bin\echtzeitlu_release.exe
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\bin\echtzeitlu_release.exe;#1" /manifest Release\echtzeitlu_release.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"F:\echtzeitlu\bin\echtzeitlu_release.exe;#1" /manifest Release\echtzeitlu_release.exe.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Release\echtzeitlu.unsuccessfulbuild".
          Touching "Release\echtzeitlu.lastbuildstate".
-     1>Done Building Project "D:\uni\9.Semester\Echtzeitgraphik\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" (build target(s)).
+     1>Done Building Project "F:\echtzeitlu\VSProject\glfw_ogl3_2.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.61
+Time Elapsed 00:00:26.70
