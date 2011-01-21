@@ -15,6 +15,11 @@ void Camera::perspective(float fovy, float aspect, float near, float far)
 	intrinsic = glm::perspective(fovy, aspect, near, far);
 }
 
+void Camera::orthogonal(int width, int height, float near, float far){
+	intrinsic = glm::ortho((float)-(width>>1), (float)(width>>1), (float)-(height>>1), (float)(height>>1), near, far);
+	printf("%f %f %f %f\n",(float)-(width>>1), (float)(width>>1), (float)-(height>>1), (float)(height>>1));
+}
+
 void Camera::lookat(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up)
 {
 	pvu2fsu(pos, view, up);
@@ -126,7 +131,6 @@ void Camera::fsu2extrinsic()
 void Camera::apply(Shader* shader){
 	GLint perspective_uniform;
 	GLint view_uniform;
-	GLint model_uniform;
 	shader->bind();
 		perspective_uniform = shader->get_uniform_location( "perspective");
 		view_uniform        = shader->get_uniform_location( "view");

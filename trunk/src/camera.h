@@ -19,6 +19,7 @@ class Camera{
 	glm::vec3 p;	// position
 
 	void perspective(float fovy, float aspect, float near, float far);
+	void orthogonal(int width, int height, float near, float far);
 	void lookat(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up);
 	
 	void translate(const glm::vec3 &v);

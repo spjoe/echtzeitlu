@@ -14,6 +14,7 @@ struct Light
 	glm::mat4 bias;
 	glm::mat4 proj;
 	glm::mat4 view;
+	glm::mat4 tview;
 	GLuint texShadowMap;
 };
 
@@ -34,6 +35,16 @@ private:
 	
 	GLuint light_fbo;
 	GLuint light_map;
+	GLuint light_vao_id;
+	GLuint light_vbo_id;
+	glm::vec4 light_verts[4];
+	unsigned light_idxs[6];
+	
+	GLuint gauss_vao_id;
+	GLuint gauss_vbo_id[2];
+	glm::vec4 gauss_verts[4];
+	glm::vec2 gauss_texs[4];
+	unsigned gauss_idxs[6];
 	
 	std::vector<Light> lightlist;
 	
@@ -51,9 +62,11 @@ public:
 	
 	void changePosition(unsigned id, glm::vec3 position);
 	
+	void Render();
+	
 	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
 	
-	void createLight(std::vector<Shader*> shaders);
+	void createLightMap(SceneObject* scene);
 
 	void update(float dTime);
 	
