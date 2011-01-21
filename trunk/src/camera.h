@@ -38,6 +38,8 @@ class Camera{
 	
 	void apply(Shader* shader);
 	
+	void print() const;
+	
 	
   private:
 	void fsu2extrinsic();

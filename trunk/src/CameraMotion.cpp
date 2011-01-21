@@ -35,14 +35,14 @@ void CameraMotion::update(float dTime)
 	}
 }
 
-void CameraMotion::flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw)
+void CameraMotion::flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed)
 {
 	flyState = movetoIaround;
 	movetoPoint  = startPoint;
 	this->pivotPoint = pivotPoint;
 	this->center = center;
 	this->speedrad = speed;
-	this->speedunits = 10;
+	this->speedunits = movespeed;
 	this->ccw = ccw;
 }
 
@@ -66,7 +66,7 @@ void CameraMotion::flyaround(float dTime)
 	float alpha = speedrad * dTime;
 	glm::vec3 p1 = camera->p;
 	glm::vec3 c = center;
-	glm::vec3 p2(10,0,10); //todo
+	glm::vec3 p2(5,0,5); //todo
 	p2 = r * glm::normalize(p2);
 
 	glm::vec3 cp1 = p1 - c; 
