@@ -35,7 +35,7 @@ class CameraMotion{
 
 public:
 	CameraMotion(Camera* camera);
-	void flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw);//speed rad per second
+	void flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed);//speed rad per second
 	void moveto(glm::vec3 Point, float speed);//speed unit per second
 	void update(float dTime);
 	void save();

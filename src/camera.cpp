@@ -134,3 +134,7 @@ void Camera::apply(Shader* shader){
 		glUniformMatrix4fv(view_uniform,        1, GL_FALSE, glm::value_ptr(extrinsic));
 	shader->unbind();
 }
+
+void Camera::print() const{
+	printf("%f %f %f\n", p.x, p.y, p.z);
+}

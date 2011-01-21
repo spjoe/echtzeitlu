@@ -169,17 +169,18 @@ void Model::draw()
 		//glUniform1i(powspecular_uniform,effect->powspecular);
 		
 		GLint ks_uniform = shader->get_uniform_location("ks");
-		if( name.compare("floor") == 0){
-			glUniform1f(ks_uniform, 0.0f);
-		}else if(name.compare("walls") == 0 ||
-				name.compare("shaft") == 0 ||
-				name.compare("socket") == 0){
-			glUniform1f(ks_uniform, 0.0f);
-		}else if(name.compare("engine") == 0){
-			glUniform1f(ks_uniform, 0.2f);
-		}else{
-			glUniform1f(ks_uniform, 0.1f);
-		}
+		glUniform1f(ks_uniform, effect->specular);
+// 		if( name.compare("floor") == 0){
+// 			glUniform1f(ks_uniform, 0.0f);
+// 		}else if(name.compare("walls") == 0 ||
+// 				name.compare("shaft") == 0 ||
+// 				name.compare("socket") == 0){
+// 			glUniform1f(ks_uniform, 0.0f);
+// 		}else if(name.compare("engine") == 0){
+// 			glUniform1f(ks_uniform, 0.2f);
+// 		}else{
+// 			glUniform1f(ks_uniform, 0.1f);
+// 		}
 	}
 	get_errors("Model::draw() D");
 

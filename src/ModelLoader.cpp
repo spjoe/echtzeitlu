@@ -653,6 +653,11 @@ void ModelLoader::fillEffect(ModelEffect *effect, std::string name)
 				texfilename.append(file);
 				effect->setBumpMap(new ModelImage(texfilename));
 			}
+			if(zeile.substr(0,f).compare("specular") == 0){
+				std::string file = zeile.substr(f+1,zeile.size());
+				texfilename.append(file);
+				effect->specular = atof(zeile.substr(f+1,zeile.size()).c_str());
+			}
 		}
 
 	dateiLese.close ();	 // Datei schliessen
