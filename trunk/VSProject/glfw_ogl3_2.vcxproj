@@ -75,8 +75,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\external\glew\include;$(SolutionDir)\external\glfw\include;$(SolutionDir)\external\glm\include;$(SolutionDir)\external\freealut\include;$(SolutionDir)\external\openal\include;$(SolutionDir)\external\collada\include;$(SolutionDir)\external\boost;$(SolutionDir)\external\collada\include\1.4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;CONSOLE;_LIB;BOOST_ALL_NO_LIB;GL_GENERATE_MIPMAP_SEG_AVOIDANCE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
@@ -84,9 +84,9 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;GLFW.lib;libcollada14dom22.lib;libboost_filesystem.lib;libboost_system.lib;alut.lib;OpenAL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_release.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\glew\lib;$(SolutionDir)external\glfw\lib-msvc100;$(SolutionDir)\external\freealut\lib;$(SolutionDir)\external\openal\libs\Win32;$(SolutionDir)\external\collada\lib;$(SolutionDir)\external\boost\lib\vc10;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>

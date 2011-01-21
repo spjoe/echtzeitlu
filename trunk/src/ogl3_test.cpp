@@ -23,7 +23,7 @@
 const std::string daeModelPath = "../resources/tmSteamEngine.dae";
 //const std::string daeModelPath = "../resources/sphere.dae";
 
-const std::string wavAudioPath = "../resources/music2.wav";
+const std::string wavAudioPath = "../resources/music.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);

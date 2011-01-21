@@ -199,7 +199,7 @@ void main()
 	}
 
 	// write color to output
-	fragColor = ambient + diffuseFinal / num_lights + ks * specularFinal;
+	fragColor = ambient + (1.0-ks) * diffuseFinal / num_lights + ks * specularFinal;
 	//fragColor = specularFinal;
 
 
