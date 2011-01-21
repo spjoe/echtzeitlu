@@ -45,6 +45,7 @@ in vec4 proj_shadow3;
 uniform vec4 ambient_color;
 uniform sampler2D colorMap;
 uniform sampler2D bumpMap;
+uniform float ks; // specular coefficient
 
 
 // fragment-shader input variables
@@ -54,7 +55,7 @@ in vec4 world_position;
 in vec2 TexCoord0;
 
 in vec3 lightVec[4];
-//in vec3 eyeVec;
+in vec3 eyeVec;
 //in vec3 halfVec[4];
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
@@ -82,11 +83,15 @@ void main()
     
     vec4 ambient = ambient_color * texture(colorMap, TexCoord0);
     
+    vec3 eye = normalize(eyeVec);
+    
     // calculate lighting + shadows
     vec4 diffuseFinal = vec4(0,0,0,0);
+    vec4 specularFinal = vec4(0,0,0,0);
 	bool shadowLight[4];
 	vec3 light_dir[4];
 	vec4 diffuse[4];
+	float specular[4];
 
 	shadowLight[0] = false;
 	shadowLight[1] = false; 
@@ -156,9 +161,13 @@ void main()
 		vec3 lVec = normalize(lightVec[0]);
 		diffuse[0]= base * light_color0 * max( dot(lVec, bump), 0.0 );
 		
+		vec3 refl = normalize(eye - 2 * bump * dot(bump, eye));
+		specular[0] = max(dot(refl,lVec),0.0);
+		specular[0] = pow(specular[0],2);
+		//fragColor = light_color0 * specular[0]; //max(dot(vec3(0,0,1),bump),0.0); //specular[0];
+		//return;
 		//fragColor = light_color0 * max( dot(lVec, vec3(0,0,1)), 0.0 );
 		//return;
-		
     }
 	if(num_lights > 1){
 		vec3 light_dir1 = (position - light_position1);
@@ -174,17 +183,24 @@ void main()
 		
 		vec3 lVec = normalize(lightVec[1]);
 		diffuse[1]= base * light_color1 * max( dot(lVec, bump), 0.0 );
+		
+		vec3 refl = normalize(eye - 2 * bump * dot(bump, eye));
+		specular[1] = max(dot(refl,lVec),0.0);
+		specular[1] = pow(specular[1],2);
 	}
 
 	for(int i = 0; i < num_lights; i++){
-		if(shadowLight[i])
+		if(shadowLight[i]){
 			diffuseFinal +=  diffuse[i] * 0.2;
-		else
+		}else{
 			diffuseFinal +=  diffuse[i];
+			specularFinal += vec4(1,1,1,1) * specular[i];
+		}
 	}
 
 	// write color to output
-	fragColor = ambient + diffuseFinal / num_lights;
+	fragColor = ambient + diffuseFinal / num_lights + ks * specularFinal;
+	//fragColor = specularFinal;
 
 
 	//fragColor = texture2D( colorMap, TexCoord0);
