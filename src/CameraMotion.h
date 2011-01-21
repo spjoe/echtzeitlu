@@ -29,19 +29,23 @@ class CameraMotion{
 	glm::vec3 movetoPoint;
 	glm::vec3 pivotPoint;
 	glm::vec3 center;
+	glm::vec3 startview;
 	float speedunits;
 	float speedrad;
 	bool ccw;
 
+	float pathLength;
+
 public:
 	CameraMotion(Camera* camera);
-	void flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed);//speed rad per second
+	void flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed, glm::vec3 startview= glm::vec3(0,0,0));//speed rad per second
 	void moveto(glm::vec3 Point, float speed);//speed unit per second
 	void update(float dTime);
 	void save();
 	void restore();
 private:
 	void moveto(float dTime);
+	void moveto2(float dTime);
 	void flyaround(float dTime);
 };
 }

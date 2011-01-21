@@ -17,7 +17,7 @@ void CameraMotion::update(float dTime)
 		if(a.x && a.y && a.z)
 			flyState = around;
 		else
-			moveto(dTime);
+			moveto2(dTime);
 		break;
 		}
 	case around:
@@ -35,7 +35,7 @@ void CameraMotion::update(float dTime)
 	}
 }
 
-void CameraMotion::flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed)
+void CameraMotion::flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 pivotPoint, float speed, bool ccw, float movespeed, glm::vec3 startview)
 {
 	flyState = movetoIaround;
 	movetoPoint  = startPoint;
@@ -44,6 +44,8 @@ void CameraMotion::flyaround(glm::vec3 startPoint, glm::vec3 center, glm::vec3 p
 	this->speedrad = speed;
 	this->speedunits = movespeed;
 	this->ccw = ccw;
+	this->pathLength = glm::length(movetoPoint - camera->p);
+	this->startview = startview;
 }
 
 void CameraMotion::moveto(glm::vec3 Point, float speed)
@@ -51,14 +53,40 @@ void CameraMotion::moveto(glm::vec3 Point, float speed)
 	flyState = movetoState;
 	movetoPoint  = Point;
 	this->speedunits = speed;
+	this->pathLength = glm::length(movetoPoint - camera->p);
 }
 
 void CameraMotion::moveto(float dTime)
 { 
 	glm::vec3 direction = movetoPoint - camera->p;
 	direction = glm::normalize(direction);
-	direction = speedunits * dTime * direction;
+	float l = pathLength - glm::length(movetoPoint - camera->p);
+	float d = 0.01f; //min speed
+	if (l < (pathLength/2))
+		d += l/(pathLength/2.0f);
+	else
+		d += (pathLength - l)/(pathLength/2.0f);
+
+	direction = speedunits * dTime * direction * d;
 	camera->translate(direction);
+}
+void CameraMotion::moveto2(float dTime)
+{ 
+	glm::vec3 direction = movetoPoint - camera->p;
+	direction = glm::normalize(direction);
+	float l = pathLength - glm::length(movetoPoint - camera->p);
+	float d = 0.01f; //min speed
+	if (l < (pathLength/2))
+		d += l/(pathLength/2.0f);
+	else
+		d += (pathLength - l)/(pathLength/2.0f);
+
+	direction = speedunits * dTime * direction * d;
+	camera->translate(direction);
+	//camera rotation richtung viewpoint
+	glm::vec3 dist = pivotPoint - startview;
+	dist = (l / pathLength) * dist;
+	camera->lookat(camera->p,startview + dist,glm::vec3(0,0,1));
 }
 void CameraMotion::flyaround(float dTime)
 {

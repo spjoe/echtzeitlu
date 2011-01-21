@@ -23,7 +23,7 @@
 const std::string daeModelPath = "../resources/tmSteamEngine.dae";
 //const std::string daeModelPath = "../resources/sphere.dae";
 
-const std::string wavAudioPath = "../resources/music.wav";
+const std::string wavAudioPath = "../resources/music2.wav";
 //const std::string daeModelPath = "../resources/trianglebox.dae";
 glm::mat4 model;
 glm::vec3 viewVector(0.0f, 0.0f, 1.0f);
@@ -62,8 +62,8 @@ reportAlutError (void)
 
 void mouseMovementCb (int x, int y)
 {
-// 	if(!stop)
-// 		return;
+ 	if(!stop)
+ 		return;
 	int dx = oldx - x;
 	int dy = oldy - y;
 
@@ -254,21 +254,22 @@ int main (int argc, char** argv)
 // 		get_errors();
 		
 		
-		cm.flyaround(glm::vec3(0,5,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, false, 2.0);
+		cm.flyaround(glm::vec3(0,5,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, false, 2.0,glm::vec3(-1.8,0,0));
 		std::vector<Shader*> shaders;
 		shaders.push_back(defaultShader);
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
 		
+		
+// 		running  = false;
+		double totaltime = 0.0;
+		int zoom = 0;
+		//rootScene->draw();
 		if(stop == false) {
 			alSourcePlay (musicSource);
 		}else{
 			cm.save();
 		}
-// 		running  = false;
-		double totaltime = 0.0;
-		int zoom = 0;
-		rootScene->draw();
 		double time = glfwGetTime( );
 		while (running) 
 		{
@@ -292,27 +293,34 @@ int main (int argc, char** argv)
 				if(totaltime < 5){
 					; // freeze
 				}
-				else if(totaltime > 10 && totaltime < 14){
-					float factor = pow((totaltime-9),2);
+				else if(totaltime > 24 && totaltime < 29){
+					float factor = pow((totaltime-23),2);
 					rootScene->update((tmptime-time)/factor);
 					pm.Update((tmptime-time)/factor);
 	  				cm.update(tmptime-time); //Move Camera
 					m_lighting->update((tmptime-time)/factor);
-				}else if(totaltime > 14 && zoom == 0){
+				}else if(totaltime > 29 && zoom == 0){
 					zoom++;
 					cm.moveto(glm::vec3(0,-2,3),2);
-				}else if (totaltime > 12 && totaltime < 20){
+				}else if (totaltime > 29 && totaltime < 45){
 					cm.update(tmptime-time);
-				}else if (totaltime >20 && zoom == 1){
+				}else if (totaltime > 45 && zoom == 1){
 					zoom++;
-					cm.flyaround(glm::vec3(1,10,5),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true,2.0);
-				}else if (totaltime > 20 && totaltime < 25){
-					float factor = pow((26-totaltime),2);
+					cm.moveto(glm::vec3(0,10,10),2.0f);
+				}else if(totaltime > 45 && totaltime < 60){
+					cm.update(tmptime-time);
+				}else if (totaltime > 60 && totaltime < 65){
+					float factor = pow((44-totaltime),2);
 					rootScene->update((tmptime-time)/factor);
 					pm.Update((tmptime-time)/factor);
 	  				cm.update(tmptime-time); //Move Camera
 					m_lighting->update((tmptime-time)/factor);
-				}else if(totaltime > 150 ){
+				}
+				else if(totaltime > 65 && zoom == 2){
+					cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true,2.0);
+					zoom++;
+				}
+				else if(totaltime > 250 ){
 					running = false;
 				}else{
 					rootScene->update(tmptime-time);
@@ -335,7 +343,7 @@ int main (int argc, char** argv)
 // 			running = running && !glfwGetKey( 'Q' );
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
-// 			if(stop){
+ 			if(stop){
 				float kb_speed = 0.05f;
 				float ms_speed = 0.03f;
 				if(glfwGetKey( 'A' ))
@@ -356,21 +364,24 @@ int main (int argc, char** argv)
 					m_camera_1.translateF(-kb_speed);
 				if(glfwGetKey( 'P' ))
 					m_camera_1.print();
-// 			}
+ 			}
 			if(glfwGetKey( 'M' )){
 				glfwSleep(0.1);
 				alSourcePlay(musicSource);
 			}
+			if(glfwGetKey( 'I' )){
+				printf("totaltime: %f",totaltime);
+			}
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
 				if(stop == true){
-// 					alSourcePause(musicSource);
-// 					cm.save();
+ 					alSourcePause(musicSource);
+ 					cm.save();
 
 				}else{
 					glfwSleep(0.1);
-// 					alSourcePlay(musicSource);
-// 					cm.restore();
+ 					alSourcePlay(musicSource);
+ 					cm.restore();
 				}
 				glfwSleep(0.1);
 				time = glfwGetTime( ); //zeitrechnung neu beginnen
