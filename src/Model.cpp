@@ -79,7 +79,7 @@ void Model::Init(){
 	angle = 0.0f;
 	
 	if( name.compare("bulb1") == 0){
-		glm::vec4 pos = model * glm::vec4(.0f,.0f,.0f,1.0f);
+		glm::vec4 pos = model * glm::vec4(0.0f,0.0f,0.0f,1.0f);
 		m_lighting->addLight(glm::vec3(pos[0], pos[1], pos[2]), glm::vec4(1.0f,1.0f,1.0f,1.0f));
 	}
 	if( name.compare("bulb2") == 0){
@@ -134,6 +134,13 @@ void Model::draw()
 {
 	if(indexlist.empty())
 		return;
+	
+	if(	name.compare("bulb1")==0)
+		return;
+	
+	if(	name.compare("bulb2")==0)
+		return;
+	
 	Shader *shader = effect->getShader();
 	get_errors("Model::draw() A");
 	shader->bind();
@@ -321,21 +328,21 @@ void Model::update(float fTime)
 			model = model_orig * rot;
 		}
 		
-		if( name.compare("bulb1") == 0 ||
-			name.compare("wire1") == 0){
-			glm::mat4 rot;
-			rot = glm::rotate(2.0f*(float)sin(angle*PI/180.0f),1.0f,0.0f,0.0f);
-			rot = rot * glm::rotate(2.0f*(float)cos(angle*PI/180.0f),0.0f,1.0f,0.0f);
-			model = model_orig * rot;
-			if(name.compare("bulb1") == 0){
-				glm::vec4 pos = model * glm::vec4(.0f,.0f,-3.0f,1.0f);
-				m_lighting->changePosition(0,glm::vec3(pos[0], pos[1], pos[2]));
-			}
-		}
-		if( name.compare("bulb2") == 0){
-			glm::vec4 pos = model * glm::vec4(.0f,.0f,0.0f,1.0f);
-			m_lighting->changePosition(1,glm::vec3(pos[0], pos[1], pos[2]));
-		}
+// 		if( name.compare("bulb1") == 0 ||
+// 			name.compare("wire1") == 0){
+// 			glm::mat4 rot;
+// 			rot = glm::rotate(2.0f*(float)sin(angle*PI/180.0f),1.0f,0.0f,0.0f);
+// 			rot = rot * glm::rotate(2.0f*(float)cos(angle*PI/180.0f),0.0f,1.0f,0.0f);
+// 			model = model_orig * rot;
+// 			if(name.compare("bulb1") == 0){
+// 				glm::vec4 pos = model * glm::vec4(.0f,.0f,-3.0f,1.0f);
+// 				m_lighting->changePosition(0,glm::vec3(pos[0], pos[1], pos[2]));
+// 			}
+// 		}
+// 		if( name.compare("bulb2") == 0){
+// 			glm::vec4 pos = model * glm::vec4(.0f,.0f,0.0f,1.0f);
+// 			m_lighting->changePosition(1,glm::vec3(pos[0], pos[1], pos[2]));
+// 		}
 		
 		updateChildren(fTime);
 	}

@@ -38,12 +38,15 @@ bool stop = false;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
+Camera m_camera_ortho;
 Lighting *m_lighting;
 SceneObject *rootScene;
 Shader *defaultShader;
 Shader *defaultColorShader;
 Shader *defaultBumpShader;
 Shader *simpleShader;
+Shader* lightShader;
+Shader* gaussShader;
 
 int width=800;
 int height=600;
@@ -87,9 +90,11 @@ void init_matrixs()
 	// with a 60 degree field of view
 	float aspect = float(width)/float(height);
 	m_camera_1.perspective(60.0f, aspect, 0.1f, 100.0f);
+	m_camera_ortho.orthogonal(width, height, 0.01f, 2.0f);
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
 	m_camera_1.lookat(glm::vec3(-2.2,2.2,0.6), glm::vec3(-1.8,0,0), glm::vec3(0,0,1));
+	m_camera_ortho.lookat(glm::vec3(0,0,-1), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
@@ -183,6 +188,8 @@ int main (int argc, char** argv)
 		Shader TextureShader("../shader/TextureShader");
 		Shader ColorShader("../shader/ColorShader");
 		Shader BumpShader("../shader/BumpShader");
+		Shader LightShader("../shader/LightShader");
+		Shader GaussShader("../shader/ipGaussShader");
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
@@ -204,15 +211,27 @@ int main (int argc, char** argv)
 			cerr << "Could not compile BumpShader program." << endl;
 			return 1;
 		}
+		if (!LightShader){
+			cerr << "Could not compile LightShader program." << endl;
+			return 1;
+		}
+		if (!GaussShader){
+			cerr << "Could not compile GaussShader program." << endl;
+			return 1;
+		}
 
 		TextureShader.bind_frag_data_location("fragColor");
 		ColorShader.bind_frag_data_location("fragColor");
 		SimpleShader.bind_frag_data_location("fragColor");
 		BumpShader.bind_frag_data_location("fragColor");
+		LightShader.bind_frag_data_location("fragColor");
+		GaussShader.bind_frag_data_location("fragColor");
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
 		simpleShader = &SimpleShader;
 		defaultBumpShader = &BumpShader;
+		lightShader = &LightShader;
+		gaussShader = &GaussShader;
 		
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
@@ -273,16 +292,19 @@ int main (int argc, char** argv)
 		double time = glfwGetTime( );
 		while (running) 
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-			m_lighting->createShadow(rootScene, shaders);
-			
-// 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
 			m_camera_1.apply(defaultShader);
 			m_camera_1.apply(defaultColorShader);
 			m_camera_1.apply(simpleShader);
 			m_camera_1.apply(defaultBumpShader);
+			m_camera_1.apply(lightShader);
+			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			m_lighting->createShadow(rootScene, shaders);
+			
+// 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 			m_lighting->createLightMap(rootScene);
+			
+// 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			//draw(simpleShader, vao_id);
 			rootScene->draw();
