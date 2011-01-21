@@ -58,7 +58,7 @@ out vec2 TexCoord0;
 
 //bumpMappin
 out vec3 lightVec[4];
-//out vec3 eyeVec;
+out vec3 eyeVec;
 //out vec3 halfVec[4];
 
 
@@ -109,7 +109,9 @@ void main()
 	lightVec[1] = rotmat * light_dir1;
 	lightVec[2] = rotmat * light_dir2;
 	lightVec[3] = rotmat * light_dir3;
-
+	
+	eyeVec = rotmat * mat3(invTransModel) * normalize(transpose(view) * vec4(0,0,1,1)).xyz;
+	
 	// For later use (phong lightning model...
 	//vec3 eyeVec = normalize(-pos *  mat3(invTransModel)); 
 	//eyeVec = rotmat * normalize(eyeVec); //eye Vektor in tangent Space

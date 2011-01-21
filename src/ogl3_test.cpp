@@ -337,7 +337,7 @@ int main (int argc, char** argv)
 			running = running && glfwGetWindowParam( GLFW_OPENED );
 
 // 			if(stop){
-				float kb_speed = 0.01f;
+				float kb_speed = 0.05f;
 				float ms_speed = 0.03f;
 				if(glfwGetKey( 'A' ))
 					m_camera_1.translateS(-kb_speed);
