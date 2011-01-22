@@ -20,6 +20,8 @@ extern Shader *simpleShader;
 extern Shader* lightShader;
 extern Shader* gaussShader;
 
+char lm_errmsg[128];
+
 int fbo_res = 1024;
 
 Lighting::Lighting()
@@ -116,7 +118,7 @@ void Lighting::init()
 	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, light_map, 0);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	get_errors("Lighting::init() B");
+	get_errors("Lighting::init() D");
 		
 	PFNGLGENVERTEXARRAYSPROC my_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)glfwGetProcAddress("glGenVertexArrays");
 	my_glGenVertexArrays(1, &light_vao_id);
@@ -134,7 +136,6 @@ void Lighting::init()
 	light_verts[2] = glm::vec4( w,-h, 0, 1);
 	light_verts[3] = glm::vec4(-w,-h, 0, 1);
 	
-	//ccw
 	light_idxs[0] = 2;
 	light_idxs[1] = 1;
 	light_idxs[2] = 0;
@@ -184,13 +185,18 @@ void Lighting::init()
 	glEnableVertexAttribArray(vertex_location);
 	glVertexAttribPointer(	vertex_location, 4, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
-							
+	get_errors("Lighting::init() E");
 	bindVBO(gauss_vbo_id[1], gauss_texs, 2 * 4 * sizeof(GLfloat));
+	sprintf(lm_errmsg, "Lighting::init() F %d", gauss_vbo_id[1]);
+	get_errors(lm_errmsg);
 	GLint tex_location = gaussShader->get_attrib_location("texkoord");
+	get_errors("Lighting::init() G");
 	glEnableVertexAttribArray(tex_location);
+	get_errors("Lighting::init() H");
 	glVertexAttribPointer(	tex_location, 2, GL_FLOAT, 
 							GL_FALSE, 0, NULL);
-
+	sprintf(lm_errmsg, "Lighting::init() I %d", tex_location);
+	get_errors(lm_errmsg);
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	get_errors();
@@ -200,15 +206,14 @@ void Lighting::init()
 	isinit = true;
 }
 
-char lm_errmsg[128];
-
 void Lighting::createLightMap(SceneObject* scene)
 {
 	
 	if(lightlist.empty())
 		return;
 		
-// 	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 // 	scene->drawSimple();
 	
 	lightShader->bind();
@@ -218,9 +223,9 @@ void Lighting::createLightMap(SceneObject* scene)
 	get_errors();
 
     // set matrix-uniforms
-    GLint model_uniform       = lightShader->get_uniform_location( "model");
-	GLint rot_uniform         = lightShader->get_uniform_location( "rot");
-	GLint color_uniform       = lightShader->get_uniform_location( "color");
+    GLint model_uniform = lightShader->get_uniform_location( "model");
+	GLint rot_uniform = lightShader->get_uniform_location( "rot");
+	GLint color_uniform = lightShader->get_uniform_location( "color");
 	
 	glm::mat4 rot = m_camera_1.extrinsic; 
 	rot[3][0] = rot[3][1] =rot[3][2] = 0;
@@ -250,25 +255,34 @@ void Lighting::createLightMap(SceneObject* scene)
 	get_errors();
 	lightShader->unbind();
 
-// 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
-	glDisable(GL_DEPTH_TEST);
+// 	glDisable(GL_DEPTH_TEST);
 	gaussShader->bind();
 	my_glBindVertexArray(gauss_vao_id);
+	
+	model_uniform = gaussShader->get_uniform_location( "model");
+	color_uniform = gaussShader->get_uniform_location( "color");
+	glm::mat4 model = glm::mat4(	1.0, 0.0, 0.0, 0.0,
+									0.0, 1.0, 0.0, 0.0,
+									0.0, 0.0, 1.0, 0.0,
+									0.0, 0.0, 0.0, 1.0);
+	glUniformMatrix4fv(model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform4fv(color_uniform,1, glm::value_ptr(glm::vec4(1,0,0,1)));
 	
 	GLint texture_uniform = gaussShader->get_uniform_location("colorMap");
 	glUniform1i(texture_uniform, 0);
 // 	get_errors(lm_errmsg);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, light_map);
-// 	get_errors("Lighting::createLightMap()");
+	get_errors("Lighting::createLightMap()");
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, gauss_idxs);
 	
 	my_glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	gaussShader->unbind();
 	get_errors("Lighting::createLightMap()");
-	glEnable(GL_DEPTH_TEST);
+// 	glEnable(GL_DEPTH_TEST);
 // 	printf("Lighting::createLightMap() B");
 }
 
