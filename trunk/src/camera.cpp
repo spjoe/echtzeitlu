@@ -17,7 +17,6 @@ void Camera::perspective(float fovy, float aspect, float near, float far)
 
 void Camera::orthogonal(int width, int height, float near, float far){
 	intrinsic = glm::ortho((float)-(width>>1), (float)(width>>1), (float)-(height>>1), (float)(height>>1), near, far);
-	printf("%f %f %f %f\n",(float)-(width>>1), (float)(width>>1), (float)-(height>>1), (float)(height>>1));
 }
 
 void Camera::lookat(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up)

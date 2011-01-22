@@ -94,7 +94,7 @@ void init_matrixs()
 
     // move camera 4 units backward, i.e. movie the scene 4 units forward
 	m_camera_1.lookat(glm::vec3(-2.2,2.2,0.6), glm::vec3(-1.8,0,0), glm::vec3(0,0,1));
-	m_camera_ortho.lookat(glm::vec3(0,0,-1), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	m_camera_ortho.lookat(glm::vec3(0,0,1), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
