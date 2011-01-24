@@ -316,7 +316,7 @@ int main (int argc, char** argv)
 					; // freeze
 				}
 				else if(totaltime > 24 && totaltime < 29){
-					float factor = pow((totaltime-23),2);
+					float factor = std::min(pow((totaltime-23),2),4.0);
 					rootScene->update((tmptime-time)/factor);
 					pm.Update((tmptime-time)/factor);
 	  				cm.update(tmptime-time); //Move Camera
@@ -326,13 +326,20 @@ int main (int argc, char** argv)
 					cm.moveto(glm::vec3(0,-2,3),2);
 				}else if (totaltime > 29 && totaltime < 45){
 					cm.update(tmptime-time);
+					rootScene->update((tmptime-time)/4.0);
+					pm.Update((tmptime-time)/4.0);
+					m_lighting->update((tmptime-time)/4.0);
+
 				}else if (totaltime > 45 && zoom == 1){
 					zoom++;
 					cm.moveto(glm::vec3(0,10,10),2.0f);
 				}else if(totaltime > 45 && totaltime < 60){
 					cm.update(tmptime-time);
+					rootScene->update((tmptime-time)/4.0);
+					pm.Update((tmptime-time)/4.0);
+					m_lighting->update((tmptime-time)/4.0);
 				}else if (totaltime > 60 && totaltime < 65){
-					float factor = pow((44-totaltime),2);
+					float factor = std::min(pow((66-totaltime),2),4.0);
 					rootScene->update((tmptime-time)/factor);
 					pm.Update((tmptime-time)/factor);
 	  				cm.update(tmptime-time); //Move Camera
