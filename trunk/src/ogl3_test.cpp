@@ -346,7 +346,7 @@ int main (int argc, char** argv)
 					m_lighting->update((tmptime-time)/factor);
 				}
 				else if(totaltime > 65 && zoom == 2){
-					cm.flyaround(glm::vec3(0,10,10),glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true,2.0);
+					cm.flyaround(m_camera_1.p, glm::vec3(0,0,5),glm::vec3(0,0,0),0.5, true,2.0);
 					zoom++;
 				}
 				else if(totaltime > 250 ){
