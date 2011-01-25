@@ -135,11 +135,11 @@ void Model::draw()
 	if(indexlist.empty())
 		return;
 	
-	if(	name.compare("bulb1")==0)
-		return;
-	
-	if(	name.compare("bulb2")==0)
-		return;
+// 	if(	name.compare("bulb1")==0)
+// 		return;
+// 	
+// 	if(	name.compare("bulb2")==0)
+// 		return;
 	
 	Shader *shader = effect->getShader();
 	get_errors("Model::draw() A");

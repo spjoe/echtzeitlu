@@ -37,8 +37,8 @@ private:
 	GLuint light_map;
 	GLuint light_vao_id;
 	GLuint light_vbo_id;
-	glm::vec4 light_verts[4];
-	unsigned light_idxs[6];
+	glm::vec4 light_verts[8];
+	unsigned light_idxs[12];
 	
 	GLuint gauss_vao_id;
 	GLuint gauss_vbo_id[2];
@@ -67,6 +67,8 @@ public:
 	void createShadow(SceneObject* scene, std::vector<Shader*> shaders);
 	
 	void createLightMap(SceneObject* scene);
+	
+	void addLightMap(GLuint tex1);
 
 	void update(float dTime);
 	

@@ -47,6 +47,11 @@ Shader *defaultBumpShader;
 Shader *simpleShader;
 Shader* lightShader;
 Shader* gaussShader;
+Shader* additionShader;
+
+GLuint scene_fbo;
+GLuint scene_map;
+GLuint scene_depth;
 
 int width=800;
 int height=600;
@@ -99,6 +104,50 @@ void init_matrixs()
     // initialize the model matrix to identity
 	model = glm::mat4(1.0f);
 }
+
+void init_fbo()
+{
+	PFNGLGENFRAMEBUFFERSPROC my_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)glfwGetProcAddress("glGenFramebuffers");
+	PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glfwGetProcAddress("glBindFramebuffer");
+	PFNGLFRAMEBUFFERTEXTURE2DPROC my_glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)glfwGetProcAddress("glFramebufferTexture2D");
+	PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)glfwGetProcAddress("glDeleteFramebuffers");
+
+	glGenTextures(1, &scene_map);
+	glBindTexture(GL_TEXTURE_2D, scene_map);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	get_errors("init_fbo() A");
+	
+	glGenTextures(1, &scene_depth);
+	glBindTexture(GL_TEXTURE_2D, scene_depth);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	get_errors("init_fbo() A");
+	
+	my_glGenFramebuffers(1,&scene_fbo);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, scene_fbo);
+	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, scene_map, 0);
+	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, scene_depth, 0);
+	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	get_errors("init_fbo() B");
+}
+
+void delete_fbo()
+{
+	PFNGLISFRAMEBUFFERPROC my_glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)glfwGetProcAddress("glIsFramebuffer");
+	PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)glfwGetProcAddress("glDeleteFramebuffer");
+	
+	if(my_glIsFramebuffer(scene_fbo))
+		my_glDeleteFramebuffers(1, &scene_fbo);
+	
+	if(glIsTexture(scene_map))
+		glDeleteTextures(1,&scene_map);
+
+	get_errors("Lighting::~Lighting()");
+}
+
 // Test if we got a valid forward compatible context (FCC)
 void test_ogl3(void)
 {
@@ -190,6 +239,7 @@ int main (int argc, char** argv)
 		Shader BumpShader("../shader/BumpShader");
 		Shader LightShader("../shader/LightShader");
 		Shader GaussShader("../shader/ipGaussShader");
+		Shader AdditionShader("../shader/ipAddition");
 
 		if (!minimal) {
 			cerr << "Could not compile minimal shader program." << endl;
@@ -219,6 +269,10 @@ int main (int argc, char** argv)
 			cerr << "Could not compile GaussShader program." << endl;
 			return 1;
 		}
+		if (!AdditionShader){
+			cerr << "Could not compile AdditionShader program." << endl;
+			return 1;
+		}
 
 		TextureShader.bind_frag_data_location("fragColor");
 		ColorShader.bind_frag_data_location("fragColor");
@@ -226,12 +280,14 @@ int main (int argc, char** argv)
 		BumpShader.bind_frag_data_location("fragColor");
 		LightShader.bind_frag_data_location("fragColor");
 		GaussShader.bind_frag_data_location("fragColor");
+		AdditionShader.bind_frag_data_location("fragColor");
 		defaultShader = &TextureShader;
 		defaultColorShader = &ColorShader;
 		simpleShader = &SimpleShader;
 		defaultBumpShader = &BumpShader;
 		lightShader = &LightShader;
 		gaussShader = &GaussShader;
+		additionShader = &AdditionShader;
 		
 		get_errors();
 		//init_vbo_vao(simpleShader, vbo_id, &vao_id);
@@ -242,6 +298,8 @@ int main (int argc, char** argv)
 		pm.AddSystem(new SparkParticleSystem("Sparkie uno",100,glm::vec4(2.0,-0.7,-1.5,1)));
 		// init lighting
 		m_lighting = new Lighting;
+		
+		init_fbo();
 
 		cout << "loading scene: '" << daeModelPath.c_str() << "'"<< endl;
 		rootScene = m_loader.loadScene(daeModelPath);
@@ -279,7 +337,6 @@ int main (int argc, char** argv)
 		shaders.push_back(defaultColorShader);
 		shaders.push_back(defaultBumpShader);
 		
-		
 // 		running  = false;
 		double totaltime = 0.0;
 		int zoom = 0;
@@ -292,6 +349,7 @@ int main (int argc, char** argv)
 		double time = glfwGetTime( );
 		while (running) 
 		{
+			// Preprocessing
 			m_camera_1.apply(defaultShader);
 			m_camera_1.apply(defaultColorShader);
 			m_camera_1.apply(simpleShader);
@@ -301,21 +359,33 @@ int main (int argc, char** argv)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			m_lighting->createShadow(rootScene, shaders);
 			
-// 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-// 			m_lighting->createLightMap(rootScene);
-			
-// 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			m_lighting->createLightMap(rootScene);
 			
 			//draw(simpleShader, vao_id);
+			
+			// Render
+			PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glfwGetProcAddress("glBindFramebuffer");
+			my_glBindFramebuffer(GL_FRAMEBUFFER, scene_fbo);
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			rootScene->draw();
 			pm.Render();
+// 			glBindTexture(GL_TEXTURE_2D, scene_map);
+// 			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, width, height, 0);
+			my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			get_errors("rootScene->draw()");
+			
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			m_lighting->addLightMap(scene_map);
+			
+			
+			// Update
 			if(!stop){
 				double tmptime = glfwGetTime();
 				totaltime += tmptime-time; //versuch einer kamara fahrt
 				if(totaltime < 5){
 					; // freeze
-				}
-				else if(totaltime > 24 && totaltime < 29){
+				}else if(totaltime > 24 && totaltime < 29){
 					float factor = std::min(pow((totaltime-23),2),4.0);
 					rootScene->update((tmptime-time)/factor);
 					pm.Update((tmptime-time)/factor);
@@ -358,6 +428,13 @@ int main (int argc, char** argv)
  					m_lighting->update(tmptime-time);
 				}
 				time = tmptime;;
+			}else{
+				double tmptime = glfwGetTime();
+				rootScene->update(tmptime-time);
+				pm.Update(tmptime-time);
+// 				cm.update(tmptime-time); //Move Camera
+				m_lighting->update(tmptime-time);
+				time = tmptime;
 			}
 			
 			glfwSwapBuffers();
@@ -412,7 +489,7 @@ int main (int argc, char** argv)
  					alSourcePlay(musicSource);
  					cm.restore();
 				}
-				glfwSleep(0.1);
+				glfwSleep(0.2);
 				time = glfwGetTime( ); //zeitrechnung neu beginnen
 			}
 			
@@ -421,6 +498,7 @@ int main (int argc, char** argv)
 
 		}
 
+		delete_fbo();
 		//	release_vbo_vao(vbo_id, &vao_id);
 		delete rootScene;
 		delete m_lighting;
