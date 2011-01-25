@@ -24,7 +24,6 @@ precision mediump float;  // delete this line if using GLSL 1.2
 uniform mat4 perspective;
 uniform mat4 view;
 uniform mat4 model;
-uniform mat4 rot;
 
 // vertex-shader input variables
 in vec4 vertex;
