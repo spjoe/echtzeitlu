@@ -35,6 +35,7 @@ glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
 GLfloat distance = -4.0f;
 bool stop = false;
+bool play_music = false;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
@@ -348,7 +349,8 @@ int main (int argc, char** argv)
 		}else{
 			cm.save();
 		}
-		alSourcePlay (musicSource);
+		if(play_music)
+			alSourcePlay (musicSource);
 		double time = glfwGetTime( );
 		while (running) 
 		{
@@ -475,8 +477,12 @@ int main (int argc, char** argv)
 					m_camera_1.print();
  			}
 			if(glfwGetKey( 'M' )){
-				glfwSleep(0.1);
-				alSourcePlay(musicSource);
+				play_music = !play_music;
+				glfwSleep(0.2);
+				if(play_music)
+					alSourcePlay(musicSource);
+				else
+					alSourcePause(musicSource);
 			}
 			if(glfwGetKey( 'I' )){
 				printf("totaltime: %f",totaltime);
