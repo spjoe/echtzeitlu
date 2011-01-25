@@ -116,7 +116,7 @@ void init_fbo()
 	glBindTexture(GL_TEXTURE_2D, scene_map);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_SRGB, GL_UNSIGNED_BYTE, NULL);
 	get_errors("init_fbo() A");
 	
 	glGenTextures(1, &scene_depth);
@@ -128,6 +128,7 @@ void init_fbo()
 	
 	my_glGenFramebuffers(1,&scene_fbo);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, scene_fbo);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, scene_map, 0);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, scene_depth, 0);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -366,19 +367,19 @@ int main (int argc, char** argv)
 			
 			//draw(simpleShader, vao_id);
 			
-			// Render
-			PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glfwGetProcAddress("glBindFramebuffer");
-			my_glBindFramebuffer(GL_FRAMEBUFFER, scene_fbo);
+// 			// Render
+// 			PFNGLBINDFRAMEBUFFERPROC my_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)glfwGetProcAddress("glBindFramebuffer");
+// 			my_glBindFramebuffer(GL_FRAMEBUFFER, scene_fbo);
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			rootScene->draw();
 			pm.Render();
-// 			glBindTexture(GL_TEXTURE_2D, scene_map);
-// 			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, width, height, 0);
-			my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			get_errors("rootScene->draw()");
-			
+			glBindTexture(GL_TEXTURE_2D, scene_map);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, 0, 0, width, height, 0);
+// 			my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
+// 			get_errors("rootScene->draw()");
+// 			
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			m_lighting->addLightMap(scene_map);
+ 			m_lighting->addLightMap(scene_map);
 			
 			
 			// Update

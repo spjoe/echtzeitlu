@@ -335,7 +335,6 @@ void Lighting::addLightMap(GLuint tex1)
 	my_glBindVertexArray(gauss_vao_id);
 	
 	GLint model_uniform = additionShader->get_uniform_location( "model");
-	
 	GLint color_uniform = additionShader->get_uniform_location( "color");
 	
 	glm::mat4 model = glm::mat4(	1.0, 0.0, 0.0, 0.0,
@@ -343,7 +342,7 @@ void Lighting::addLightMap(GLuint tex1)
 									0.0, 0.0, 1.0, 0.0,
 									0.0, 0.0, 0.0, 1.0);
 	glUniformMatrix4fv(model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-	glUniform4fv(color_uniform,1, glm::value_ptr(glm::vec4(1,0,0,1)));
+	glUniform4fv(color_uniform,1, glm::value_ptr(glm::vec4(1,1,1,1)));
 	
 	GLint colorMap_uniform = additionShader->get_uniform_location("colorMap");
 	GLint lightMap_uniform = additionShader->get_uniform_location("lightMap");
@@ -355,10 +354,9 @@ void Lighting::addLightMap(GLuint tex1)
 	glBindTexture(GL_TEXTURE_2D, tex1);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, light_map);
+	glActiveTexture(GL_TEXTURE0);
 
-	
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, gauss_idxs);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, width, height, 0);
 	get_errors("Lighting::addTextures() 4");
 	
 	my_glBindVertexArray(0);
