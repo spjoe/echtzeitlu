@@ -140,6 +140,10 @@
     <None Include="..\shader\BumpShader.vert" />
     <None Include="..\shader\ColorShader.frag" />
     <None Include="..\shader\ColorShader.vert" />
+    <None Include="..\shader\ipAddition.frag" />
+    <None Include="..\shader\ipAddition.vert" />
+    <None Include="..\shader\ipGaussShader.frag" />
+    <None Include="..\shader\ipGaussShader.vert" />
     <None Include="..\shader\minimal.frag" />
     <None Include="..\shader\minimal.vert" />
     <None Include="..\shader\simple_shader.frag" />

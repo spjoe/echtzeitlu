@@ -35,7 +35,7 @@ glm::vec4 ambient_color(0.1f, 0.1f, 0.1f, 1.0f);
 
 GLfloat distance = -4.0f;
 bool stop = false;
-bool play_music = false;
+bool play_music = true;
 
 using namespace echtzeitlu;
 Camera m_camera_1;
