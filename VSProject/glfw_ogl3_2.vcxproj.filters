@@ -169,5 +169,17 @@
     <None Include="..\shader\simple_shader.vert">
       <Filter>Ressourcendateien</Filter>
     </None>
+    <None Include="..\shader\ipAddition.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\ipAddition.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\ipGaussShader.frag">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="..\shader\ipGaussShader.vert">
+      <Filter>Ressourcendateien</Filter>
+    </None>
   </ItemGroup>
 </Project>
