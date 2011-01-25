@@ -35,6 +35,7 @@ private:
 	
 	GLuint light_fbo;
 	GLuint light_map;
+	GLuint light_depth;
 	GLuint light_vao_id;
 	GLuint light_vbo_id;
 	glm::vec4 light_verts[8];

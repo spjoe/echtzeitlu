@@ -342,10 +342,11 @@ int main (int argc, char** argv)
 		int zoom = 0;
 		//rootScene->draw();
 		if(stop == false) {
-			alSourcePlay (musicSource);
+			
 		}else{
 			cm.save();
 		}
+		alSourcePlay (musicSource);
 		double time = glfwGetTime( );
 		while (running) 
 		{
@@ -481,12 +482,12 @@ int main (int argc, char** argv)
 			if(glfwGetKey( 'C' )){
 				stop = !stop;
 				if(stop == true){
- 					alSourcePause(musicSource);
+//  					alSourcePause(musicSource);
  					cm.save();
 
 				}else{
 					glfwSleep(0.1);
- 					alSourcePlay(musicSource);
+//  					alSourcePlay(musicSource);
  					cm.restore();
 				}
 				glfwSleep(0.2);

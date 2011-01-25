@@ -115,9 +115,17 @@ void Lighting::init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	get_errors("Lighting::init() C");
 	
+	glGenTextures(1, &light_depth);
+	glBindTexture(GL_TEXTURE_2D, light_depth);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+	get_errors("Lighting::init() C");
+	
 	my_glGenFramebuffers(1,&light_fbo);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
 	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, light_map, 0);
+	my_glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, light_depth, 0);
 	my_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	get_errors("Lighting::init() D");
 		
@@ -234,7 +242,7 @@ void Lighting::createLightMap(SceneObject* scene)
 		
 	my_glBindFramebuffer(GL_FRAMEBUFFER, light_fbo);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-// 	scene->drawSimple();
+	scene->drawSimple();
 	
 	lightShader->bind();
 	get_errors();
@@ -264,6 +272,7 @@ void Lighting::createLightMap(SceneObject* scene)
 						
 		glUniformMatrix4fv(model_uniform, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform4fv(color_uniform,1, glm::value_ptr(light.color));
+// 		printf("%f %f %f\n", light.color.r, light.color.g, light.color.b);
 		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, light_idxs);
 		get_errors();
 	}
@@ -462,10 +471,10 @@ void Lighting::update(float dTime){
 
 	for(float j = 3.1 ; j < 4.5; j+=0.2){
 		if(totaltime < j){
-			lightlist[0].color = glm::vec4(0.1,0.1,0.1,1);
+			lightlist[0].color = glm::vec4(0.0,0.0,0.0,1);
 			break;
 		}else if(totaltime < (j + 0.1)){
-			lightlist[0].color = glm::vec4(0.9,0.9,0.9,1);
+			lightlist[0].color = glm::vec4(1,1,1,1);
 			break;
 		}
 	}
