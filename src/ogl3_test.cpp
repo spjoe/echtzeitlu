@@ -56,6 +56,7 @@ GLuint scene_depth;
 
 int width=800;
 int height=600;
+int mode = GLFW_WINDOW;
 
 
 int oldx,oldy;
@@ -117,7 +118,7 @@ void init_fbo()
 	glBindTexture(GL_TEXTURE_2D, scene_map);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_SRGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	get_errors("init_fbo() A");
 	
 	glGenTextures(1, &scene_depth);
@@ -190,6 +191,21 @@ int main (int argc, char** argv)
     {
       reportAlutError ();
     }
+	
+	if(argc < 3){
+		width = 800;
+		height = 600;
+		mode = GLFW_WINDOW;
+	}else if(argc < 4){
+// 		printf("%s\n", argv[1]);
+		width = atoi(argv[1]);
+		height = atoi(argv[2]);
+		mode = GLFW_WINDOW;
+	}else{
+		width = atoi(argv[1]);
+		height = atoi(argv[2]);
+		mode = GLFW_FULLSCREEN;
+	}
 
 	glfwInit();
 
@@ -201,7 +217,7 @@ int main (int argc, char** argv)
 	if (glfwOpenWindow(	width,height,
 						0,0,0,0,
 						24, 8,
-						GLFW_WINDOW) != GL_TRUE) {
+						mode) != GL_TRUE) {
 			cerr << "Failed to initialize OpenGL window." << endl;
 			glfwTerminate();
 			return 1;
