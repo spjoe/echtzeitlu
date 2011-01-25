@@ -23,34 +23,43 @@ precision mediump float;  // delete this line if using GLSL 1.2
 // uniform shader-parameters
 uniform vec4 color;
 uniform sampler2D colorMap;
-
+uniform bool vertical;
 
 
 // fragment-shader output variable (-> stored in the frame-buffer, i.e. "the pixel you see")
 out vec4 fragColor;
 in vec2 texCoord;
 
-void main()
+const float blurSize = 1.0/256.0;
+ 
+void main(void)
 {
-    vec4 gauss_sum = vec4(0,0,0,0);
-    
-    float kernel[5];
-    kernel[0] = 1.0f;
-    kernel[1] = 4.0f;
-    kernel[2] = 6.0f;
-    kernel[3] = 4.0f;
-    kernel[4] = 1.0f;
-    float divisor = 1.0f/(kernel[0]+kernel[1]+kernel[2]+kernel[3]+kernel[4]);
-    
-	gauss_sum += textureOffset(colorMap, texCoord, ivec2( 2, 0)) * kernel[0];
-	gauss_sum += textureOffset(colorMap, texCoord, ivec2( 1, 0)) * kernel[1];
-	gauss_sum += textureOffset(colorMap, texCoord, ivec2( 0, 0)) * kernel[2];
-	gauss_sum += textureOffset(colorMap, texCoord, ivec2( 1, 0)) * kernel[3];
-	gauss_sum += textureOffset(colorMap, texCoord, ivec2( 2, 0)) * kernel[4];
-	gauss_sum = gauss_sum * divisor;
-
-		
-    
-    // write color to output
-    fragColor = gauss_sum;
+   vec4 sum = vec4(0.0);
+ 
+   // blur in y (vertical)
+   // take nine samples, with the distance blurSize between them
+	if(vertical){
+		sum += texture2D(colorMap, vec2(texCoord.x - 4.0*blurSize, texCoord.y)) * 0.05;
+		sum += texture2D(colorMap, vec2(texCoord.x - 3.0*blurSize, texCoord.y)) * 0.09;
+		sum += texture2D(colorMap, vec2(texCoord.x - 2.0*blurSize, texCoord.y)) * 0.12;
+		sum += texture2D(colorMap, vec2(texCoord.x - blurSize, texCoord.y)) * 0.15;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(colorMap, vec2(texCoord.x + blurSize, texCoord.y)) * 0.15;
+		sum += texture2D(colorMap, vec2(texCoord.x + 2.0*blurSize, texCoord.y)) * 0.12;
+		sum += texture2D(colorMap, vec2(texCoord.x + 3.0*blurSize, texCoord.y)) * 0.09;
+		sum += texture2D(colorMap, vec2(texCoord.x + 4.0*blurSize, texCoord.y)) * 0.05;
+	}else{
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y - 4.0*blurSize)) * 0.05;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y - 3.0*blurSize)) * 0.09;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y - 2.0*blurSize)) * 0.12;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y - blurSize)) * 0.15;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y + blurSize)) * 0.15;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y + 2.0*blurSize)) * 0.12;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y + 3.0*blurSize)) * 0.09;
+		sum += texture2D(colorMap, vec2(texCoord.x, texCoord.y + 4.0*blurSize)) * 0.05;
+	}
+	
+ 
+   fragColor = sum;
 }
