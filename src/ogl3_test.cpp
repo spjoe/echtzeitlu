@@ -139,9 +139,10 @@ void delete_fbo()
 	PFNGLISFRAMEBUFFERPROC my_glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)glfwGetProcAddress("glIsFramebuffer");
 	PFNGLDELETEFRAMEBUFFERSPROC my_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)glfwGetProcAddress("glDeleteFramebuffer");
 	
-	if(my_glIsFramebuffer(scene_fbo))
+	if(my_glIsFramebuffer(scene_fbo)){
 		my_glDeleteFramebuffers(1, &scene_fbo);
-	
+	}
+
 	if(glIsTexture(scene_map))
 		glDeleteTextures(1,&scene_map);
 
@@ -499,10 +500,11 @@ int main (int argc, char** argv)
 
 		}
 
-		delete_fbo();
+		
 		//	release_vbo_vao(vbo_id, &vao_id);
 		delete rootScene;
 		delete m_lighting;
+// 		delete_fbo();
 		pm.Shutdown();
 	}
 
