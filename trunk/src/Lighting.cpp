@@ -305,6 +305,8 @@ void Lighting::createLightMap(SceneObject* scene)
 // 	get_errors(lm_errmsg);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, light_map);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	get_errors("Lighting::createLightMap()");
 	
 	glUniform1i(vertical_uniform, 1);
